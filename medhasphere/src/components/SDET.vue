@@ -206,10 +206,10 @@
   
   <script setup lang="ts">
   import { ref, computed } from 'vue';
-  import seleniumTasksRaw   from '../data/seleniumTasks.json';
-  import playwrightTasksRaw from '../data/playwrightTasks.json';
-  import apiTasksRaw        from '../data/apiTasks.json';
-  import interviewQARaw     from '../data/interviewQA.json';
+  import seleniumTasksRaw   from './data/seleniumTasks.json';
+  import playwrightTasksRaw from './data/playwrightTasks.json';
+  import apiTasksRaw        from './data/apiTasks.json';
+  import interviewQARaw     from './data/interviewQA.json';
   
   // ── types ──────────────────────────────────────────────
   interface QA {
