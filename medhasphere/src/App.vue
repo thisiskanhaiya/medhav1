@@ -1,37 +1,26 @@
 <script setup>
-import { ref } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
-
-const count = ref(0)
+import Dashboard from './components/Dashboard.vue';
 </script>
 
 <template>
-  <div>
-    
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="/src/assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
-  <div class="card">
-    <button type="button" @click="count++">count is {{ count }}</button>
-  </div>
+  <Dashboard/>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #f0f2f5;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
-.card {
-  padding: 2em;
+
+#app {
+  width: 100%;
+  min-height: 100vh;
 }
 </style>
