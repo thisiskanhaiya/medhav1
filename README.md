@@ -1,8 +1,8 @@
 Phase - 00
-// 1. Build Platform
-// 2. Containt Risch and Dynamic update
-// 3. Skill Rich
-// 4. Pilot Project
+// 1. Build basic public Platform
+// 2. Containt good and Dynamic update
+// 3. Our Skill update
+// 4. Switch good compony
 // 5. collage Pilot project with Platform and provide internship
 
 
