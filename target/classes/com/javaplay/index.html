@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanhaiya Gawade - Java Developer</title>
+    <style>
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --accent-color: #3182ce;
+            --accent-hover: #2c5aa0;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode {
+            --primary-bg: #1a202c;
+            --secondary-bg: #2d3748;
+            --card-bg: #2d3748;
+            --text-primary: #f7fafc;
+            --text-secondary: #cbd5e0;
+            --accent-color: #63b3ed;
+            --accent-hover: #4299e1;
+            --border-color: #4a5568;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: var(--primary-bg);
+            transition: all 0.3s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--accent-hover);
+        }
+
+        .main {
+            margin-top: 80px;
+            padding: 2rem 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: white;
+            padding: 4rem 0;
+            text-align: center;
+            margin-bottom: 3rem;
+            border-radius: 12px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .section {
+            background: var(--card-bg);
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section h2 {
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .skill-category h3 {
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .skill-tag {
+            background: var(--secondary-bg);
+            color: var(--text-secondary);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .experience-item {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--secondary-bg);
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .experience-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .experience-company {
+            color: var(--accent-color);
+            font-weight: 500;
+        }
+
+        .experience-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .experience-description ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .experience-description li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .experience-description li::before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: var(--secondary-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .project-title {
+            color: var(--accent-color);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-list {
+            list-style: none;
+        }
+
+        .achievement-list li {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .achievement-list li::before {
+            content: "🏆";
+            position: absolute;
+            left: 0;
+            top: 0.8rem;
+        }
+
+        .achievement-list li:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .experience-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .main {
+                margin-top: 120px;
+            }
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">Kanhaiya Gawade</div>
+                <ul class="nav-links">
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#skills">Skills</a></li>
+                    <li><a href="#experience">Experience</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#achievements">Achievements</a></li>
+                </ul>
+                <button class="theme-toggle" onclick="toggleTheme()">🌙 Dark</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="hero fade-in">
+                <h1>Kanhaiya Gawade</h1>
+                <p>Java Developer and former SDET with experience in the banking sector. Proficient in designing and developing RESTful APIs with Java and Spring Boot, and building robust microservices applications.</p>
+                <div class="contact-links">
+                    <a href="http://linkedin.com/in/thisiskanhaiya/" class="contact-link">LinkedIn</a>
+                    <a href="tel:+917218174567" class="contact-link">📞 +91 7218174567</a>
+                    <a href="https://thisiskanhaiya.github.io/portfolio/" class="contact-link">Portfolio</a>
+                    <a href="mailto:mgawade7878@gmail.com" class="contact-link">📧 Email</a>
+                    <a href="https://github.com/thisiskanhaiya/" class="contact-link">GitHub</a>
+                </div>
+            </section>
+
+            <section id="about" class="section fade-in">
+                <h2>About Me</h2>
+                <p>Java Developer and former SDET with experience in the banking sector, proficient in designing and developing RESTful APIs with Java and Spring Boot, and building robust microservices applications, including a loan management system with Kafka integrations. Demonstrated ability to improve efficiency through automation, having streamlined business tasks with CITS (Selenium based tool) and enhanced API testing with Ready-API. Passionate about creating high-quality, scalable software solutions in an agile environment.</p>
+            </section>
+
+            <section id="skills" class="section fade-in">
+                <h2>Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-category">
+                        <h3>Development</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Java</span>
+                            <span class="skill-tag">Spring Boot</span>
+                            <span class="skill-tag">Spring Data JPA</span>
+                            <span class="skill-tag">Hibernate</span>
+                            <span class="skill-tag">RESTful API</span>
+                            <span class="skill-tag">Microservices</span>
+                            <span class="skill-tag">Multithreading</span>
+                            <span class="skill-tag">Design Patterns</span>
+                            <span class="skill-tag">Messaging Queues</span>
+                            <span class="skill-tag">Docker</span>
+                            <span class="skill-tag">MySQL</span>
+                            <span class="skill-tag">Oracle</span>
+                            <span class="skill-tag">Swagger API</span>
+                        </div>
+                    </div>
+                    <div class="skill-category">
+                        <h3>Tools & Technologies</h3>
+                        <div class="skill-tags">
+                            <span class="skill-tag">Git-Copilot</span>
+                            <span class="skill-tag">OpenAI Lab45</span>
+                            <span class="skill-tag">Maven</span>
+                            <span class="skill-tag">Postman</span>
+                            <span class="skill-tag">Ready API</span>
+                            <span class="skill-tag">Jenkins</span>
+                            <span class="skill-tag">Oracle SQL</span>
+                            <span class="skill-tag">Debugging</span>
+                            <span class="skill-tag">Unit Testing</span>
+                            <span class="skill-tag">Documentation</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="experience" class="section fade-in">
+                <h2>Professional Experience</h2>
+                
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div>
+                            <div class="experience-title">Java Developer</div>
+                            <div class="experience-company">Wipro Technologies - Client Project (Banking Domain)</div>
+                        </div>
+                        <div class="experience-date">Mar 2023 - Present</div>
+                    </div>
+                    <div class="experience-description">
+                        <ul>
+                            <li>Developed and maintained RESTful APIs for key banking processes (loan creation, onboarding, address, quotes, rates) using Java and Spring Boot</li>
+                            <li>Actively participated in Agile sprints, worked in SDLC STLC providing accurate effort estimations and adhering to delivery timelines</li>
+                            <li>Worked extensively on the controller layer, ensuring smooth integration and optimal functionality of all APIs</li>
+                            <li>Created and executed automation test packs for APIs using ReadyAPI to enhance testing efficiency and coverage</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div>
+                            <div class="experience-title">Project Engineer (SDET)</div>
+                            <div class="experience-company">Wipro Technologies - Client Project (Banking Domain)</div>
+                        </div>
+                    </div>
+                    <div class="experience-description">
+                        <ul>
+                            <li>Automated APIs using ReadyAPI with JDBC data and streamlined business tasks using CITS (Selenium-based tool)</li>
+                            <li>Worked on robotics jobs and payment cycles, improving process efficiency</li>
+                            <li>Conducted a case study on improving affordability services in the banking domain</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="experience-item">
+                    <div class="experience-header">
+                        <div>
+                            <div class="experience-title">Java Fullstack Development Training</div>
+                            <div class="experience-company">Chennai</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="projects" class="section fade-in">
+                <h2>Personal Projects</h2>
+                <div class="project-grid">
+                    <div class="project-card">
+                        <div class="project-title">Loan Management System</div>
+                        <p>Designed and implemented a scalable loan processing system utilizing microservices, messaging queues, and seamless document upload and validation directly into the database.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-title">E-commerce Application</div>
+                        <p>Developed a robust online shopping platform with full user authentication, product management, and secure payment integrations, powered by RESTful APIs and dynamic front-end technologies.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-title">Blog Application</div>
+                        <p>Engineered a content management system with post creation, editing, and sharing features, leveraging Spring Boot for back-end and Angular for a responsive user interface.</p>
+                    </div>
+                    <div class="project-card">
+                        <div class="project-title">Weather Information REST Service</div>
+                        <p>Built a real-time weather data service using REST APIs, integrating with third-party data providers and delivering accurate forecasts in a microservice architecture.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="achievements" class="section fade-in">
+                <h2>Achievements</h2>
+                <ul class="achievement-list">
+                    <li>Solved <strong>250+ DSA</strong> problems on LeetCode and GeeksforGeeks</li>
+                    <li>Case Study Premium Banking Business</li>
+                    <li><strong>AIR-01</strong> in International Robotics Competition (College)</li>
+                    <li>Employee of the Month</li>
+                </ul>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            const button = document.querySelector('.theme-toggle');
+            
+            if (body.classList.contains('dark-mode')) {
+                body.classList.remove('dark-mode');
+                button.innerHTML = '🌙 Dark';
+                localStorage.setItem('theme', 'light');
+            } else {
+                body.classList.add('dark-mode');
+                button.innerHTML = '☀️ Light';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const button = document.querySelector('.theme-toggle');
+            
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                button.innerHTML = '☀️ Light';
+            }
+
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    if (targetSection) {
+                        targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+
+            // Add fade-in animation to sections on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationDelay = '0.1s';
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.section').forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "projects": [
+    {
+      "id": 1,
+      "name": "Project One",
+      "description": "Sample project data"
+    },
+    {
+      "id": 2,
+      "name": "Project Two",
+      "description": "Another sample project"
+    }
+  ]
+}
