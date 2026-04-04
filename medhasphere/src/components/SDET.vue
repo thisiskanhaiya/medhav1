@@ -16,13 +16,17 @@
       <div class="overlay" v-if="sidebarOpen" @click="closeSidebar"></div>
   
       <!-- Sidebar -->
-      <aside :class="['sidebar', { 'sidebar-open': sidebarOpen }]">
+      <aside :class="['sidebar', { 'sidebar-open': sidebarOpen, 'sidebar-minimized': sidebarMinimized }]">
         <div class="sidebar-header">
-          <h2>SDET</h2>
-          <button class="close-btn" @click="closeSidebar">✕</button>
+          <h2 v-if="!sidebarMinimized">SDET</h2>
+          <div class="sidebar-controls">
+            <button class="minimize-btn" @click="toggleSidebarMinimized" v-if="!sidebarMinimized">⬅️</button>
+            <button class="minimize-btn" @click="toggleSidebarMinimized" v-else>➡️</button>
+            <button class="close-btn" @click="closeSidebar" v-if="sidebarOpen">✕</button>
+          </div>
         </div>
   
-        <nav class="sidebar-nav">
+        <nav class="sidebar-nav" v-if="!sidebarMinimized">
           <div v-for="(section, index) in sections" :key="index" class="nav-section">
             <div
               class="nav-section-header"
@@ -30,7 +34,10 @@
               :class="{ active: activeSectionIndex === index }"
             >
               <span class="section-icon">{{ section.icon }}</span>
-              <span class="section-title">{{ section.title }}</span>
+              <div class="section-info">
+                <span class="section-title">{{ section.title }}</span>
+                <span class="completion-percentage">{{ getSectionCompletion(section) }}%</span>
+              </div>
               <span class="chevron" :class="{ rotated: openSections.includes(index) }">▾</span>
             </div>
   
@@ -47,6 +54,7 @@
                   >
                     <span class="task-number">{{ cIndex + 1 }}</span>
                     <span class="task-name">{{ cat.title }}</span>
+                    <span class="category-qa-count">{{ cat.questions.length }} Qs</span>
                   </li>
                 </template>
   
@@ -56,10 +64,17 @@
                     v-for="(task, tIndex) in section.tasks"
                     :key="tIndex"
                     @click="selectTask(task, section.title)"
-                    :class="{ active: selectedTask?.title === task.title }"
+                    :class="{ active: selectedTask?.title === task.title, completed: isTaskCompleted(task, section.id) }"
                   >
+                    <input
+                      type="checkbox"
+                      :checked="isTaskCompleted(task, section.id)"
+                      @click.stop="toggleTaskCompletion(task, section.id)"
+                      class="completion-checkbox"
+                    />
                     <span class="task-number">{{ tIndex + 1 }}</span>
                     <span class="task-name">{{ task.title }}</span>
+                    <span class="completion-icon" v-if="isTaskCompleted(task, section.id)">✅</span>
                   </li>
                 </template>
   
@@ -92,9 +107,16 @@
               v-for="(qa, i) in selectedCategory.questions"
               :key="qa.id"
               class="qa-card"
+              :class="{ completed: isQACompleted(qa, selectedCategory.title) }"
             >
               <div class="qa-header" @click="toggleQA(i)">
                 <div class="qa-left">
+                  <input
+                    type="checkbox"
+                    :checked="isQACompleted(qa, selectedCategory.title)"
+                    @click.stop="toggleQACompletion(qa, selectedCategory.title)"
+                    class="completion-checkbox"
+                  />
                   <span class="qa-number">{{ qa.id }}</span>
                   <p class="qa-question">{{ qa.question }}</p>
                 </div>
@@ -240,6 +262,7 @@
   
   // ── state ──────────────────────────────────────────────
   const sidebarOpen        = ref(false);
+  const sidebarMinimized   = ref(false);
   const openSections       = ref<number[]>([]);
   const openExercises      = ref<number[]>([]);
   const openQAs            = ref<number[]>([]);
@@ -248,6 +271,10 @@
   const currentSection     = ref('');
   const copiedIndex        = ref<number | null>(null);
   const activeSectionIndex = ref<number | null>(null);
+  
+  // ── completion tracking ─────────────────────────────────
+  const completedTasks     = ref<Set<string>>(new Set());
+  const completedQAs       = ref<Set<string>>(new Set());
   
   // ── 4 sections ─────────────────────────────────────────
   const sections = computed(() => [
@@ -297,16 +324,61 @@
 
   const previousTask = computed(() => hasPrevious.value ? currentTasks.value[currentTaskIndex.value - 1] : null);
   const nextTask = computed(() => hasNext.value ? currentTasks.value[currentTaskIndex.value + 1] : null);
+
+  // ── completion helpers ──────────────────────────────────
+  const getSectionCompletion = (section: any) => {
+    if (section.id === 'interview') {
+      const totalQAs = section.categories.reduce((sum: number, cat: InterviewCategory) => sum + cat.questions.length, 0);
+      const completedQAsInSection = section.categories.reduce((sum: number, cat: InterviewCategory) => {
+        return sum + cat.questions.filter((qa: QA) => completedQAs.value.has(`${cat.title}-${qa.id}`)).length;
+      }, 0);
+      return totalQAs > 0 ? Math.round((completedQAsInSection / totalQAs) * 100) : 0;
+    } else {
+      const totalTasks = section.tasks.length;
+      const completedTasksInSection = section.tasks.filter((task: any) => completedTasks.value.has(`${section.id}-${task.title}`)).length;
+      return totalTasks > 0 ? Math.round((completedTasksInSection / totalTasks) * 100) : 0;
+    }
+  };
+
+  const isTaskCompleted = (task: any, sectionId: string) => {
+    return completedTasks.value.has(`${sectionId}-${task.title}`);
+  };
+
+  const isQACompleted = (qa: QA, categoryTitle: string) => {
+    return completedQAs.value.has(`${categoryTitle}-${qa.id}`);
+  };
+
+  const toggleTaskCompletion = (task: any, sectionId: string) => {
+    const key = `${sectionId}-${task.title}`;
+    if (completedTasks.value.has(key)) {
+      completedTasks.value.delete(key);
+    } else {
+      completedTasks.value.add(key);
+    }
+  };
+
+  const toggleQACompletion = (qa: QA, categoryTitle: string) => {
+    const key = `${categoryTitle}-${qa.id}`;
+    if (completedQAs.value.has(key)) {
+      completedQAs.value.delete(key);
+    } else {
+      completedQAs.value.add(key);
+    }
+  };
   
   // ── helpers ────────────────────────────────────────────
   function toggleSidebar() { sidebarOpen.value = !sidebarOpen.value; }
+  function toggleSidebarMinimized() { sidebarMinimized.value = !sidebarMinimized.value; }
   function closeSidebar()  { sidebarOpen.value = false; }
   
   function toggleSection(index: number) {
     activeSectionIndex.value = index;
-    const idx = openSections.value.indexOf(index);
-    if (idx === -1) openSections.value.push(index);
-    else            openSections.value.splice(idx, 1);
+    // Only allow one section open at a time
+    if (openSections.value.includes(index)) {
+      openSections.value = openSections.value.filter(i => i !== index);
+    } else {
+      openSections.value = [index];
+    }
   }
   
   function openSection(index: number) {

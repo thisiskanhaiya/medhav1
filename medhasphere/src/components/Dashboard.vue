@@ -16,6 +16,15 @@
           </span>
         </nav>
       </header>
+
+      <!-- Hero Background Section - Only show when no course selected -->
+      <section v-if="!selected" class="hero" :style="{ backgroundImage: `url(${images[currentImageIndex]})` }">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <h1 class="hero-title">Welcome to Medhasphere</h1>
+          <p class="hero-subtitle">Master Testing & Development Skills with Expert Guidance</p>
+        </div>
+      </section>
   
       <!-- Main Content Container -->
       <div class="main-content" v-if="!selected">
@@ -75,8 +84,8 @@
         </footer>
       </div>
 
-      <!-- Component loads here when course is selected -->
-      <div class="content" v-if="selected">
+      <!-- Course Content - Clean layout without background -->
+      <div class="course-content" v-if="selected">
         <component :is="currentComponent" />
       </div>
   
@@ -84,11 +93,23 @@
   </template>
 
   <script setup>
-  import { ref, computed } from 'vue'
+  import { ref, computed, onMounted } from 'vue'
   import SDETComponent from './SDET.vue'
   import JavaComponent from './Java.vue'
+  import testimonial1 from '../assets/1775264017792.png'
+  import testimonial2 from '../assets/1775264871247.png'
+  import testimonial3 from '../assets/1775265121160.png'
   
   const selected = ref(null)
+  const currentImageIndex = ref(0)
+  const images = [testimonial1, testimonial2, testimonial3]
+  
+  onMounted(() => {
+    // Auto-change background image every 5 seconds
+    setInterval(() => {
+      currentImageIndex.value = (currentImageIndex.value + 1) % images.length
+    }, 5000)
+  })
   
   const courses = [
     { id: 'sdet', name: 'SDET', icon: '🔬', description: 'Master automation testing frameworks' },
@@ -96,9 +117,9 @@
   ]
 
   const testimonials = [
-    { avatar: '👨‍💼', name: 'Rajesh Kumar', role: 'QA Engineer', text: 'Medhasphere helped me transition from manual testing to automation within 3 months!' },
-    { avatar: '👩‍💻', name: 'Priya Sharma', role: 'Java Developer', text: 'The structured learning path and practical exercises made Java concepts crystal clear.' },
-    { avatar: '👨‍🎓', name: 'Arjun Patel', role: 'SDET Specialist', text: 'Best platform for learning SDET fundamentals. Highly recommended for career growth!' },
+    { avatar: '👨‍💼', name: 'Rajesh Kumar', role: 'QA Engineer', text: 'Medhasphere helped me transition from manual testing to automation within 3 months!', image: testimonial1 },
+    { avatar: '👩‍💻', name: 'Priya Sharma', role: 'Java Developer', text: 'The structured learning path and practical exercises made Java concepts crystal clear.', image: testimonial2 },
+    { avatar: '👨‍🎓', name: 'Arjun Patel', role: 'SDET Specialist', text: 'Best platform for learning SDET fundamentals. Highly recommended for career growth!', image: testimonial3 },
   ]
   
   const navigate = (id) => {
@@ -124,13 +145,14 @@
   .dashboard {
     width: 100%;
     min-height: 100vh;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e8eef7 100%);
+    background: #f0f2f5;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     position: relative;
     overflow-x: hidden;
+    color: #333;
   }
 
-  /* 3D Background Effect */
+  /* Light Background Effects */
   .dashboard::before {
     content: '';
     position: fixed;
@@ -139,11 +161,19 @@
     right: 0;
     bottom: 0;
     background: 
-      radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 40% 30%, rgba(102, 126, 234, 0.05) 0%, transparent 40%);
+      radial-gradient(circle at 20% 20%, rgba(25, 118, 210, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(66, 165, 245, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 40% 60%, rgba(25, 118, 210, 0.03) 0%, transparent 40%),
+      radial-gradient(circle at 60% 20%, rgba(100, 181, 246, 0.03) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
+    animation: float 20s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-10px) rotate(1deg); }
+    66% { transform: translateY(10px) rotate(-1deg); }
   }
 
   .dashboard > * {
@@ -151,19 +181,73 @@
     z-index: 1;
   }
   
+  /* Hero Section */
+  .hero {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: background-image 1s ease-in-out;
+  }
+
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(227, 242, 253, 0.3) 50%, rgba(187, 222, 251, 0.4) 100%);
+    backdrop-filter: blur(1px);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: #1565c0;
+    max-width: 800px;
+    padding: 0 20px;
+  }
+
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from { text-shadow: 0 2px 8px rgba(25, 118, 210, 0.2); }
+    to { text-shadow: 0 2px 8px rgba(66, 165, 245, 0.3); }
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    line-height: 1.6;
+    text-shadow: 0 1px 4px rgba(25, 118, 210, 0.1);
+  }
+  
   /* Premium Top Nav */
   .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    color: #1565c0;
     padding: 16px 40px;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
-    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid #90caf9;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.1);
   }
   
   .header .logo {
@@ -174,11 +258,12 @@
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     user-select: none;
+    color: #1565c0;
   }
 
   .header .logo:hover {
     transform: scale(1.08);
-    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    color: #1976d2;
   }
 
   .header .logo:active {
@@ -197,17 +282,19 @@
     font-size: 0.95rem;
     font-weight: 600;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    background: rgba(255, 255, 255, 0.1);
-    border: 1.5px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1.5px solid rgba(25, 118, 210, 0.2);
     backdrop-filter: blur(10px);
     user-select: none;
+    color: #1565c0;
   }
   
   .nav-item:hover {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(25, 118, 210, 0.1);
+    border-color: #1976d2;
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.15);
+    color: #1976d2;
   }
   
   .nav-item:active {
@@ -215,24 +302,31 @@
   }
   
   .nav-item.active {
-    background: white;
-    color: #667eea;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: white;
+    border-color: #1976d2;
+  }
+  
+  .nav-item.active {
+    background: rgba(102, 126, 234, 0.8);
+    color: white;
     font-weight: 700;
-    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
     transform: translateY(-3px);
   }
 
   /* Main Content Container */
   .main-content {
-    padding: 30px 40px 40px;
+    padding: 40px 40px 40px;
   }
 
   .section-title {
     font-size: 1.8rem;
-    color: #2d3748;
+    color: #e0e0e0;
     text-align: center;
     margin-bottom: 30px;
     font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
   
   /* Modern Cards Container */
@@ -248,31 +342,32 @@
     flex-wrap: wrap;
   }
   
-  /* Reduced Card Styling */
+  /* Light Card Styling */
   .card {
     position: relative;
-    width: 280px;
-    height: 340px;
-    background: white;
+    width: 350px;
+    height: 280px;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 20px;
-    padding: 30px;
+    padding: 25px;
     text-align: center;
     cursor: pointer;
     transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     overflow: hidden;
-    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.15);
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    box-shadow: 0 8px 32px rgba(25, 118, 210, 0.1);
+    border: 1px solid rgba(25, 118, 210, 0.2);
     transform-style: preserve-3d;
     perspective: 1000px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    backdrop-filter: blur(10px);
   }
 
   .card-background {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(25, 118, 210, 0.05) 0%, rgba(66, 165, 245, 0.05) 100%);
     opacity: 0;
     transition: opacity 0.5s ease;
     pointer-events: none;
@@ -285,7 +380,8 @@
 
   .card:hover {
     transform: translateY(-18px) rotateX(8deg) rotateY(-5deg) scale(1.02);
-    box-shadow: 0 35px 70px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 35px 70px rgba(25, 118, 210, 0.2);
+    border-color: rgba(25, 118, 210, 0.3);
   }
 
   .card:active {
@@ -293,17 +389,18 @@
   }
   
   .icon {
-    font-size: 4rem;
+    font-size: 3.5rem;
     margin-bottom: 12px;
     transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     display: inline-block;
     position: relative;
     z-index: 1;
+    color: #1976d2;
   }
 
   .card:hover .icon {
     transform: scale(1.25) rotate(15deg);
-    filter: drop-shadow(0 10px 20px rgba(102, 126, 234, 0.4));
+    filter: drop-shadow(0 10px 20px rgba(25, 118, 210, 0.4));
   }
 
   .card:active .icon {
@@ -312,7 +409,7 @@
   
   .card h3 {
     font-size: 1.4rem;
-    color: #2d3748;
+    color: #1565c0;
     margin: 10px 0 8px 0;
     font-weight: 700;
     letter-spacing: -0.5px;
@@ -322,29 +419,28 @@
   }
 
   .card:hover h3 {
-    color: #667eea;
+    color: #1976d2;
     transform: translateY(-6px);
   }
   
   .card p {
-    color: #718096;
+    color: #666;
     font-size: 0.85rem;
     line-height: 1.5;
     margin: 0 0 12px 0;
     transition: color 0.3s ease;
     position: relative;
     z-index: 1;
-    flex-grow: 1;
   }
 
   .card:hover p {
-    color: #667eea;
+    color: #1976d2;
   }
   
   .btn {
     margin-top: auto;
     padding: 10px 24px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1976d2 0%, #42a5f5 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -384,9 +480,9 @@
   }
   
   .btn:hover {
-    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
     transform: translateY(-3px);
-    box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 15px 30px rgba(25, 118, 210, 0.3);
   }
 
   .btn:hover::before {
@@ -395,7 +491,7 @@
 
   .btn:active {
     transform: translateY(-1px);
-    box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 6px 15px rgba(25, 118, 210, 0.2);
   }
 
   .btn-text {
@@ -418,24 +514,25 @@
 
   .testimonials-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 25px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
     max-width: 1000px;
     margin: 0 auto;
   }
 
   .testimonial-card {
-    background: white;
-    padding: 25px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
     border-radius: 16px;
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 8px 24px rgba(25, 118, 210, 0.1);
     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    border: 1px solid rgba(102, 126, 234, 0.1);
+    border: 1px solid rgba(25, 118, 210, 0.2);
+    backdrop-filter: blur(10px);
   }
 
   .testimonial-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 16px 35px rgba(102, 126, 234, 0.2);
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 35px rgba(25, 118, 210, 0.15);
   }
 
   .rating {
@@ -474,7 +571,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, #667eea, #764ba2);
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
     border-radius: 50%;
     flex-shrink: 0;
   }
@@ -482,23 +579,24 @@
   .author-name {
     margin: 0;
     font-weight: 600;
-    color: #2d3748;
+    color: #1565c0;
     font-size: 0.9rem;
   }
 
   .author-role {
     margin: 0;
-    color: #718096;
+    color: #666;
     font-size: 0.8rem;
   }
 
   /* Footer */
   .footer {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    color: #1565c0;
     padding: 30px 40px;
     text-align: center;
-    margin-top: 40px;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid #90caf9;
   }
 
   .footer-content {
@@ -527,6 +625,15 @@
     width: 100%;
   }
 
+  /* Course Content - Clean layout without background */
+  .course-content {
+    width: 100%;
+    min-height: 100vh;
+    background: #f0f2f5;
+    padding: 80px 20px 20px;
+    color: #333;
+  }
+
   /* Responsive Design */
   @media (max-width: 768px) {
     .header {
@@ -550,23 +657,22 @@
       padding: 20px;
     }
 
-    .section-title {
-      font-size: 1.4rem;
-      margin-bottom: 20px;
+    .hero-title {
+      font-size: 2.5rem;
     }
 
-    .courses {
-      gap: 20px;
+    .hero-subtitle {
+      font-size: 1rem;
     }
 
     .card {
       width: 100%;
-      max-width: 260px;
-      height: 320px;
+      max-width: 320px;
+      height: 260px;
     }
 
     .icon {
-      font-size: 3.5rem;
+      font-size: 3rem;
     }
 
     .card h3 {
@@ -582,7 +688,8 @@
     }
 
     .testimonial-card {
-      padding: 20px;
+      padding: 18px;
+      height: 180px;
     }
 
     .footer {
@@ -603,23 +710,37 @@
       padding: 15px;
     }
 
-    .courses {
-      gap: 15px;
+    .hero {
+      height: 80vh;
+    }
+
+    .hero-title {
+      font-size: 2rem;
+    }
+
+    .hero-subtitle {
+      font-size: 0.9rem;
     }
 
     .card {
       width: 100%;
-      max-width: 240px;
-      height: 300px;
-      padding: 20px;
+      max-width: 280px;
+      height: 240px;
+      padding: 18px;
     }
 
     .icon {
-      font-size: 3rem;
+      font-size: 2.5rem;
     }
 
-    .testimonials-grid {
-      grid-template-columns: 1fr;
+    .testimonial-card {
+      height: 160px;
+      padding: 15px;
+    }
+
+    .testimonial-card {
+      height: 160px;
+      padding: 15px;
     }
   }
   </style>
