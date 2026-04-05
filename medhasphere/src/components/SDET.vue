@@ -208,6 +208,21 @@
           <div class="welcome-icon">🚀</div>
           <h1>Welcome to SDET</h1>
           <p>Select a topic from the sidebar to get started</p>
+         <div class="career-dropdown">
+    <div class="career-dropdown-header" @click="showCareer = !showCareer">
+      <div class="career-header-left">
+        <span>📌</span>
+        <span>SDET Career – Present & Future</span>
+      </div>
+      <span class="chevron" :class="{ rotated: showCareer }">▾</span>
+    </div>
+
+    <transition name="slide">
+      <div v-if="showCareer" class="career-dropdown-body">
+        <SdetCareer />
+      </div>
+    </transition>
+  </div>
           <div class="welcome-cards">
             <div
               v-for="(section, i) in sections"
@@ -238,7 +253,9 @@
   import playwrightTasksRaw from '../data/playwrightTasks.json';
   import apiTasksRaw        from '../data/apiTasks.json';
   import interviewQARaw     from '../data/interviewQA.json';
-  
+  import SdetCareer from './SdetCareer.vue';
+
+
   // ── types ──────────────────────────────────────────────
   interface QA {
     id: number;
@@ -256,7 +273,7 @@
   function toTaskArray(raw: Record<string, any>): any[] {
     return Object.values(raw);
   }
-  
+  const showCareer = ref(false);
   // interviewQA.json → array of { title, icon, questions[] }
   const interviewCategories = Object.values(interviewQARaw) as InterviewCategory[];
   
