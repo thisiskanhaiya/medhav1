@@ -17,14 +17,22 @@
   
       <!-- Sidebar -->
       <aside :class="['sidebar', { 'sidebar-open': sidebarOpen, 'sidebar-minimized': sidebarMinimized }]">
-        <div class="sidebar-header">
-          <h2 v-if="!sidebarMinimized">SDET</h2>
-          <div class="sidebar-controls">
-            <button class="minimize-btn" @click="toggleSidebarMinimized" v-if="!sidebarMinimized">⬅️</button>
-            <button class="minimize-btn" @click="toggleSidebarMinimized" v-else>➡️</button>
-            <button class="close-btn" @click="closeSidebar" v-if="sidebarOpen">✕</button>
-          </div>
-        </div>
+       <div class="sidebar-header">
+  <h2 
+    v-if="!sidebarMinimized" 
+    @click="selectedTask = null"        
+    style="cursor:pointer; user-select:none;"
+    title="Go to Welcome Screen"
+  >
+    🔬 SDET
+  </h2>
+  <div class="sidebar-controls">
+    <button class="minimize-btn" @click="toggleSidebarMinimized">
+      {{ sidebarMinimized ? '➡️' : '⬅️' }}
+    </button>
+    <button class="close-btn" @click="closeSidebar">✕</button>
+  </div>
+</div>
   
         <nav class="sidebar-nav" v-if="!sidebarMinimized">
           <div v-for="(section, index) in sections" :key="index" class="nav-section">
