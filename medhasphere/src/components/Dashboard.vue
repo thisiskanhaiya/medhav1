@@ -86,8 +86,13 @@
 
       <!-- Course Content - Clean layout without background -->
       <div class="course-content" v-if="selected">
-        <component :is="currentComponent" />
-      </div>
+  <!-- Back button + header stays visible -->
+  <div class="course-header">
+    <button class="back-btn" @click="goHome">← Back</button>
+    <h2 class="course-title">{{ courses.find(c => c.id === selected)?.icon }} {{ courses.find(c => c.id === selected)?.name }}</h2>
+  </div>
+  <component :is="currentComponent" />
+</div>
   
     </div>
   </template>
@@ -234,21 +239,22 @@
   
   /* Premium Top Nav */
   .header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    color: #1565c0;
-    padding: 16px 40px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid #90caf9;
-    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.1);
-  }
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  color: #1565c0;
+  padding: 16px 40px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;           
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid #90caf9;
+  box-shadow: 0 2px 8px rgba(25, 118, 210, 0.1);
+  height: 64px;           /* ← fixed height so we can offset content */
+}
   
   .header .logo {
     font-size: 1.6rem;
@@ -624,77 +630,82 @@
   .content {
     width: 100%;
   }
+  /* ─── Course Sub-header ──────────────────────────────── */
+.course-header {
+  display: none;           /* ← hidden, SDET has its own mobile header */
+}
 
   /* Course Content - Clean layout without background */
   .course-content {
-    width: 100%;
-    min-height: 100vh;
-    background: #f0f2f5;
-    padding: 80px 20px 20px;
-    color: #333;
-  }
+  width: 100%;
+  min-height: 100vh;
+  background: #f0f2f5;
+  padding-top: 64px;      /* ← exactly header height, no more 80px */
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  color: #333;
+}
 
   /* Responsive Design */
   @media (max-width: 768px) {
-    .header {
-      padding: 12px 20px;
-    }
+   .header {
+    padding: 10px 16px;
+    height: 56px;           /* ← smaller on mobile */
+    z-index: 500;
+  }
 
-    .header .logo {
-      font-size: 1.3rem;
-    }
+  .header .logo {
+    font-size: 1.1rem;
+  }
 
-    .nav-links {
-      gap: 10px;
-    }
+  .nav-links {
+    gap: 8px;
+  }
 
-    .nav-item {
-      padding: 6px 12px;
-      font-size: 0.8rem;
-    }
+  .nav-item {
+    padding: 5px 10px;
+    font-size: 0.75rem;
+  }
 
-    .main-content {
-      padding: 20px;
-    }
+  .course-content {
+    padding-top: 56px;      /* ← match mobile header height */
+  }
 
-    .hero-title {
-      font-size: 2.5rem;
-    }
+  .main-content {
+    margin-top: 56px;
+    padding: 16px;
+  }
 
-    .hero-subtitle {
-      font-size: 1rem;
-    }
+  .hero {
+    margin-top: 56px;
+    height: calc(100vh - 56px);
+  }
 
-    .card {
-      width: 100%;
-      max-width: 320px;
-      height: 260px;
-    }
+  .hero-title    { font-size: 1.8rem; }
+  .hero-subtitle { font-size: 0.9rem; }
 
-    .icon {
-      font-size: 3rem;
-    }
+  .card {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 220px;
+  }
 
-    .card h3 {
-      font-size: 1.2rem;
-    }
+  .courses {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
 
-    .card p {
-      font-size: 0.8rem;
-    }
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
 
-    .testimonials-grid {
-      gap: 18px;
-    }
-
-    .testimonial-card {
-      padding: 18px;
-      height: 180px;
-    }
-
-    .footer {
-      padding: 20px;
-    }
+  .testimonial-card {
+    height: auto;
+    padding: 16px;
+  }
   }
 
   @media (max-width: 480px) {
@@ -710,9 +721,10 @@
       padding: 15px;
     }
 
-    .hero {
-      height: 80vh;
-    }
+   .hero {
+  margin-top: 64px;        /* ← push below fixed header */
+  height: calc(100vh - 64px);
+}
 
     .hero-title {
       font-size: 2rem;
