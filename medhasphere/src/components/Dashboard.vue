@@ -115,6 +115,7 @@
 import { ref, computed, onMounted } from 'vue'
 import SDETComponent from './SDET.vue'
 import JavaComponent from './Java.vue'
+import AIDeveloperComponent from './AIDeveloper.vue'
 import testimonial1 from '../assets/1775264017792.png'
 import testimonial2 from '../assets/1775264871247.png'
 import testimonial3 from '../assets/1775265121160.png'
@@ -152,6 +153,17 @@ const courses = [
     duration: '5 Months',
     level: 'Beginner → Pro',
   },
+  {
+    id: 'ai',
+    name: 'AI Developer',
+    icon: '🤖',
+    description: 'Master AI, Machine Learning, LLMs, Prompt Engineering & build intelligent applications.',
+    badge: '🚀 New',
+    tags: ['Cutting Edge', 'High Demand', 'Future Tech'],
+    lessons: 80,
+    duration: '4 Months',
+    level: 'Beginner → Pro',
+  },
 ]
 
 const testimonials = [
@@ -166,6 +178,7 @@ const goHome   = ()  => { selected.value = null }
 const currentComponent = computed(() => {
   if (selected.value === 'sdet') return SDETComponent
   if (selected.value === 'java') return JavaComponent
+  if (selected.value === 'ai') return AIDeveloperComponent
   return null
 })
 </script>

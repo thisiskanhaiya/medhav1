@@ -138,7 +138,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const industryPoints = [
   { icon: '⚙️', title: 'Automation First',     desc: 'Write robust, maintainable automation code — not just manual test cases.' },
   { icon: '🔗', title: 'End-to-End Thinking',  desc: 'Understand and test across UI, APIs, microservices, and databases.' },
