@@ -1,215 +1,442 @@
 <template>
-    <div class="coming-soon-container">
-      <!-- Mobile Header -->
-      <div class="mobile-header">
-        <button class="hamburger" @click="goBack">
-          <span class="back-arrow">←</span>
-        </button>
-        <h2 class="mobile-title">Java Development</h2>
+  <div class="sdet-container">
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+      <button class="hamburger" @click="toggleSidebar">
+        <span :class="['hamburger-icon', { open: sidebarOpen }]">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+      <h2 class="mobile-title">{{ currentSection || 'Java Development' }}</h2>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" v-if="sidebarOpen" @click="closeSidebar"></div>
+
+    <!-- Sidebar -->
+    <aside :class="['sidebar', { 'sidebar-open': sidebarOpen, 'sidebar-minimized': sidebarMinimized }]">
+      <div class="sidebar-header">
+        <h2 
+          v-if="!sidebarMinimized" 
+          @click="selectedTask = null; selectedCategory = null"        
+          style="cursor:pointer; user-select:none;"
+          title="Go to Welcome Screen"
+        >
+          ☕ Java
+        </h2>
+        <div class="sidebar-controls">
+          <button class="minimize-btn" @click="toggleSidebarMinimized">
+            {{ sidebarMinimized ? '➡️' : '⬅️' }}
+          </button>
+          <button class="close-btn" @click="closeSidebar">✕</button>
+        </div>
       </div>
 
-      <!-- Coming Soon Content -->
-      <main class="coming-soon-content">
-        <div class="coming-soon-card">
-          <div class="coming-soon-icon">🚧</div>
-          <h1>Coming Soon</h1>
-          <p>We're working hard to bring you comprehensive Java Development courses. Stay tuned for exciting content on enterprise applications, Spring Framework, microservices, and more!</p>
-
-          <div class="features-preview">
-            <h3>What's Coming:</h3>
-            <ul>
-              <li>☕ Java Fundamentals & OOP</li>
-              <li>🌱 Spring Boot & Framework</li>
-              <li>🏗️ Enterprise Application Development</li>
-              <li>🔧 Microservices Architecture</li>
-              <li>🗄️ Database Integration</li>
-              <li>☁️ Cloud Deployment</li>
-            </ul>
+      <nav class="sidebar-nav" v-if="!sidebarMinimized">
+        <div v-for="(section, index) in sections" :key="index" class="nav-section">
+          <div
+            class="nav-section-header"
+            @click="toggleSection(index)"
+            :class="{ active: activeSectionIndex === index }"
+          >
+            <span class="section-icon">{{ section.icon }}</span>
+            <div class="section-info">
+              <span class="section-title">{{ section.title }}</span>
+              <span class="completion-percentage">{{ getSectionCompletion(section) }}%</span>
+            </div>
+            <span class="chevron" :class="{ rotated: openSections.includes(index) }">▾</span>
           </div>
 
-          <button class="back-btn" @click="goBack">
-            <span class="btn-icon">←</span>
-            Back to Dashboard
-          </button>
+          <transition name="slide">
+            <ul v-if="openSections.includes(index)" class="nav-items">
+              <!-- Interview Preparation: list categories -->
+              <template v-if="section.id === 'interview'">
+                <li
+                  v-for="(cat, cIndex) in section.categories"
+                  :key="cIndex"
+                  @click="selectCategory(cat, section.title)"
+                  :class="{ active: selectedCategory?.title === cat.title }"
+                >
+                  <span class="task-number">{{ cIndex + 1 }}</span>
+                  <span class="task-name">{{ cat.title }}</span>
+                  <span class="category-qa-count">{{ cat.questions.length }} Qs</span>
+                </li>
+              </template>
+
+              <!-- Other sections: list tasks -->
+              <template v-else>
+                <li
+                  v-for="(task, tIndex) in section.tasks"
+                  :key="tIndex"
+                  @click="selectTask(task, section.title)"
+                  :class="{ active: selectedTask?.title === task.title, completed: isTaskCompleted(task, section.id) }"
+                >
+                  <input
+                    type="checkbox"
+                    :checked="isTaskCompleted(task, section.id)"
+                    @click.stop="toggleTaskCompletion(task, section.id)"
+                    class="completion-checkbox"
+                  />
+                  <span class="task-number">{{ tIndex + 1 }}</span>
+                  <span class="task-name">{{ task.title }}</span>
+                  <span class="completion-icon" v-if="isTaskCompleted(task, section.id)">✅</span>
+                </li>
+              </template>
+            </ul>
+          </transition>
         </div>
-      </main>
-    </div>
-  </template>
+      </nav>
+    </aside>
 
-  <script setup>
-  const goBack = () => {
-    // Navigate back to dashboard (home)
-    window.location.href = '/'
+    <!-- Main Content -->
+    <main class="content">
+      <!-- Interview Preparation View -->
+      <div v-if="selectedCategory" class="task-view">
+        <div class="task-header">
+          <h1>{{ selectedCategory.icon }} {{ selectedCategory.title }}</h1>
+          <span class="breadcrumb">Interview Preparation → {{ selectedCategory.title }}</span>
+          <div class="qa-meta">
+            <span class="qa-count">{{ selectedCategory.questions.length }} Questions</span>
+            <div class="difficulty-legend">
+              <span class="badge easy">Easy</span>
+              <span class="badge medium">Medium</span>
+              <span class="badge hard">Hard</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="qa-list">
+          <div
+            v-for="(qa, i) in selectedCategory.questions"
+            :key="qa.id"
+            class="qa-card"
+            :class="{ completed: isQACompleted(qa, selectedCategory.title) }"
+          >
+            <div class="qa-header" @click="toggleQA(i)">
+              <div class="qa-left">
+                <input
+                  type="checkbox"
+                  :checked="isQACompleted(qa, selectedCategory.title)"
+                  @click.stop="toggleQACompletion(qa, selectedCategory.title)"
+                  class="completion-checkbox"
+                />
+                <span class="qa-number">{{ qa.id }}</span>
+                <p class="qa-question">{{ qa.question }}</p>
+              </div>
+              <div class="qa-right">
+                <span :class="['badge', qa.difficulty.toLowerCase()]">
+                  {{ qa.difficulty }}
+                </span>
+                <span class="chevron" :class="{ rotated: openQAs.includes(i) }">▾</span>
+              </div>
+            </div>
+
+            <transition name="slide">
+              <div v-if="openQAs.includes(i)" class="qa-answer">
+                <p>{{ qa.answer }}</p>
+              </div>
+            </transition>
+          </div>
+        </div>
+      </div>
+
+      <!-- Normal Task View -->
+      <div v-else-if="selectedTask" class="task-view">
+        <div class="task-header">
+          <h1>{{ selectedTask.title }}</h1>
+          <span class="breadcrumb">{{ currentSection }} → {{ selectedTask.title }}</span>
+        </div>
+
+        <div class="description-card">
+          <h2>📘 Overview</h2>
+          <pre class="description-text">{{ selectedTask.description }}</pre>
+        </div>
+
+        <div class="key-points-card" v-if="selectedTask.keyPoints">
+          <h2>🔑 Key Points</h2>
+          <ul>
+            <li v-for="(point, i) in selectedTask.keyPoints" :key="i">{{ point }}</li>
+          </ul>
+        </div>
+
+        <div class="exercises-section" v-if="selectedTask.exercises">
+          <h2>💻 Exercises</h2>
+          <div
+            v-for="(exercise, i) in selectedTask.exercises"
+            :key="i"
+            class="exercise-card"
+          >
+            <div class="exercise-header" @click="toggleExercise(i)">
+              <div class="exercise-title">
+                <span class="exercise-number">{{ i + 1 }}</span>
+                <h3>{{ exercise.title }}</h3>
+              </div>
+              <span class="chevron" :class="{ rotated: openExercises.includes(i) }">▾</span>
+            </div>
+
+            <transition name="slide">
+              <div v-if="openExercises.includes(i)" class="exercise-body">
+                <p class="scenario">{{ exercise.scenario }}</p>
+
+                <div v-if="exercise.steps" class="steps-section">
+                  <h4>📋 Steps</h4>
+                  <ol>
+                    <li v-for="(step, s) in exercise.steps" :key="s">{{ step }}</li>
+                  </ol>
+                </div>
+
+                <div v-if="exercise.code" class="code-section">
+                  <div class="code-header">
+                    <span>💻 Code</span>
+                    <button @click="copyCode(exercise.code, i)" class="copy-btn">
+                      {{ copiedIndex === i ? '✅ Copied!' : '📋 Copy' }}
+                    </button>
+                  </div>
+                  <pre class="code-block"><code>{{ exercise.code }}</code></pre>
+                </div>
+              </div>
+            </transition>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons" v-if="selectedTask && currentTasks.length > 1">
+          <button @click="goToPrevious" :disabled="!hasPrevious" class="nav-btn prev-btn">⬅️ Previous</button>
+          <button @click="goToNext" :disabled="!hasNext" class="nav-btn next-btn">Next ➡️</button>
+        </div>
+      </div>
+
+      <!-- Welcome Screen -->
+      <div v-else class="welcome-screen">
+        <div class="welcome-icon">☕</div>
+        <h1>Welcome to Java Development</h1>
+        <p>Master Java from Fundamentals to Enterprise Applications</p>
+
+        <div class="welcome-cards">
+          <div
+            v-for="(section, i) in sections"
+            :key="i"
+            class="welcome-card"
+            @click="openSection(i)"
+          >
+            <span class="card-icon">{{ section.icon }}</span>
+            <h3>{{ section.title }}</h3>
+            <p>
+              {{
+                section.id === 'interview'
+                  ? section.categories.length + ' categories'
+                  : section.tasks.length + ' topics'
+              }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue';
+import javaTasksRaw from '../data/javaTasks.json';
+import javaInterviewQARaw from '../data/javaInterviewQA.json';
+
+// Normalise helpers
+function toTaskArray(raw) {
+  return Object.values(raw);
+}
+
+// Interview categories
+const interviewCategories = Object.values(javaInterviewQARaw);
+
+// State
+const sidebarOpen = ref(false);
+const sidebarMinimized = ref(false);
+const openSections = ref([]);
+const openExercises = ref([]);
+const openQAs = ref([]);
+const selectedTask = ref(null);
+const selectedCategory = ref(null);
+const currentSection = ref('');
+const copiedIndex = ref(null);
+const activeSectionIndex = ref(null);
+
+// Completion tracking
+const completedTasks = ref(new Set());
+const completedQAs = ref(new Set());
+
+// All tasks
+const allTasks = toTaskArray(javaTasksRaw);
+
+// Sections
+const sections = computed(() => [
+  {
+    id: 'java-basics',
+    title: 'Java Basics',
+    icon: '📚',
+    tasks: allTasks.slice(0, 3),
+    categories: [],
+  },
+  {
+    id: 'oop',
+    title: 'OOP Concepts',
+    icon: '🎯',
+    tasks: allTasks.slice(3, 5),
+    categories: [],
+  },
+  {
+    id: 'collections',
+    title: 'Collections & Exceptions',
+    icon: '📦',
+    tasks: allTasks.slice(5, 7),
+    categories: [],
+  },
+  {
+    id: 'advanced',
+    title: 'Advanced Java',
+    icon: '⚡',
+    tasks: allTasks.slice(7, 9),
+    categories: [],
+  },
+  {
+    id: 'spring',
+    title: 'Spring Boot',
+    icon: '🌱',
+    tasks: allTasks.slice(9, 10),
+    categories: [],
+  },
+  {
+    id: 'interview',
+    title: 'Interview Preparation',
+    icon: '📝',
+    tasks: [],
+    categories: interviewCategories,
+  },
+]);
+
+// Navigation helpers
+const currentTasks = computed(() => {
+  const section = sections.value.find(s => s.title === currentSection.value);
+  return section ? section.tasks : [];
+});
+
+const currentTaskIndex = computed(() => {
+  if (!selectedTask.value || !currentTasks.value.length) return -1;
+  return currentTasks.value.findIndex(t => t.title === selectedTask.value.title);
+});
+
+const hasPrevious = computed(() => currentTaskIndex.value > 0);
+const hasNext = computed(() => currentTaskIndex.value < currentTasks.value.length - 1);
+
+const previousTask = computed(() => hasPrevious.value ? currentTasks.value[currentTaskIndex.value - 1] : null);
+const nextTask = computed(() => hasNext.value ? currentTasks.value[currentTaskIndex.value + 1] : null);
+
+// Completion helpers
+const getSectionCompletion = (section) => {
+  if (section.id === 'interview') {
+    const totalQAs = section.categories.reduce((sum, cat) => sum + cat.questions.length, 0);
+    const completedQAsInSection = section.categories.reduce((sum, cat) => {
+      return sum + cat.questions.filter((qa) => completedQAs.value.has(`${cat.title}-${qa.id}`)).length;
+    }, 0);
+    return totalQAs > 0 ? Math.round((completedQAsInSection / totalQAs) * 100) : 0;
+  } else {
+    const totalTasks = section.tasks.length;
+    const completedTasksInSection = section.tasks.filter((task) => completedTasks.value.has(`${section.id}-${task.title}`)).length;
+    return totalTasks > 0 ? Math.round((completedTasksInSection / totalTasks) * 100) : 0;
   }
-  </script>
+};
 
-  <style scoped>
-  .coming-soon-container {
-    display: flex;
-    height: 100vh;
-    width: 100%;
-    overflow: hidden;
-    font-family: 'Segoe UI', sans-serif;
-    position: relative;
-    background: #f0f2f5;
+const isTaskCompleted = (task, sectionId) => {
+  return completedTasks.value.has(`${sectionId}-${task.title}`);
+};
+
+const isQACompleted = (qa, categoryTitle) => {
+  return completedQAs.value.has(`${categoryTitle}-${qa.id}`);
+};
+
+const toggleTaskCompletion = (task, sectionId) => {
+  const key = `${sectionId}-${task.title}`;
+  if (completedTasks.value.has(key)) {
+    completedTasks.value.delete(key);
+  } else {
+    completedTasks.value.add(key);
   }
+};
 
-  /* Mobile Header */
-  .mobile-header {
-    display: none;
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    height: 56px;
-    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-    color: #1565c0;
-    align-items: center;
-    padding: 0 16px;
-    gap: 12px;
-    z-index: 200;
-    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.1);
-    border-bottom: 1px solid #90caf9;
+const toggleQACompletion = (qa, categoryTitle) => {
+  const key = `${categoryTitle}-${qa.id}`;
+  if (completedQAs.value.has(key)) {
+    completedQAs.value.delete(key);
+  } else {
+    completedQAs.value.add(key);
   }
+};
 
-  .back-arrow {
-    font-size: 1.2rem;
-    cursor: pointer;
-    padding: 4px;
-    color: #1976d2;
+// Helpers
+function toggleSidebar() { sidebarOpen.value = !sidebarOpen.value; }
+function toggleSidebarMinimized() { sidebarMinimized.value = !sidebarMinimized.value; }
+function closeSidebar() { sidebarOpen.value = false; }
+
+function toggleSection(index) {
+  activeSectionIndex.value = index;
+  if (openSections.value.includes(index)) {
+    openSections.value = openSections.value.filter(i => i !== index);
+  } else {
+    openSections.value = [index];
   }
+}
 
-  .mobile-title {
-    font-size: 1rem;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    flex: 1;
+function openSection(index) {
+  activeSectionIndex.value = index;
+  if (!openSections.value.includes(index)) openSections.value.push(index);
+}
+
+function selectTask(task, section) {
+  selectedTask.value = task;
+  selectedCategory.value = null;
+  currentSection.value = section;
+  openExercises.value = [];
+  closeSidebar();
+}
+
+function selectCategory(cat, section) {
+  selectedCategory.value = cat;
+  selectedTask.value = null;
+  currentSection.value = section;
+  openQAs.value = [];
+  closeSidebar();
+}
+
+function goToPrevious() {
+  if (hasPrevious.value) {
+    selectTask(previousTask.value, currentSection.value);
   }
+}
 
-  /* Coming Soon Content */
-  .coming-soon-content {
-    flex: 1;
-    height: 100vh;
-    overflow-y: auto;
-    background: #f0f2f5;
-    padding: 80px 40px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+function goToNext() {
+  if (hasNext.value) {
+    selectTask(nextTask.value, currentSection.value);
   }
+}
 
-  .coming-soon-card {
-    background: white;
-    border-radius: 20px;
-    padding: 60px 40px;
-    box-shadow: 0 20px 60px rgba(25, 118, 210, 0.1);
-    border: 1px solid rgba(25, 118, 210, 0.1);
-    text-align: center;
-    max-width: 600px;
-    width: 100%;
-  }
+function toggleExercise(index) {
+  const idx = openExercises.value.indexOf(index);
+  if (idx === -1) openExercises.value.push(index);
+  else openExercises.value.splice(idx, 1);
+}
 
-  .coming-soon-icon {
-    font-size: 4rem;
-    margin-bottom: 20px;
-    display: block;
-  }
+function toggleQA(index) {
+  const idx = openQAs.value.indexOf(index);
+  if (idx === -1) openQAs.value.push(index);
+  else openQAs.value.splice(idx, 1);
+}
 
-  .coming-soon-card h1 {
-    font-size: 2.5rem;
-    color: #1565c0;
-    margin-bottom: 20px;
-    font-weight: 700;
-  }
+async function copyCode(code, index) {
+  await navigator.clipboard.writeText(code);
+  copiedIndex.value = index;
+  setTimeout(() => (copiedIndex.value = null), 2000);
+}
+</script>
 
-  .coming-soon-card > p {
-    font-size: 1.1rem;
-    color: #666;
-    line-height: 1.6;
-    margin-bottom: 40px;
-  }
-
-  .features-preview {
-    background: #e3f2fd;
-    border-radius: 12px;
-    padding: 30px;
-    margin-bottom: 40px;
-    text-align: left;
-  }
-
-  .features-preview h3 {
-    font-size: 1.3rem;
-    color: #1565c0;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-
-  .features-preview ul {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 12px;
-  }
-
-  .features-preview li {
-    font-size: 0.95rem;
-    color: #424242;
-    padding: 8px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .back-btn {
-    background: linear-gradient(135deg, #1976d2, #42a5f5);
-    color: white;
-    border: none;
-    padding: 14px 28px;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .back-btn:hover {
-    background: linear-gradient(135deg, #1565c0, #1976d2);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(25, 118, 210, 0.3);
-  }
-
-  .btn-icon {
-    font-size: 1.1rem;
-  }
-
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .mobile-header {
-      display: flex;
-    }
-
-    .coming-soon-content {
-      padding: 72px 20px 40px;
-    }
-
-    .coming-soon-card {
-      padding: 40px 20px;
-    }
-
-    .coming-soon-card h1 {
-      font-size: 2rem;
-    }
-
-    .features-preview {
-      padding: 20px;
-    }
-
-    .features-preview ul {
-      grid-template-columns: 1fr;
-    }
-  }
-  </style>
+<style scoped src="./SDET.css"></style>
