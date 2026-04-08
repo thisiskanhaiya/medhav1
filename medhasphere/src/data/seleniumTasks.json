@@ -1,0 +1,648 @@
+{
+    "Task 1: Introduction to Selenium": {
+      "title": "Introduction to Selenium",
+      "description": "Selenium is the most widely used open-source test automation framework for web applications. It allows testers and developers to automate browser interactions, simulating real user behavior across different browsers and operating systems.\n\nSelenium Suite consists of four main components:\n\n1. Selenium IDE\n   - Browser extension for Chrome and Firefox\n   - Record and playback functionality\n   - Good for beginners and quick test creation\n   - Exports tests in multiple languages\n\n2. Selenium WebDriver\n   - Core component for browser automation\n   - Direct communication with browser using native support\n   - Supports Java, Python, C#, JavaScript, Ruby\n   - No server needed (unlike Selenium RC)\n\n3. Selenium Grid\n   - Enables parallel test execution\n   - Run tests on multiple machines and browsers simultaneously\n   - Hub and Node architecture\n   - Reduces overall test execution time\n\n4. Selenium RC (Deprecated)\n   - Old version, replaced by WebDriver\n   - Required a server to run tests\n\nWhy Selenium?\n   - Free and open-source\n   - Supports all major browsers\n   - Large community support\n   - Integrates with TestNG, JUnit, Maven, Jenkins, Docker",
+      "keyPoints": [
+        "Selenium WebDriver directly controls browsers without needing a server",
+        "Supports Chrome, Firefox, Safari, Edge, Opera browsers",
+        "Works with Java, Python, C#, JavaScript, Ruby, Kotlin",
+        "Selenium 4 is W3C standardized - more stable cross-browser behavior",
+        "Cannot automate desktop applications or CAPTCHA",
+        "Best used with TestNG or JUnit for test management"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Explore Selenium IDE",
+          "scenario": "Install Selenium IDE as a Chrome extension, record a simple Google search and play it back to understand how Selenium works before writing code.",
+          "steps": [
+            "Go to Chrome Web Store and search 'Selenium IDE'",
+            "Install the extension and open it",
+            "Click 'Record a new test in a new project'",
+            "Name your project 'My First Test'",
+            "Navigate to https://www.google.com",
+            "Type 'Selenium WebDriver' in search box and press Enter",
+            "Stop recording and click Play button",
+            "Observe the recorded steps in IDE"
+          ],
+          "code": "// Selenium IDE exports this as Java code:\ndriver.get(\"https://www.google.com\");\ndriver.findElement(By.name(\"q\")).sendKeys(\"Selenium WebDriver\");\ndriver.findElement(By.name(\"q\")).sendKeys(Keys.ENTER);"
+        },
+        {
+          "id": 2,
+          "title": "Understand Selenium Architecture",
+          "scenario": "Research and document the flow of how a Selenium test communicates with a browser. Draw the architecture: Test Code → WebDriver API → Browser Driver → Browser.",
+          "steps": [
+            "Test code calls Selenium WebDriver API methods",
+            "WebDriver converts calls to W3C WebDriver Protocol (JSON over HTTP)",
+            "Browser-specific driver (ChromeDriver) receives the commands",
+            "ChromeDriver communicates with Chrome browser natively",
+            "Browser executes the action and returns response",
+            "Response travels back through the same chain"
+          ],
+          "code": "// This single line triggers the entire communication chain:\ndriver.findElement(By.id(\"username\")).sendKeys(\"admin\");\n\n// Flow:\n// 1. Java code calls sendKeys()\n// 2. WebDriver sends HTTP POST to ChromeDriver\n// 3. ChromeDriver finds element in Chrome\n// 4. Chrome types the text\n// 5. Success response returned"
+        }
+      ]
+    },
+  
+    "Task 2: Environment Setup": {
+      "title": "Setting Up Selenium Environment",
+      "description": "Proper environment setup is the foundation of any Selenium project. A well-configured project ensures smooth test execution and easy maintenance.\n\nRequired Tools:\n\n1. Java JDK (Java Development Kit)\n   - Version 11 or higher recommended\n   - Set JAVA_HOME environment variable\n   - Verify: java -version in terminal\n\n2. IDE (Integrated Development Environment)\n   - IntelliJ IDEA (recommended) or Eclipse\n   - Provides code completion, debugging\n\n3. Maven (Build Tool)\n   - Manages project dependencies via pom.xml\n   - Downloads Selenium JAR files automatically\n   - Verify: mvn -version in terminal\n\n4. Browser + Browser Driver\n   - Chrome + ChromeDriver (must match versions)\n   - Selenium 4.6+ includes Selenium Manager (auto driver management)\n   - Alternative: WebDriverManager library\n\n5. TestNG (Testing Framework)\n   - Adds test annotations, grouping, reporting\n   - Install TestNG plugin in IntelliJ\n\nMaven Dependencies needed in pom.xml:\n   - selenium-java\n   - testng\n   - webdrivermanager (optional but recommended)",
+      "keyPoints": [
+        "Java and Maven must be installed and added to PATH",
+        "ChromeDriver version must match installed Chrome browser version",
+        "Selenium 4.6+ includes Selenium Manager for automatic driver management",
+        "WebDriverManager library auto-downloads correct driver version",
+        "Always use latest stable Selenium version",
+        "Set up .gitignore to exclude target/ and .idea/ folders"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Create Maven Selenium Project",
+          "scenario": "Create a new Maven project in IntelliJ IDEA with all necessary Selenium and TestNG dependencies configured in pom.xml.",
+          "steps": [
+            "Open IntelliJ → New Project → Maven Archetype",
+            "GroupId: com.automation, ArtifactId: selenium-project",
+            "Open pom.xml and add selenium-java dependency",
+            "Add testng dependency",
+            "Add webdrivermanager dependency",
+            "Click 'Load Maven Changes' (elephant icon)",
+            "Create folder structure: src/test/java/tests"
+          ],
+          "code": "<dependencies>\n  <!-- Selenium WebDriver -->\n  <dependency>\n    <groupId>org.seleniumhq.selenium</groupId>\n    <artifactId>selenium-java</artifactId>\n    <version>4.15.0</version>\n  </dependency>\n\n  <!-- TestNG -->\n  <dependency>\n    <groupId>org.testng</groupId>\n    <artifactId>testng</artifactId>\n    <version>7.8.0</version>\n    <scope>test</scope>\n  </dependency>\n\n  <!-- WebDriverManager -->\n  <dependency>\n    <groupId>io.github.bonigarcia</groupId>\n    <artifactId>webdrivermanager</artifactId>\n    <version>5.6.3</version>\n  </dependency>\n</dependencies>"
+        },
+        {
+          "id": 2,
+          "title": "Write First Selenium Test",
+          "scenario": "Write your first Selenium test that opens a browser, navigates to google.com, verifies the title, and closes the browser.",
+          "steps": [
+            "Create class FirstTest.java in tests package",
+            "Setup WebDriverManager for Chrome",
+            "Create ChromeDriver instance",
+            "Navigate to https://www.google.com",
+            "Print and assert the page title",
+            "Close the browser using quit()"
+          ],
+          "code": "import io.github.bonigarcia.wdm.WebDriverManager;\nimport org.openqa.selenium.WebDriver;\nimport org.openqa.selenium.chrome.ChromeDriver;\nimport org.testng.Assert;\nimport org.testng.annotations.*;\n\npublic class FirstTest {\n    WebDriver driver;\n\n    @BeforeMethod\n    public void setup() {\n        WebDriverManager.chromedriver().setup();\n        driver = new ChromeDriver();\n        driver.manage().window().maximize();\n    }\n\n    @Test\n    public void verifyGoogleTitle() {\n        driver.get(\"https://www.google.com\");\n        String title = driver.getTitle();\n        System.out.println(\"Page Title: \" + title);\n        Assert.assertEquals(title, \"Google\");\n    }\n\n    @AfterMethod\n    public void teardown() {\n        driver.quit();\n    }\n}"
+        }
+      ]
+    },
+  
+    "Task 3: Locators & Strategies": {
+      "title": "Locators & Locator Strategies",
+      "description": "Locators are the backbone of Selenium automation. They identify web elements on a page so Selenium can interact with them. Choosing the right locator is critical for test stability and performance.\n\nTypes of Locators (Best to Least Preferred):\n\n1. ID Locator\n   - Fastest and most reliable\n   - Should be unique on a page\n   - Example: By.id(\"username\")\n\n2. Name Locator\n   - Uses the 'name' HTML attribute\n   - Common for form elements\n   - Example: By.name(\"email\")\n\n3. CSS Selector\n   - Very fast, flexible, widely used\n   - Supports partial matching\n   - Example: By.cssSelector(\"input.login-btn\")\n\n4. XPath\n   - Most powerful, can traverse the entire DOM\n   - Can select by text, attributes, parent/child\n   - Absolute XPath: /html/body/div/input (AVOID)\n   - Relative XPath: //input[@id='user'] (USE THIS)\n\n5. ClassName\n   - Uses CSS class name\n   - Avoid if multiple classes applied\n\n6. TagName\n   - Selects by HTML tag (div, input, button)\n   - Useful for getting all elements of a type\n\n7. LinkText / PartialLinkText\n   - Only for anchor <a> tags\n   - LinkText: exact match, PartialLinkText: partial\n\nXPath Special Functions:\n   - contains(): //input[contains(@id,'user')]\n   - starts-with(): //div[starts-with(@class,'nav')]\n   - text(): //button[text()='Submit']\n   - normalize-space(): handles whitespace",
+      "keyPoints": [
+        "Prefer ID > Name > CSS Selector > XPath for performance",
+        "Never use absolute XPath - it breaks with any UI change",
+        "Use contains() in XPath for dynamic/partial attribute values",
+        "CSS Selector cannot traverse up DOM (no parent selection)",
+        "XPath axes: parent, child, following-sibling, preceding-sibling",
+        "Use browser DevTools (F12) to test locators before coding",
+        "Right-click element → Inspect → Ctrl+F to test XPath/CSS in DevTools"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Practice All Locator Types",
+          "scenario": "On https://www.selenium.dev/selenium/web/inputs.html, find various elements using all 8 types of locators and interact with them.",
+          "steps": [
+            "Open the Selenium inputs test page",
+            "Find email field using By.id()",
+            "Find checkbox using By.name()",
+            "Find submit button using By.cssSelector()",
+            "Find password field using By.xpath()",
+            "Find all input elements using By.tagName()",
+            "Print count of all input elements found"
+          ],
+          "code": "driver.get(\"https://www.selenium.dev/selenium/web/inputs.html\");\n\n// By ID\nWebElement emailField = driver.findElement(By.id(\"email\"));\nemailField.sendKeys(\"test@email.com\");\n\n// By Name\nWebElement checkbox = driver.findElement(By.name(\"checkbox\"));\n\n// By CSS Selector\nWebElement submitBtn = driver.findElement(By.cssSelector(\"input[type='submit']\"));\n\n// By XPath\nWebElement passwordField = driver.findElement(By.xpath(\"//input[@type='password']\"));\n\n// By TagName - find all inputs\nList<WebElement> allInputs = driver.findElements(By.tagName(\"input\"));\nSystem.out.println(\"Total inputs found: \" + allInputs.size());"
+        },
+        {
+          "id": 2,
+          "title": "Dynamic XPath with contains() and text()",
+          "scenario": "Practice writing XPath for dynamic elements where IDs change. Use contains(), starts-with(), and text() functions.",
+          "steps": [
+            "Use contains() to find element with partial ID",
+            "Use starts-with() to find element whose attribute starts with a value",
+            "Use text() to find button by its visible text",
+            "Use following-sibling to find next element",
+            "Use parent:: to navigate to parent element"
+          ],
+          "code": "// contains() - when ID is dynamic like 'user_123_field'\nWebElement el1 = driver.findElement(By.xpath(\"//*[contains(@id,'user')]\"));\n\n// starts-with() - attribute starts with 'nav'\nWebElement el2 = driver.findElement(By.xpath(\"//div[starts-with(@class,'nav')]\"));\n\n// text() - find by visible text\nWebElement loginBtn = driver.findElement(By.xpath(\"//button[text()='Login']\"));\n\n// normalize-space() - handles extra whitespace\nWebElement el3 = driver.findElement(By.xpath(\"//span[normalize-space()='Submit']\"));\n\n// Sibling - find next sibling of an element\nWebElement sibling = driver.findElement(By.xpath(\"//label[@for='email']/following-sibling::input\"));\n\n// Parent traversal\nWebElement parent = driver.findElement(By.xpath(\"//input[@id='email']/parent::div\"));"
+        },
+        {
+          "id": 3,
+          "title": "CSS Selector Advanced Techniques",
+          "scenario": "Master CSS selectors including attribute selectors, pseudo-classes, and combinators for robust element identification.",
+          "steps": [
+            "Use attribute selector to find input by type",
+            "Use class and ID combination selector",
+            "Use child combinator (>) to find direct children",
+            "Use nth-child to find specific table row",
+            "Use attribute contains (*=) for partial match"
+          ],
+          "code": "// Attribute selector\nWebElement emailInput = driver.findElement(By.cssSelector(\"input[type='email']\"));\n\n// Class selector\nWebElement btn = driver.findElement(By.cssSelector(\".btn-primary\"));\n\n// ID + class combination\nWebElement el = driver.findElement(By.cssSelector(\"#loginForm .submit-btn\"));\n\n// Direct child\nWebElement directChild = driver.findElement(By.cssSelector(\"div.container > input\"));\n\n// nth-child - 2nd row of table\nWebElement secondRow = driver.findElement(By.cssSelector(\"table tr:nth-child(2)\"));\n\n// Attribute contains\nWebElement partial = driver.findElement(By.cssSelector(\"[class*='nav-item']\"));\n\n// Attribute starts with\nWebElement startsWith = driver.findElement(By.cssSelector(\"[id^='user']\"));\n\n// Attribute ends with\nWebElement endsWith = driver.findElement(By.cssSelector(\"[id$='_field']\"));"
+        }
+      ]
+    },
+  
+    "Task 4: Browser Interactions": {
+      "title": "Browser Interactions & Navigation",
+      "description": "Selenium WebDriver provides extensive methods to interact with the browser itself, not just elements. Understanding browser-level operations is essential for comprehensive automation.\n\nNavigation Commands:\n   - driver.get(url) - Navigate to URL, waits for page load\n   - driver.navigate().to(url) - Same as get()\n   - driver.navigate().back() - Browser back button\n   - driver.navigate().forward() - Browser forward button\n   - driver.navigate().refresh() - Refresh page\n\nBrowser Information:\n   - driver.getTitle() - Get page title\n   - driver.getCurrentUrl() - Get current URL\n   - driver.getPageSource() - Get full HTML source\n   - driver.getWindowHandle() - Current window ID\n   - driver.getWindowHandles() - All open window IDs\n\nBrowser Window Management:\n   - driver.manage().window().maximize()\n   - driver.manage().window().minimize()\n   - driver.manage().window().fullscreen()\n   - driver.manage().window().setSize(new Dimension(1280,720))\n\nCookies Management:\n   - driver.manage().getCookies() - Get all cookies\n   - driver.manage().addCookie(cookie) - Add cookie\n   - driver.manage().deleteCookieNamed(name)\n   - driver.manage().deleteAllCookies()",
+      "keyPoints": [
+        "driver.get() waits for page load complete, navigate().to() does not guarantee this",
+        "Always maximize browser window to avoid element visibility issues",
+        "driver.close() closes current window, driver.quit() closes all and ends session",
+        "Page source can be used to verify content without finding elements",
+        "Cookies can be used to maintain login sessions between tests"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Browser Navigation Operations",
+          "scenario": "Practice navigating between multiple pages using browser navigation methods and verify URLs at each step.",
+          "steps": [
+            "Navigate to https://www.example.com",
+            "Print the page title and URL",
+            "Navigate to https://www.google.com",
+            "Use navigate().back() to go to example.com",
+            "Use navigate().forward() to go back to google",
+            "Refresh the current page",
+            "Verify URL after each navigation"
+          ],
+          "code": "driver.get(\"https://www.example.com\");\nSystem.out.println(\"Title: \" + driver.getTitle());\nSystem.out.println(\"URL: \" + driver.getCurrentUrl());\n\ndriver.navigate().to(\"https://www.google.com\");\nAssert.assertTrue(driver.getCurrentUrl().contains(\"google\"));\n\ndriver.navigate().back();\nAssert.assertTrue(driver.getCurrentUrl().contains(\"example\"));\n\ndriver.navigate().forward();\nAssert.assertTrue(driver.getCurrentUrl().contains(\"google\"));\n\ndriver.navigate().refresh();\nSystem.out.println(\"After refresh: \" + driver.getTitle());"
+        },
+        {
+          "id": 2,
+          "title": "Window and Cookie Management",
+          "scenario": "Learn to manage browser windows size and handle cookies for session management in tests.",
+          "steps": [
+            "Maximize browser window",
+            "Set specific window size to 1280x720",
+            "Navigate to a site and capture cookies",
+            "Print all cookie names and values",
+            "Delete a specific cookie",
+            "Verify cookie deletion"
+          ],
+          "code": "// Window management\ndriver.manage().window().maximize();\ndriver.manage().window().setSize(new Dimension(1280, 720));\nDimension size = driver.manage().window().getSize();\nSystem.out.println(\"Width: \" + size.width + \" Height: \" + size.height);\n\ndriver.get(\"https://www.google.com\");\n\n// Get all cookies\nSet<Cookie> cookies = driver.manage().getCookies();\nfor (Cookie cookie : cookies) {\n    System.out.println(cookie.getName() + \" = \" + cookie.getValue());\n}\n\n// Add custom cookie\nCookie myCookie = new Cookie(\"testCookie\", \"testValue\");\ndriver.manage().addCookie(myCookie);\n\n// Delete specific cookie\ndriver.manage().deleteCookieNamed(\"testCookie\");\nSystem.out.println(\"Cookie deleted\");\n\n// Delete all cookies\ndriver.manage().deleteAllCookies();"
+        }
+      ]
+    },
+  
+    "Task 5: WebElement Interactions": {
+      "title": "WebElement Interactions",
+      "description": "WebElement is the core interface representing an HTML element. Every interaction with a web page element goes through WebElement methods.\n\nCommon WebElement Methods:\n\nInput Operations:\n   - sendKeys(text) - Type text into field\n   - clear() - Clear existing text\n   - sendKeys(Keys.ENTER) - Press keyboard keys\n   - sendKeys(Keys.TAB) - Tab to next field\n\nClick Operations:\n   - click() - Click on element\n   - submit() - Submit a form\n\nElement Information:\n   - getText() - Get visible text\n   - getAttribute(name) - Get attribute value\n   - getCssValue(property) - Get CSS property value\n   - getTagName() - Get HTML tag name\n   - getRect() - Get size and location\n\nElement State:\n   - isDisplayed() - Is element visible?\n   - isEnabled() - Is element enabled/clickable?\n   - isSelected() - Is checkbox/radio selected?\n\nSpecial Inputs:\n   - Checkboxes: click() to toggle, isSelected() to verify\n   - Radio buttons: click() to select\n   - File upload: sendKeys('/path/to/file')\n   - Date picker: sendKeys('2024-01-15') or use JS",
+      "keyPoints": [
+        "Always clear() field before sendKeys() to avoid appending to existing text",
+        "isDisplayed() returns false for hidden elements even if in DOM",
+        "getAttribute('value') gets current input field value",
+        "getAttribute('innerHTML') gets inner HTML content",
+        "Use Keys class for special keyboard actions (ENTER, TAB, BACKSPACE)",
+        "getText() returns empty string for hidden elements"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Form Interactions",
+          "scenario": "Fill out a complete registration form with text inputs, checkboxes, and radio buttons on https://demoqa.com/automation-practice-form",
+          "steps": [
+            "Navigate to the practice form",
+            "Enter first name and last name",
+            "Enter email address",
+            "Select gender radio button",
+            "Enter mobile number",
+            "Check a hobby checkbox",
+            "Verify all entered values using getAttribute('value')"
+          ],
+          "code": "driver.get(\"https://demoqa.com/automation-practice-form\");\n\n// Text inputs\nWebElement firstName = driver.findElement(By.id(\"firstName\"));\nfirstName.clear();\nfirstName.sendKeys(\"John\");\n\ndriver.findElement(By.id(\"lastName\")).sendKeys(\"Doe\");\ndriver.findElement(By.id(\"userEmail\")).sendKeys(\"john@email.com\");\ndriver.findElement(By.id(\"userNumber\")).sendKeys(\"9876543210\");\n\n// Radio button\ndriver.findElement(By.xpath(\"//label[text()='Male']\")).click();\n\n// Checkbox\nWebElement sportsCheckbox = driver.findElement(By.xpath(\"//label[text()='Sports']\"));\nif (!sportsCheckbox.isSelected()) {\n    sportsCheckbox.click();\n}\n\n// Verify values\nString enteredName = firstName.getAttribute(\"value\");\nSystem.out.println(\"Entered: \" + enteredName);\nAssert.assertEquals(enteredName, \"John\");"
+        },
+        {
+          "id": 2,
+          "title": "Element State Verification",
+          "scenario": "Practice verifying element states - visible, enabled, selected - before and after interactions.",
+          "steps": [
+            "Check if element is displayed before interacting",
+            "Check if button is enabled before clicking",
+            "Verify checkbox is not selected initially",
+            "Click checkbox and verify it is selected",
+            "Disable a field using JavaScript and verify isEnabled()",
+            "Print element tag name, text, and CSS color"
+          ],
+          "code": "driver.get(\"https://demoqa.com/automation-practice-form\");\n\nWebElement emailField = driver.findElement(By.id(\"userEmail\"));\n\n// State checks\nSystem.out.println(\"Is Displayed: \" + emailField.isDisplayed());\nSystem.out.println(\"Is Enabled: \" + emailField.isEnabled());\nSystem.out.println(\"Tag Name: \" + emailField.getTagName());\n\n// Checkbox state\nWebElement checkbox = driver.findElement(By.id(\"hobbies-checkbox-1\"));\nSystem.out.println(\"Initially selected: \" + checkbox.isSelected());\ncheckbox.click();\nSystem.out.println(\"After click selected: \" + checkbox.isSelected());\nAssert.assertTrue(checkbox.isSelected());\n\n// CSS Value\nWebElement heading = driver.findElement(By.tagName(\"h1\"));\nSystem.out.println(\"Font size: \" + heading.getCssValue(\"font-size\"));\nSystem.out.println(\"Color: \" + heading.getCssValue(\"color\"));"
+        }
+      ]
+    },
+  
+    "Task 6: Waits in Selenium": {
+      "title": "Waits - Implicit, Explicit & Fluent",
+      "description": "Waits are one of the most critical concepts in Selenium. Modern web applications are dynamic - elements load asynchronously with AJAX, animations, and API calls. Without proper waits, tests fail intermittently with NoSuchElementException or ElementNotInteractableException.\n\nTypes of Waits:\n\n1. Implicit Wait\n   - Global timeout applied to ALL findElement calls\n   - Set once, applies throughout driver session\n   - Polls the DOM at regular intervals until timeout\n   - driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10))\n   - Drawback: always waits maximum time even if element found early\n\n2. Explicit Wait\n   - Waits for SPECIFIC condition on SPECIFIC element\n   - Uses WebDriverWait + ExpectedConditions\n   - Much more flexible and reliable\n   - Stops waiting as soon as condition is met\n   - ExpectedConditions: visibilityOf, elementToBeClickable, presenceOfElement, etc.\n\n3. Fluent Wait\n   - Advanced explicit wait\n   - Define polling interval (check every X milliseconds)\n   - Ignore specific exceptions during wait\n   - Useful for elements that appear and disappear\n\n4. Thread.sleep() - AVOID IN PRODUCTION\n   - Hard-coded pause regardless of element state\n   - Makes tests slow and unreliable\n   - Only use for debugging\n\nBest Practices:\n   - NEVER mix implicit and explicit waits\n   - Use explicit wait for dynamic elements\n   - Set a global implicit wait as baseline\n   - Prefer elementToBeClickable over visibilityOfElement for buttons",
+      "keyPoints": [
+        "NEVER use Thread.sleep() in real tests - it wastes time unconditionally",
+        "Mixing implicit and explicit waits causes unpredictable behavior",
+        "elementToBeClickable waits for both visible AND enabled",
+        "visibilityOfElementLocated waits for element to be visible in viewport",
+        "presenceOfElementLocated only checks if element is in DOM (may not be visible)",
+        "Fluent wait is best for elements with loading spinners or animations",
+        "Default polling interval for WebDriverWait is 500 milliseconds"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Implement Explicit Wait",
+          "scenario": "On https://demoqa.com/dynamic-properties, elements appear after a delay. Use explicit wait to handle these dynamic elements.",
+          "steps": [
+            "Navigate to dynamic properties page",
+            "Create WebDriverWait with 10 second timeout",
+            "Wait for button that appears after 5 seconds",
+            "Wait for button that becomes enabled after delay",
+            "Wait for element color to change",
+            "Click each element after condition is satisfied"
+          ],
+          "code": "driver.get(\"https://demoqa.com/dynamic-properties\");\nWebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));\n\n// Wait for element to be visible\nWebElement visibleAfterDelay = wait.until(\n    ExpectedConditions.visibilityOfElementLocated(By.id(\"visibleAfter\"))\n);\nSystem.out.println(\"Element visible: \" + visibleAfterDelay.getText());\n\n// Wait for element to be clickable (visible + enabled)\nWebElement enableAfterDelay = wait.until(\n    ExpectedConditions.elementToBeClickable(By.id(\"enableAfter\"))\n);\nenableAfterDelay.click();\n\n// Wait for URL to contain specific text\nwait.until(ExpectedConditions.urlContains(\"dynamic-properties\"));\n\n// Wait for title\nwait.until(ExpectedConditions.titleContains(\"DEMOQA\"));\n\n// Wait for element text to change\nwait.until(ExpectedConditions.textToBePresentInElementLocated(\n    By.id(\"colorChange\"), \"Color Change\"\n));"
+        },
+        {
+          "id": 2,
+          "title": "Fluent Wait Implementation",
+          "scenario": "Use Fluent Wait to handle a loading spinner that appears before content loads, with custom polling interval.",
+          "steps": [
+            "Create FluentWait with 15 second timeout",
+            "Set polling interval to every 2 seconds",
+            "Ignore NoSuchElementException during polling",
+            "Wait for loading spinner to disappear",
+            "Wait for actual content to appear",
+            "Compare performance with Thread.sleep()"
+          ],
+          "code": "// Fluent Wait setup\nWait<WebDriver> fluentWait = new FluentWait<>(driver)\n    .withTimeout(Duration.ofSeconds(15))\n    .pollingEvery(Duration.ofSeconds(2))\n    .ignoring(NoSuchElementException.class)\n    .ignoring(StaleElementReferenceException.class);\n\n// Wait for spinner to disappear\nfluentWait.until(driver -> {\n    List<WebElement> spinners = driver.findElements(By.className(\"loading-spinner\"));\n    return spinners.isEmpty() || !spinners.get(0).isDisplayed();\n});\n\n// Wait for content using custom condition\nWebElement content = fluentWait.until(driver -> {\n    WebElement el = driver.findElement(By.id(\"content\"));\n    return el.isDisplayed() ? el : null;\n});\n\nSystem.out.println(\"Content loaded: \" + content.getText());"
+        }
+      ]
+    },
+  
+    "Task 7: Dropdowns & Select": {
+      "title": "Handling Dropdowns",
+      "description": "Dropdowns are common UI elements in web forms. Selenium handles them differently based on their HTML implementation.\n\nTypes of Dropdowns:\n\n1. HTML Select Element (<select> tag)\n   - Native browser dropdown\n   - Handled by Selenium's Select class\n   - Most reliable to automate\n\n2. Custom Dropdowns\n   - Built with div, ul, li tags\n   - Styled to look like dropdowns\n   - Need to click to open, then click option\n   - Common in modern React/Angular apps\n\n3. Multi-Select Dropdowns\n   - <select multiple> attribute\n   - Can select multiple options\n   - Use selectByVisibleText() multiple times\n   - Use deselectAll() to clear selections\n\nSelect Class Methods:\n   - selectByVisibleText(text) - Select by visible option text\n   - selectByValue(value) - Select by value attribute\n   - selectByIndex(index) - Select by position (0-based)\n   - getFirstSelectedOption() - Get currently selected\n   - getOptions() - Get all available options\n   - getAllSelectedOptions() - Get all selected (multi-select)\n   - deselectAll() - Deselect all (multi-select only)\n   - deselectByVisibleText(text)",
+      "keyPoints": [
+        "Select class only works with HTML <select> elements",
+        "For custom dropdowns: click to open, then click the option",
+        "getOptions().size() tells you total number of options",
+        "Always verify selection after selecting using getFirstSelectedOption()",
+        "selectByIndex(0) selects first option, useful for resetting dropdown",
+        "Use isMultiple() to check if dropdown supports multi-select"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Select Class Operations",
+          "scenario": "On https://demoqa.com/select-menu, practice all Select class methods with the standard select dropdown.",
+          "steps": [
+            "Find the select element on the page",
+            "Create Select object wrapping the element",
+            "Select 'Volvo' by visible text",
+            "Verify selection using getFirstSelectedOption()",
+            "Print all available options",
+            "Select by index (second option)",
+            "Select by value attribute"
+          ],
+          "code": "driver.get(\"https://demoqa.com/select-menu\");\n\n// Standard select dropdown\nWebElement selectElement = driver.findElement(By.id(\"oldSelectMenu\"));\nSelect select = new Select(selectElement);\n\n// Select by visible text\nselect.selectByVisibleText(\"Blue\");\nSystem.out.println(\"Selected: \" + select.getFirstSelectedOption().getText());\n\n// Select by index\nselect.selectByIndex(1);\nSystem.out.println(\"Selected by index: \" + select.getFirstSelectedOption().getText());\n\n// Select by value\nselect.selectByValue(\"3\");\nSystem.out.println(\"Selected by value: \" + select.getFirstSelectedOption().getText());\n\n// Get all options\nList<WebElement> options = select.getOptions();\nSystem.out.println(\"Total options: \" + options.size());\nfor (WebElement option : options) {\n    System.out.println(\"Option: \" + option.getText());\n}\n\n// Check if multi-select\nSystem.out.println(\"Is Multiple: \" + select.isMultiple());"
+        },
+        {
+          "id": 2,
+          "title": "Handle Custom Dropdown",
+          "scenario": "Handle a custom React/Angular dropdown that is built with div elements instead of native select tag.",
+          "steps": [
+            "Identify the custom dropdown trigger element",
+            "Click to open the dropdown",
+            "Wait for dropdown options to appear",
+            "Find and click the desired option",
+            "Verify the selected value is displayed"
+          ],
+          "code": "driver.get(\"https://demoqa.com/select-menu\");\nWebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));\n\n// Click to open custom dropdown\nWebElement dropdownTrigger = driver.findElement(By.id(\"react-select-2-input\"));\ndropdownTrigger.click();\n\n// Wait for options to appear\nwait.until(ExpectedConditions.visibilityOfElementLocated(\n    By.className(\"react-select__menu\")\n));\n\n// Click specific option\nWebElement option = driver.findElement(\n    By.xpath(\"//div[contains(@class,'option') and text()='Group 1, option 1']\"));\noption.click();\n\n// Verify selection\nWebElement selectedValue = driver.findElement(\n    By.className(\"react-select__single-value\"));\nSystem.out.println(\"Selected: \" + selectedValue.getText());\nAssert.assertEquals(selectedValue.getText(), \"Group 1, option 1\");"
+        }
+      ]
+    },
+  
+    "Task 8: Alerts & Popups": {
+      "title": "Handling Alerts, Popups & Frames",
+      "description": "Web applications often display alerts, confirmation dialogs, and prompts. Selenium provides the Alert interface to handle these JavaScript-based dialogs.\n\nTypes of Alerts:\n\n1. Simple Alert\n   - Just an OK button\n   - Used to display information\n   - Handle: alert.accept()\n\n2. Confirmation Alert\n   - OK and Cancel buttons\n   - Used to confirm actions\n   - Accept: alert.accept()\n   - Dismiss: alert.dismiss()\n\n3. Prompt Alert\n   - Text input field + OK + Cancel\n   - Used to collect user input\n   - Enter text: alert.sendKeys(text)\n   - Then accept or dismiss\n\nAlert Methods:\n   - driver.switchTo().alert() - Switch to alert\n   - alert.getText() - Get alert message\n   - alert.accept() - Click OK\n   - alert.dismiss() - Click Cancel\n   - alert.sendKeys(text) - Enter text in prompt\n\nFrames/iFrames:\n   - Frames are HTML documents within documents\n   - Must switch context to interact with elements inside\n   - switchTo().frame(index/name/element)\n   - switchTo().defaultContent() - Return to main page\n   - switchTo().parentFrame() - Go one level up\n\nBrowser Windows & Tabs:\n   - New window/tab opens with new handle\n   - driver.getWindowHandles() returns Set of all handles\n   - switchTo().window(handle) to switch context",
+      "keyPoints": [
+        "Must switch to alert before performing any action on it",
+        "NoAlertPresentException thrown if no alert is present",
+        "Use explicit wait with alertIsPresent() condition for async alerts",
+        "Always switch back to defaultContent() after working inside frame",
+        "Cannot interact with elements inside frame without switching first",
+        "Window handles are not guaranteed in any specific order"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Handle All Alert Types",
+          "scenario": "On https://demoqa.com/alerts, handle simple alert, confirmation alert, and prompt alert.",
+          "steps": [
+            "Click button to trigger simple alert",
+            "Switch to alert and read the message",
+            "Accept the simple alert",
+            "Trigger confirmation dialog",
+            "Dismiss the confirmation",
+            "Trigger prompt alert",
+            "Send text to prompt and accept"
+          ],
+          "code": "driver.get(\"https://demoqa.com/alerts\");\nWebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));\n\n// Simple Alert\ndriver.findElement(By.id(\"alertButton\")).click();\nAlert simpleAlert = wait.until(ExpectedConditions.alertIsPresent());\nSystem.out.println(\"Alert Text: \" + simpleAlert.getText());\nsimpleAlert.accept();\n\n// Confirmation Alert\ndriver.findElement(By.id(\"confirmButton\")).click();\nAlert confirmAlert = driver.switchTo().alert();\nSystem.out.println(\"Confirm Text: \" + confirmAlert.getText());\nconfirmAlert.dismiss(); // Click Cancel\n\n// Check result\nString result = driver.findElement(By.id(\"confirmResult\")).getText();\nAssert.assertEquals(result, \"You selected Cancel\");\n\n// Prompt Alert\ndriver.findElement(By.id(\"promtButton\")).click();\nAlert promptAlert = driver.switchTo().alert();\nSystem.out.println(\"Prompt Text: \" + promptAlert.getText());\nprompAlert.sendKeys(\"John Doe\");\nprompAlert.accept();\n\n// Verify prompt result\nString promptResult = driver.findElement(By.id(\"promptResult\")).getText();\nSystem.out.println(\"Prompt Result: \" + promptResult);"
+        },
+        {
+          "id": 2,
+          "title": "Switch Between Multiple Windows",
+          "scenario": "Handle a scenario where clicking a link opens a new browser tab, perform actions in new tab, then return to original.",
+          "steps": [
+            "Get current window handle before clicking",
+            "Click a link that opens new tab",
+            "Get all window handles",
+            "Switch to new window",
+            "Perform actions in new window",
+            "Close new window",
+            "Switch back to original window"
+          ],
+          "code": "driver.get(\"https://demoqa.com/browser-windows\");\n\n// Store original window handle\nString originalWindow = driver.getWindowHandle();\nSystem.out.println(\"Original window: \" + originalWindow);\n\n// Open new window\ndriver.findElement(By.id(\"windowButton\")).click();\n\n// Wait for new window\nWebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));\nwait.until(ExpectedConditions.numberOfWindowsToBe(2));\n\n// Switch to new window\nfor (String handle : driver.getWindowHandles()) {\n    if (!handle.equals(originalWindow)) {\n        driver.switchTo().window(handle);\n        break;\n    }\n}\n\n// Actions in new window\nSystem.out.println(\"New window title: \" + driver.getTitle());\nString newWindowText = driver.findElement(By.id(\"sampleHeading\")).getText();\nSystem.out.println(\"New window content: \" + newWindowText);\n\n// Close new window and return\ndriver.close();\ndriver.switchTo().window(originalWindow);\nSystem.out.println(\"Back to: \" + driver.getTitle());"
+        }
+      ]
+    },
+  
+    "Task 9: Actions Class": {
+      "title": "Actions Class - Mouse & Keyboard",
+      "description": "The Actions class in Selenium enables complex user gesture simulations that cannot be performed with simple click() and sendKeys() methods.\n\nMouse Actions:\n   - moveToElement(element) - Hover over element\n   - click(element) - Click at element position\n   - doubleClick(element) - Double click\n   - contextClick(element) - Right click\n   - clickAndHold(element) - Press and hold\n   - release() - Release held button\n   - dragAndDrop(source, target) - Drag and drop\n   - dragAndDropBy(element, xOffset, yOffset)\n   - moveByOffset(x, y) - Move mouse by coordinates\n\nKeyboard Actions:\n   - sendKeys(Keys.CONTROL + \"a\") - Keyboard shortcut\n   - keyDown(Keys.SHIFT) - Press and hold key\n   - keyUp(Keys.SHIFT) - Release held key\n   - sendKeys(element, text) - Type in element\n\nChaining Actions:\n   - All actions can be chained\n   - Must call build().perform() to execute\n   - Or just perform() which implies build()\n\nCommon Use Cases:\n   - Hover menus that reveal on mouse over\n   - Drag and drop UI elements\n   - Rich text editors requiring keyboard shortcuts\n   - Sliders and range inputs\n   - Canvas element interactions",
+      "keyPoints": [
+        "Actions are not executed until perform() is called",
+        "build() compiles actions, perform() executes them",
+        "In Selenium 4, perform() alone is sufficient (no need for build())",
+        "Use moveToElement() before clicking on menu items that appear on hover",
+        "dragAndDrop() may not work on all websites due to HTML5 drag events",
+        "For Ctrl+Click (multi-select): keyDown(CONTROL), click elements, keyUp(CONTROL)"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Mouse Hover and Context Menu",
+          "scenario": "On https://demoqa.com/menu, hover over menu items to reveal submenus and interact with them. Also practice right-click context menu.",
+          "steps": [
+            "Create Actions instance",
+            "Find the main menu item",
+            "Use moveToElement() to hover",
+            "Wait for submenu to appear",
+            "Click on submenu item",
+            "Practice right-click context menu"
+          ],
+          "code": "driver.get(\"https://demoqa.com/menu\");\nActions actions = new Actions(driver);\nWebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));\n\n// Hover over main menu\nWebElement mainMenu = driver.findElement(By.id(\"nav\"));\nWebElement menuItem2 = driver.findElement(By.linkText(\"Menu Item 2\"));\nactions.moveToElement(menuItem2).perform();\n\n// Wait for submenu and click\nWebElement subItem = wait.until(ExpectedConditions.visibilityOfElementLocated(\n    By.linkText(\"SUB SUB LIST »\")\n));\nactions.moveToElement(subItem).perform();\n\nWebElement deepItem = wait.until(ExpectedConditions.visibilityOfElementLocated(\n    By.linkText(\"Sub Sub Item 1\")\n));\ndeepItem.click();\n\n// Right click (context menu)\ndriver.get(\"https://demoqa.com/context-menu\");\nWebElement contextArea = driver.findElement(By.id(\"rightClickBtn\"));\nactions.contextClick(contextArea).perform();\n\nAlert alert = driver.switchTo().alert();\nSystem.out.println(\"Context menu alert: \" + alert.getText());\nalert.accept();"
+        },
+        {
+          "id": 2,
+          "title": "Drag and Drop",
+          "scenario": "Implement drag and drop on https://demoqa.com/droppable - drag the draggable element and drop it on the target.",
+          "steps": [
+            "Find source (draggable) element",
+            "Find target (droppable) element",
+            "Use dragAndDrop() method",
+            "Verify the drop was successful",
+            "Also practice dragAndDropBy() with offset coordinates"
+          ],
+          "code": "driver.get(\"https://demoqa.com/droppable\");\nActions actions = new Actions(driver);\n\nWebElement source = driver.findElement(By.id(\"draggable\"));\nWebElement target = driver.findElement(By.id(\"droppable\"));\n\n// Method 1: dragAndDrop\nactions.dragAndDrop(source, target).perform();\n\n// Verify\nString targetText = target.getText();\nSystem.out.println(\"Target text: \" + targetText);\nAssert.assertEquals(targetText, \"Dropped!\");\n\n// Method 2: clickAndHold, move, release\ndriver.navigate().refresh();\nsource = driver.findElement(By.id(\"draggable\"));\ntarget = driver.findElement(By.id(\"droppable\"));\n\nactions.clickAndHold(source)\n       .moveToElement(target)\n       .release()\n       .perform();\n\nSystem.out.println(\"Drop successful: \" + target.getText());"
+        }
+      ]
+    },
+  
+    "Task 10: JavaScriptExecutor": {
+      "title": "JavaScriptExecutor",
+      "description": "JavaScriptExecutor is an interface in Selenium that allows you to execute JavaScript code directly in the browser. It is a powerful tool when normal WebDriver methods are insufficient.\n\nWhen to Use JavaScriptExecutor:\n   - Element is not clickable (covered/hidden)\n   - Scrolling to element or position\n   - Changing element properties dynamically\n   - Getting values not accessible via WebDriver\n   - Handling HTML5 input types (date, color)\n   - Triggering events not fired by WebDriver\n\nCommon Uses:\n\n1. Clicking elements:\n   js.executeScript(\"arguments[0].click();\", element)\n\n2. Scrolling:\n   - By pixels: js.executeScript(\"window.scrollBy(0,500)\")\n   - To element: js.executeScript(\"arguments[0].scrollIntoView(true)\", element)\n   - To bottom: js.executeScript(\"window.scrollTo(0,document.body.scrollHeight)\")\n\n3. Getting/Setting values:\n   - Get: js.executeScript(\"return arguments[0].value;\", element)\n   - Set: js.executeScript(\"arguments[0].value='text';\", element)\n\n4. Highlighting element (debugging):\n   js.executeScript(\"arguments[0].style.border='3px solid red'\", element)\n\n5. Page information:\n   - Title: js.executeScript(\"return document.title;\")\n   - URL: js.executeScript(\"return window.location.href;\")",
+      "keyPoints": [
+        "Cast driver to JavascriptExecutor before using",
+        "executeScript() runs synchronously, executeAsyncScript() for async operations",
+        "arguments[0] refers to the first element passed as parameter",
+        "JS click bypasses element visibility check - use carefully",
+        "scrollIntoView(true) aligns element to top, false to bottom",
+        "Use JS to interact with elements hidden behind overlays"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Scroll and Highlight Elements",
+          "scenario": "Use JavaScriptExecutor to scroll through a long page, highlight elements for debugging, and interact with elements using JS click.",
+          "steps": [
+            "Cast WebDriver to JavascriptExecutor",
+            "Scroll down by 500 pixels",
+            "Scroll to a specific element",
+            "Highlight an element with red border for debugging",
+            "Use JS click on a button",
+            "Get page title using JavaScript"
+          ],
+          "code": "driver.get(\"https://demoqa.com/elements\");\nJavascriptExecutor js = (JavascriptExecutor) driver;\n\n// Scroll down by pixels\njs.executeScript(\"window.scrollBy(0, 500);\");\nThread.sleep(1000); // Just to see scroll effect\n\n// Scroll to bottom of page\njs.executeScript(\"window.scrollTo(0, document.body.scrollHeight);\");\n\n// Scroll to specific element\nWebElement element = driver.findElement(By.linkText(\"Buttons\"));\njs.executeScript(\"arguments[0].scrollIntoView(true);\", element);\n\n// Highlight element (useful for debugging)\njs.executeScript(\"arguments[0].style.border='3px solid red'; arguments[0].style.backgroundColor='yellow';\", element);\n\n// JS Click\njs.executeScript(\"arguments[0].click();\", element);\n\n// Get page info\nString title = (String) js.executeScript(\"return document.title;\");\nString url = (String) js.executeScript(\"return window.location.href;\");\nSystem.out.println(\"Title: \" + title);\nSystem.out.println(\"URL: \" + url);"
+        },
+        {
+          "id": 2,
+          "title": "Set Values Using JavaScript",
+          "scenario": "Use JavaScript to set values in form fields that don't respond to sendKeys(), such as read-only fields or hidden inputs.",
+          "steps": [
+            "Find a read-only input field",
+            "Use JS to remove readonly attribute",
+            "Set value using JS executeScript",
+            "Use JS to set date in date picker",
+            "Get inner text of element using JS",
+            "Manipulate CSS class of element"
+          ],
+          "code": "JavascriptExecutor js = (JavascriptExecutor) driver;\n\n// Set value in field (bypasses readonly)\nWebElement inputField = driver.findElement(By.id(\"sampleHeading\"));\njs.executeScript(\"arguments[0].removeAttribute('readonly');\", inputField);\njs.executeScript(\"arguments[0].value='New Value';\", inputField);\n\n// Verify the set value\nString value = (String) js.executeScript(\"return arguments[0].value;\", inputField);\nSystem.out.println(\"Field value: \" + value);\n\n// Get inner text\nString innerText = (String) js.executeScript(\"return arguments[0].innerText;\", inputField);\nSystem.out.println(\"Inner text: \" + innerText);\n\n// Add/Remove CSS class\njs.executeScript(\"arguments[0].classList.add('highlighted');\", inputField);\njs.executeScript(\"arguments[0].classList.remove('highlighted');\", inputField);\n\n// Check if element has class\nBoolean hasClass = (Boolean) js.executeScript(\n    \"return arguments[0].classList.contains('btn-primary');\", inputField);\nSystem.out.println(\"Has class: \" + hasClass);"
+        }
+      ]
+    },
+  
+    "Task 11: Screenshots & Reporting": {
+      "title": "Screenshots & Test Reporting",
+      "description": "Screenshots and reports are essential for understanding test results, especially when tests fail in CI/CD pipelines where you cannot watch execution live.\n\nTaking Screenshots:\n\n1. Full Page Screenshot\n   - Captures entire browser viewport\n   - TakesScreenshot interface\n   - Save as File or BASE64 string\n\n2. Element Screenshot (Selenium 4)\n   - Captures specific element only\n   - WebElement implements TakesScreenshot\n   - Useful for comparing specific UI components\n\n3. When to Capture:\n   - On test failure (@AfterMethod)\n   - At key test steps for evidence\n   - For visual regression testing\n\nTest Reports:\n\n1. TestNG Default Reports\n   - Generated in test-output folder\n   - HTML and XML formats\n   - Basic but always available\n\n2. Extent Reports\n   - Professional HTML reports\n   - Embed screenshots\n   - Test pass/fail statistics\n   - Timeline view\n\n3. Allure Reports\n   - Beautiful interactive reports\n   - History trends\n   - Categories of failures\n   - Integration with Jenkins\n\nBest Practices:\n   - Name screenshots with timestamp to avoid overwriting\n   - Attach screenshots to extent report on failure\n   - Store screenshots in target/ folder (excluded from git)",
+      "keyPoints": [
+        "Always capture screenshot on test failure for debugging",
+        "Use timestamp in filename to prevent overwriting: timestamp = new SimpleDateFormat",
+        "Extent Reports need extent.flush() at end to write HTML file",
+        "Allure requires @Step annotations and allure-results folder",
+        "Element screenshot useful for visual regression - compare baseline vs current",
+        "Base64 format useful for embedding in HTML reports"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Capture Screenshots on Failure",
+          "scenario": "Create a test base class that automatically captures a screenshot whenever a test fails and saves it with a timestamp.",
+          "steps": [
+            "Create BaseTest class with ITestListener or use @AfterMethod with ITestResult",
+            "Check if test result status is FAILURE",
+            "Cast driver to TakesScreenshot",
+            "Save screenshot with test name and timestamp",
+            "Log screenshot path to console"
+          ],
+          "code": "import org.testng.ITestResult;\nimport org.apache.commons.io.FileUtils;\n\npublic class BaseTest {\n    protected WebDriver driver;\n\n    @BeforeMethod\n    public void setup() {\n        WebDriverManager.chromedriver().setup();\n        driver = new ChromeDriver();\n        driver.manage().window().maximize();\n    }\n\n    @AfterMethod\n    public void teardown(ITestResult result) throws IOException {\n        // Capture screenshot if test failed\n        if (result.getStatus() == ITestResult.FAILURE) {\n            TakesScreenshot ts = (TakesScreenshot) driver;\n            File screenshotFile = ts.getScreenshotAs(OutputType.FILE);\n\n            // Create filename with timestamp\n            String timestamp = new SimpleDateFormat(\"yyyyMMdd_HHmmss\").format(new Date());\n            String fileName = result.getName() + \"_\" + timestamp + \".png\";\n            String destPath = \"screenshots/\" + fileName;\n\n            // Save screenshot\n            FileUtils.copyFile(screenshotFile, new File(destPath));\n            System.out.println(\"Screenshot saved: \" + destPath);\n        }\n        driver.quit();\n    }\n}"
+        },
+        {
+          "id": 2,
+          "title": "Element Screenshot",
+          "scenario": "Capture a screenshot of a specific element (Selenium 4 feature) for visual comparison testing.",
+          "steps": [
+            "Navigate to a page with a specific element to capture",
+            "Find the element to screenshot",
+            "Cast element to TakesScreenshot",
+            "Save element screenshot as PNG",
+            "Compare with baseline image"
+          ],
+          "code": "// Selenium 4 - Element Level Screenshot\ndriver.get(\"https://demoqa.com/elements\");\n\nWebElement card = driver.findElement(By.className(\"card\"));\n\n// Element implements TakesScreenshot in Selenium 4\nFile elementScreenshot = ((TakesScreenshot) card).getScreenshotAs(OutputType.FILE);\nFileUtils.copyFile(elementScreenshot, new File(\"screenshots/element_capture.png\"));\nSystem.out.println(\"Element screenshot captured\");\n\n// Full page screenshot\nFile pageScreenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);\nFileUtils.copyFile(pageScreenshot, new File(\"screenshots/full_page.png\"));\n\n// Screenshot as Base64 (for embedding in HTML)\nString base64 = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64);\nSystem.out.println(\"Base64 length: \" + base64.length());\n// Embed in HTML: <img src='data:image/png;base64 then base64  "
+        }
+      ]
+    },
+  
+    "Task 12: Page Object Model": {
+      "title": "Page Object Model (POM) Design Pattern",
+      "description": "Page Object Model is the most widely used design pattern in Selenium automation. It creates an abstraction layer between test code and page interaction code.\n\nCore Concept:\n   - Each web page = One Java class\n   - Class contains all locators for that page\n   - Class contains all methods to interact with page\n   - Tests only call methods, never use locators directly\n\nWithout POM (BAD):\n   - Test code directly has locators\n   - Same locator copied in multiple tests\n   - When locator changes: update ALL tests\n   - Tests become unreadable and unmaintainable\n\nWith POM (GOOD):\n   - Locator defined once in page class\n   - Test calls page.login('user','pass')\n   - When locator changes: update only page class\n   - Tests read like plain English\n\nPageFactory:\n   - Part of Selenium support package\n   - Provides @FindBy annotation for cleaner syntax\n   - Lazy initialization - element found when used\n   - initElements() sets up all @FindBy elements\n\nBest Practices:\n   - Page methods should return void or another page object\n   - Never assert in page methods (keep in tests)\n   - Name methods as user actions: clickLogin(), enterUsername()\n   - Use constructor injection for WebDriver\n   - Create BasePage class with common utilities",
+      "keyPoints": [
+        "POM separates 'what to test' (tests) from 'how to interact' (page classes)",
+        "Never put assertions inside page object methods",
+        "Page methods should return the resulting page for fluent API",
+        "PageFactory @FindBy is evaluated lazily - element found when method called",
+        "Create a BasePage class for common methods like waitForElement, scrollTo",
+        "@FindBy(how = How.XPATH, using = '//button') is alternative syntax"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Build Login Page Object",
+          "scenario": "Create a LoginPage class using POM with PageFactory for a login form, then use it in a test class.",
+          "steps": [
+            "Create LoginPage.java in pages package",
+            "Add WebElement fields with @FindBy annotations",
+            "Add constructor with PageFactory.initElements()",
+            "Create method: enterUsername(String)",
+            "Create method: enterPassword(String)",
+            "Create method: clickLogin() returning HomePage",
+            "Use LoginPage in test class"
+          ],
+          "code": "// LoginPage.java\npublic class LoginPage {\n    private WebDriver driver;\n\n    @FindBy(id = \"userName\")\n    private WebElement usernameField;\n\n    @FindBy(id = \"password\")\n    private WebElement passwordField;\n\n    @FindBy(id = \"login\")\n    private WebElement loginButton;\n\n    @FindBy(id = \"output\")\n    private WebElement outputMessage;\n\n    public LoginPage(WebDriver driver) {\n        this.driver = driver;\n        PageFactory.initElements(driver, this);\n    }\n\n    public LoginPage enterUsername(String username) {\n        usernameField.clear();\n        usernameField.sendKeys(username);\n        return this;\n    }\n\n    public LoginPage enterPassword(String password) {\n        passwordField.clear();\n        passwordField.sendKeys(password);\n        return this;\n    }\n\n    public void clickLogin() {\n        loginButton.click();\n    }\n\n    public String getOutputMessage() {\n        return outputMessage.getText();\n    }\n}\n\n// LoginTest.java\npublic class LoginTest extends BaseTest {\n    @Test\n    public void testSuccessfulLogin() {\n        driver.get(\"https://demoqa.com/login\");\n        LoginPage loginPage = new LoginPage(driver);\n\n        // Fluent API - method chaining\n        loginPage.enterUsername(\"testUser\")\n                 .enterPassword(\"testPassword\")\n                 .clickLogin();\n\n        String message = loginPage.getOutputMessage();\n        System.out.println(\"Output: \" + message);\n    }\n}"
+        },
+        {
+          "id": 2,
+          "title": "BasePage Class Implementation",
+          "scenario": "Create a reusable BasePage class with common utility methods that all page objects can inherit.",
+          "steps": [
+            "Create BasePage.java abstract class",
+            "Add common wait utilities",
+            "Add scroll to element method",
+            "Add highlight element for debugging",
+            "Add isElementDisplayed helper",
+            "Extend BasePage in LoginPage"
+          ],
+          "code": "// BasePage.java\npublic class BasePage {\n    protected WebDriver driver;\n    protected WebDriverWait wait;\n\n    public BasePage(WebDriver driver) {\n        this.driver = driver;\n        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));\n        PageFactory.initElements(driver, this);\n    }\n\n    protected WebElement waitForElement(By locator) {\n        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));\n    }\n\n    protected WebElement waitForClickable(By locator) {\n        return wait.until(ExpectedConditions.elementToBeClickable(locator));\n    }\n\n    protected void scrollToElement(WebElement element) {\n        JavascriptExecutor js = (JavascriptExecutor) driver;\n        js.executeScript(\"arguments[0].scrollIntoView(true);\", element);\n    }\n\n    protected boolean isElementDisplayed(By locator) {\n        try {\n            return driver.findElement(locator).isDisplayed();\n        } catch (NoSuchElementException e) {\n            return false;\n        }\n    }\n\n    protected void highlightElement(WebElement element) {\n        JavascriptExecutor js = (JavascriptExecutor) driver;\n        js.executeScript(\"arguments[0].style.border='3px solid red'\", element);\n    }\n}\n\n// LoginPage extends BasePage\npublic class LoginPage extends BasePage {\n    @FindBy(id = \"userName\")\n    private WebElement usernameField;\n\n    public LoginPage(WebDriver driver) {\n        super(driver); // calls BasePage constructor\n    }\n\n    public void enterUsername(String username) {\n        waitForClickable(By.id(\"userName\"));\n        highlightElement(usernameField);\n        usernameField.sendKeys(username);\n    }\n}"
+        }
+      ]
+    },
+  
+    "Task 13: TestNG Framework": {
+      "title": "TestNG Integration & Configuration",
+      "description": "TestNG (Test Next Generation) is a powerful testing framework inspired by JUnit. It addresses many limitations of JUnit and provides enterprise-level test management capabilities.\n\nTestNG Annotations in Execution Order:\n   @BeforeSuite → @BeforeTest → @BeforeGroups → @BeforeClass → @BeforeMethod → @Test → @AfterMethod → @AfterClass → @AfterGroups → @AfterTest → @AfterSuite\n\n@Test Attributes:\n   - priority: controls execution order (lower runs first)\n   - groups: categorize tests (smoke, regression)\n   - enabled: set false to skip test\n   - timeOut: fail if test exceeds duration\n   - dependsOnMethods: run after specified method\n   - dataProvider: link to data provider\n   - expectedExceptions: test should throw this\n   - invocationCount: run test N times\n   - threadPoolSize: parallel threads\n\ntestng.xml:\n   - Defines test suites\n   - Groups tests\n   - Controls parallel execution\n   - Passes parameters\n   - Includes/excludes tests\n\nTestNG Assertions:\n   - Hard assertions (Assert): stop test on failure\n   - Soft assertions (SoftAssert): continue on failure",
+      "keyPoints": [
+        "Priority lower number runs first (priority=1 before priority=2)",
+        "@BeforeMethod runs before EACH @Test method in class",
+        "@BeforeClass runs ONCE before all @Test methods in class",
+        "dependsOnMethods - if dependent test fails, dependent test is skipped",
+        "SoftAssert.assertAll() must be called to report failures",
+        "testng.xml parallel='methods' with thread-count for parallel execution"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "TestNG Annotations and Priority",
+          "scenario": "Create a complete TestNG test class demonstrating all lifecycle annotations, test priorities, and grouping.",
+          "steps": [
+            "Create test class with @BeforeSuite, @BeforeClass, @BeforeMethod",
+            "Add tests with different priorities (1, 2, 3)",
+            "Assign tests to groups (smoke, regression)",
+            "Add @AfterMethod, @AfterClass, @AfterSuite",
+            "Create testng.xml to run only smoke group",
+            "Run and observe execution order"
+          ],
+          "code": "public class TestNGDemoTest {\n\n    @BeforeSuite\n    public void beforeSuite() {\n        System.out.println(\"=== Suite Started ===\");\n    }\n\n    @BeforeClass\n    public void beforeClass() {\n        System.out.println(\"=== Class Setup ===\");\n    }\n\n    @BeforeMethod\n    public void beforeMethod(Method method) {\n        System.out.println(\"Starting test: \" + method.getName());\n    }\n\n    @Test(priority = 1, groups = {\"smoke\"})\n    public void verifyHomePage() {\n        System.out.println(\"Test 1: Verify Home Page\");\n    }\n\n    @Test(priority = 2, groups = {\"smoke\", \"regression\"})\n    public void verifyLogin() {\n        System.out.println(\"Test 2: Verify Login\");\n    }\n\n    @Test(priority = 3, groups = {\"regression\"}, dependsOnMethods = {\"verifyLogin\"})\n    public void verifyDashboard() {\n        System.out.println(\"Test 3: Verify Dashboard (runs after login)\");\n    }\n\n    @Test(enabled = false)\n    public void skippedTest() {\n        System.out.println(\"This test is skipped\");\n    }\n\n    @AfterMethod\n    public void afterMethod(ITestResult result) {\n        System.out.println(\"Test \" + result.getName() + \": \" +\n            (result.isSuccess() ? \"PASSED\" : \"FAILED\"));\n    }\n\n    @AfterClass\n    public void afterClass() {\n        System.out.println(\"=== Class Teardown ===\");\n    }\n\n    @AfterSuite\n    public void afterSuite() {\n        System.out.println(\"=== Suite Completed ===\");\n    }\n}"
+        },
+        {
+          "id": 2,
+          "title": "Data Driven Testing with @DataProvider",
+          "scenario": "Implement data-driven login tests using TestNG @DataProvider to test multiple username/password combinations.",
+          "steps": [
+            "Create @DataProvider method returning Object[][]",
+            "Reference DataProvider in @Test annotation",
+            "Test runs once for each data row",
+            "Print test data being used in each run",
+            "Use external data source (Excel) with DataProvider"
+          ],
+          "code": "public class DataDrivenTest {\n    WebDriver driver;\n\n    @DataProvider(name = \"loginCredentials\")\n    public Object[][] getLoginData() {\n        return new Object[][] {\n            {\"validUser\",    \"validPass\",   true},\n            {\"invalidUser\",  \"invalidPass\", false},\n            {\"validUser\",    \"wrongPass\",   false},\n            {\"\",             \"\",            false}\n        };\n    }\n\n    @Test(dataProvider = \"loginCredentials\")\n    public void testLogin(String username, String password, boolean expectedResult) {\n        driver.get(\"https://demoqa.com/login\");\n        driver.findElement(By.id(\"userName\")).sendKeys(username);\n        driver.findElement(By.id(\"password\")).sendKeys(password);\n        driver.findElement(By.id(\"login\")).click();\n\n        boolean isLoggedIn = driver.findElements(By.id(\"userName-value\")).size() > 0;\n        System.out.println(\"Username: \" + username + \" | Expected: \" + expectedResult + \" | Actual: \" + isLoggedIn);\n        Assert.assertEquals(isLoggedIn, expectedResult);\n    }\n\n    @DataProvider(name = \"loginFromExcel\")\n    public Object[][] getDataFromExcel() throws IOException {\n        FileInputStream fis = new FileInputStream(\"src/test/resources/testdata.xlsx\");\n        Workbook workbook = new XSSFWorkbook(fis);\n        Sheet sheet = workbook.getSheet(\"LoginData\");\n        int rowCount = sheet.getLastRowNum();\n        Object[][] data = new Object[rowCount][2];\n        for (int i = 1; i <= rowCount; i++) {\n            data[i-1][0] = sheet.getRow(i).getCell(0).getStringCellValue();\n            data[i-1][1] = sheet.getRow(i).getCell(1).getStringCellValue();\n        }\n        workbook.close();\n        return data;\n    }\n}"
+        }
+      ]
+    },
+  
+    "Task 14: Parallel Execution": {
+      "title": "Parallel Test Execution with Selenium Grid",
+      "description": "Parallel execution dramatically reduces total test execution time by running multiple tests simultaneously. Selenium Grid extends this to multiple machines and browsers.\n\nParallel Execution with TestNG:\n   - parallel='methods': each test method in separate thread\n   - parallel='classes': each test class in separate thread\n   - parallel='tests': each <test> tag in testng.xml in separate thread\n   - thread-count: number of parallel threads\n\nCritical: Thread Safety\n   - WebDriver is NOT thread-safe\n   - Sharing driver between threads causes failures\n   - Solution: ThreadLocal<WebDriver> - gives each thread its own driver\n\nSelenium Grid Architecture:\n   - Hub: central point receiving test requests\n   - Node: machine running tests on browsers\n   - Register nodes to hub\n   - Tests specify desired capabilities\n   - Hub routes to matching node\n\nSelenium Grid 4 Improvements:\n   - Standalone mode (no hub/node needed)\n   - Docker support\n   - Built-in UI at http://localhost:4444\n   - Dynamic node allocation\n\nRemoteWebDriver:\n   - Used to connect to Grid\n   - Specify hub URL and capabilities\n   - Browser runs on remote node\n   - Same API as local WebDriver",
+      "keyPoints": [
+        "ThreadLocal<WebDriver> is MANDATORY for parallel execution",
+        "Always call ThreadLocal.remove() after test to prevent memory leaks",
+        "Grid hub default port is 4444: http://localhost:4444",
+        "Standalone mode for simple setup: java -jar selenium-server.jar standalone",
+        "Use DesiredCapabilities or Options to specify browser in Grid",
+        "thread-count in testng.xml determines max concurrent tests"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "ThreadLocal WebDriver for Parallel Tests",
+          "scenario": "Create a DriverManager class using ThreadLocal to safely run tests in parallel without driver conflicts.",
+          "steps": [
+            "Create DriverManager class with ThreadLocal<WebDriver>",
+            "Add getDriver(), setDriver(), removeDriver() methods",
+            "Update BaseTest to use DriverManager",
+            "Configure testng.xml for parallel execution",
+            "Run and verify tests run simultaneously"
+          ],
+          "code": "// DriverManager.java\npublic class DriverManager {\n    private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();\n\n    public static WebDriver getDriver() {\n        return driverThreadLocal.get();\n    }\n\n    public static void setDriver(WebDriver driver) {\n        driverThreadLocal.set(driver);\n    }\n\n    public static void removeDriver() {\n        if (driverThreadLocal.get() != null) {\n            driverThreadLocal.get().quit();\n            driverThreadLocal.remove();\n        }\n    }\n}\n\n// BaseTest.java\npublic class BaseTest {\n    @BeforeMethod\n    @Parameters(\"browser\")\n    public void setup(@Optional(\"chrome\") String browser) {\n        WebDriver driver;\n        if (browser.equalsIgnoreCase(\"firefox\")) {\n            WebDriverManager.firefoxdriver().setup();\n            driver = new FirefoxDriver();\n        } else {\n            WebDriverManager.chromedriver().setup();\n            driver = new ChromeDriver();\n        }\n        driver.manage().window().maximize();\n        DriverManager.setDriver(driver);\n    }\n\n    @AfterMethod\n    public void teardown() {\n        DriverManager.removeDriver();\n    }\n\n    public WebDriver getDriver() {\n        return DriverManager.getDriver();\n    }\n}\n\n// testng.xml for parallel\n/*\n<suite name=\"Parallel Suite\" parallel=\"methods\" thread-count=\"3\">\n  <test name=\"ChromeTests\">\n    <parameter name=\"browser\" value=\"chrome\"/>\n    <classes>\n      <class name=\"tests.LoginTest\"/>\n    </classes>\n  </test>\n</suite>\n*/"
+        }
+      ]
+    },
+  
+    "Task 15: File Upload & Download": {
+      "title": "File Upload and Download Handling",
+      "description": "Handling file operations is a common requirement in web automation. Selenium has limitations with OS-level dialogs but provides good solutions for HTML-based file operations.\n\nFile Upload Methods:\n\n1. sendKeys() on input[type='file']\n   - Most reliable approach\n   - Works for HTML file input elements\n   - No OS dialog appears\n   - Provide absolute file path\n\n2. Robot class\n   - For OS-level file dialogs\n   - Simulates keyboard/mouse at OS level\n   - Platform-specific behavior\n   - Fragile, not recommended\n\n3. AutoIT (Windows only)\n   - External tool for Windows dialogs\n   - Compile .au3 script to .exe\n   - Execute from Selenium using Runtime\n\nFile Download:\n   - Cannot handle OS Save dialogs with Selenium\n   - Solution: Configure browser preferences\n   - Chrome: set download directory, disable dialog\n   - Firefox: set browser.download preferences\n   - Verify download: check file exists after download\n   - Wait for download: poll file system until file appears\n\nChrome Download Preferences:\n   - download.default_directory\n   - download.prompt_for_download: false\n   - plugins.always_open_pdf_externally: true",
+      "keyPoints": [
+        "sendKeys() with file path works without opening OS dialog",
+        "File path must be absolute path on the machine running tests",
+        "For remote Grid execution, use RemoteWebDriver with file detector",
+        "Chrome preferences disable save dialog for automatic downloads",
+        "Always wait for file to appear before asserting download success",
+        "Clean up downloaded files in @AfterMethod to keep test environment clean"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "File Upload with sendKeys",
+          "scenario": "Upload a file on https://demoqa.com/upload-download using sendKeys approach, which avoids OS dialog entirely.",
+          "steps": [
+            "Create a test file to upload",
+            "Find input[type='file'] element",
+            "Use sendKeys() with absolute file path",
+            "Verify upload success message",
+            "Verify uploaded filename is displayed"
+          ],
+          "code": "driver.get(\"https://demoqa.com/upload-download\");\n\n// Create a test file\nString testFilePath = System.getProperty(\"user.dir\") + \"/src/test/resources/testfile.txt\";\nFile file = new File(testFilePath);\nif (!file.exists()) {\n    FileWriter writer = new FileWriter(file);\n    writer.write(\"This is test upload content\");\n    writer.close();\n}\n\n// Find file input - no need to click Browse button\nWebElement fileInput = driver.findElement(By.id(\"uploadFile\"));\nfileInput.sendKeys(testFilePath);\n\n// Wait for upload message\nWebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));\nWebElement uploadedPath = wait.until(\n    ExpectedConditions.visibilityOfElementLocated(By.id(\"uploadedFilePath\"))\n);\n\nSystem.out.println(\"Uploaded: \" + uploadedPath.getText());\nAssert.assertTrue(uploadedPath.getText().contains(\"testfile.txt\"));"
+        },
+        {
+          "id": 2,
+          "title": "Configure Chrome for Auto Download",
+          "scenario": "Configure ChromeDriver to automatically download files to a specific folder without showing the OS save dialog.",
+          "steps": [
+            "Create download directory",
+            "Set Chrome preferences for download",
+            "Disable download prompt",
+            "Click download link",
+            "Wait for file to appear in directory",
+            "Verify file was downloaded"
+          ],
+          "code": "// Setup Chrome with download preferences\nString downloadPath = System.getProperty(\"user.dir\") + \"/downloads\";\nnew File(downloadPath).mkdirs();\n\nHashMap<String, Object> chromePrefs = new HashMap<>();\nchromePrefs.put(\"download.default_directory\", downloadPath);\nchromePrefs.put(\"download.prompt_for_download\", false);\nchromePrefs.put(\"plugins.always_open_pdf_externally\", true);\n\nChromeOptions options = new ChromeOptions();\noptions.setExperimentalOption(\"prefs\", chromePrefs);\n\nWebDriverManager.chromedriver().setup();\ndriver = new ChromeDriver(options);\n\ndriver.get(\"https://demoqa.com/upload-download\");\n\n// Click download button\ndriver.findElement(By.id(\"downloadButton\")).click();\n\n// Wait for file to download\nString downloadedFile = downloadPath + \"/sampleFile.jpeg\";\nWebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));\nwait.until(driver -> new File(downloadedFile).exists());\n\nAssert.assertTrue(new File(downloadedFile).exists(), \"File not downloaded!\");\nSystem.out.println(\"File downloaded: \" + downloadedFile);"
+        }
+      ]
+    }
+  }

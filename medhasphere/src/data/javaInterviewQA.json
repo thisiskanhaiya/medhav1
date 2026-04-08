@@ -1,0 +1,290 @@
+{
+  "coreJava": {
+    "title": "Core Java Concepts",
+    "icon": "☕",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is the difference between JDK, JRE, and JVM?",
+        "answer": "JVM (Java Virtual Machine): Executes Java bytecode, provides platform independence. JRE (Java Runtime Environment): JVM + core libraries, needed to run Java programs. JDK (Java Development Kit): JRE + development tools (compiler, debugger), needed to develop Java programs. JDK contains JRE which contains JVM.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 2,
+        "question": "What are the four pillars of OOP?",
+        "answer": "Encapsulation: Bundling data and methods, hiding implementation using access modifiers. Inheritance: Child class inherits from parent using 'extends'. Polymorphism: Same interface, different implementations - overloading (compile-time) and overriding (runtime). Abstraction: Hiding complexity using abstract classes/interfaces, showing only essential features.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 3,
+        "question": "What is the difference between == and .equals()?",
+        "answer": "== compares references (memory addresses) for objects, actual values for primitives. .equals() compares content/values and can be overridden. For String: 'hello' == 'hello' may be true (string pool), but new String('hello') == new String('hello') is false. Always use .equals() for object content comparison.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 4,
+        "question": "What is the difference between String, StringBuilder, and StringBuffer?",
+        "answer": "String: Immutable, new object created on modification, thread-safe due to immutability. StringBuilder: Mutable, single-threaded use, faster. StringBuffer: Mutable, thread-safe (synchronized), slower than StringBuilder. Use String for few modifications, StringBuilder for many modifications, StringBuffer in multi-threaded scenarios.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 5,
+        "question": "Explain method overloading vs method overriding.",
+        "answer": "Overloading (Compile-time polymorphism): Same method name, different parameters (number/type/order), in same class. Overriding (Runtime polymorphism): Same method name and signature, in child class, replaces parent implementation. Overloading resolved at compile time, overriding at runtime. @Override annotation helps catch errors.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 6,
+        "question": "What is the difference between abstract class and interface?",
+        "answer": "Abstract class: Can have abstract and concrete methods, constructors, instance variables, single inheritance only. Interface: All methods public abstract (before Java 8), Java 8+ allows default/static methods, multiple implementation allowed. Use abstract class for IS-A with shared code, interface for capabilities/contracts.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 7,
+        "question": "What is the difference between final, finally, and finalize?",
+        "answer": "final: Keyword - final variable (constant), final method (cannot override), final class (cannot extend). finally: Block in try-catch that always executes for cleanup. finalize(): Method called by GC before object is garbage collected (deprecated in Java 9). Use try-with-resources instead of finalize.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 8,
+        "question": "Explain access modifiers in Java.",
+        "answer": "private: Same class only. default (no modifier): Same package only. protected: Same package + subclasses in other packages. public: Accessible everywhere. For fields, prefer private with getters/setters. Classes can only be public or default.",
+        "difficulty": "Easy"
+      }
+    ]
+  },
+
+  "collections": {
+    "title": "Collections Framework",
+    "icon": "📚",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is the difference between ArrayList and LinkedList?",
+        "answer": "ArrayList: Dynamic array, O(1) random access by index, O(n) insertion/deletion in middle, better for frequent reads. LinkedList: Doubly linked list, O(n) access by index, O(1) insertion/deletion at ends, implements Deque, better for frequent modifications. ArrayList uses less memory overall.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 2,
+        "question": "What is the difference between HashMap, LinkedHashMap, and TreeMap?",
+        "answer": "HashMap: Unordered, O(1) get/put, allows one null key. LinkedHashMap: Maintains insertion order, slightly slower due to linked list. TreeMap: Sorted by keys (natural/Comparator), O(log n) operations, no null keys. Use HashMap for performance, LinkedHashMap for order, TreeMap for sorted data.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 3,
+        "question": "What is the difference between HashSet and TreeSet?",
+        "answer": "HashSet: Unordered, O(1) operations, allows one null, backed by HashMap. TreeSet: Sorted order, O(log n) operations, no nulls allowed, backed by TreeMap. Use HashSet for fast unique checks, TreeSet when you need sorted unique elements.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 4,
+        "question": "How does HashMap work internally?",
+        "answer": "HashMap uses array of buckets. Key's hashCode() determines bucket index. Collisions handled by linked list (Java 7) or tree (Java 8+ when >8 entries). On get: hash key → find bucket → traverse list/tree using equals(). Load factor 0.75 triggers resize. Java 8+ converts to red-black tree for O(log n) worst case.",
+        "difficulty": "Hard"
+      },
+      {
+        "id": 5,
+        "question": "What is the difference between fail-fast and fail-safe iterators?",
+        "answer": "Fail-fast: Throws ConcurrentModificationException if collection modified during iteration (ArrayList, HashMap). Uses modCount internally. Fail-safe: Works on clone, doesn't throw exception (ConcurrentHashMap, CopyOnWriteArrayList). Fail-safe may not reflect latest changes. Use Iterator.remove() for safe removal during iteration.",
+        "difficulty": "Hard"
+      },
+      {
+        "id": 6,
+        "question": "When should you override equals() and hashCode()?",
+        "answer": "Override both when using objects as Map keys or in Sets. Contract: Equal objects MUST have same hashCode. If only equals() overridden, HashMap won't find objects. Use same fields in both methods. IDE can generate these. Objects.equals() and Objects.hash() help with null handling.",
+        "difficulty": "Medium"
+      }
+    ]
+  },
+
+  "exceptions": {
+    "title": "Exception Handling",
+    "icon": "⚠️",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is the difference between checked and unchecked exceptions?",
+        "answer": "Checked exceptions: Must be caught or declared (throws), checked at compile-time. Examples: IOException, SQLException. Unchecked exceptions (RuntimeException): Don't require handling, occur at runtime. Examples: NullPointerException, ArrayIndexOutOfBoundsException. Error: Serious system problems, shouldn't be caught (OutOfMemoryError).",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 2,
+        "question": "What is try-with-resources?",
+        "answer": "Java 7+ feature that automatically closes resources implementing AutoCloseable. Syntax: try (Resource r = new Resource()) { }. Resources closed in reverse order of creation. Cleaner than try-finally, handles multiple resources. Suppressed exceptions accessible via getSuppressed().",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 3,
+        "question": "Can we have try without catch?",
+        "answer": "Yes, with try-finally (for cleanup) or try-with-resources (auto-close). try-finally: finally always executes. try-with-resources: resources auto-closed. Cannot have try alone. Example: try (var reader = new FileReader(file)) { } - no catch needed if exception is declared in method signature.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 4,
+        "question": "What happens if exception is thrown in finally block?",
+        "answer": "The finally exception masks the original exception from try/catch block. The original exception is lost unless you handle it explicitly. In Java 7+, use try-with-resources which handles this via suppressed exceptions. Best practice: Avoid throwing exceptions in finally, use try-finally for cleanup only.",
+        "difficulty": "Hard"
+      }
+    ]
+  },
+
+  "multithreading": {
+    "title": "Multithreading & Concurrency",
+    "icon": "🔄",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is the difference between Thread and Runnable?",
+        "answer": "Thread: Class to extend, can only extend one class (no multiple inheritance), has lifecycle methods. Runnable: Interface to implement, allows extending other classes, separates task from thread. Prefer Runnable for flexibility. Java 5+ prefer ExecutorService over manual thread creation.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 2,
+        "question": "What is the difference between synchronized method and synchronized block?",
+        "answer": "Synchronized method: Locks entire method on 'this' object (or class for static). Synchronized block: Locks only specific section on specified object, more granular control. Block preferred for performance - minimize locked code. Both provide mutual exclusion and visibility guarantees.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 3,
+        "question": "What is volatile keyword?",
+        "answer": "volatile ensures visibility: reads/writes go directly to main memory, not CPU cache. Prevents caching of variable value. Does NOT provide atomicity - i++ on volatile is still not thread-safe. Use for flags, single writer multiple reader scenarios. For atomicity, use Atomic classes or synchronized.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 4,
+        "question": "What is ThreadLocal?",
+        "answer": "ThreadLocal provides thread-local variables - each thread has its own independent copy. Common uses: storing user context, database connections per thread, SimpleDateFormat (not thread-safe). Usage: ThreadLocal<T> tl = new ThreadLocal<>(); tl.set(value); tl.get(); Always call remove() to prevent memory leaks.",
+        "difficulty": "Hard"
+      },
+      {
+        "id": 5,
+        "question": "What is the difference between wait() and sleep()?",
+        "answer": "wait(): Object method, releases lock, must be in synchronized block, woken by notify()/notifyAll(). sleep(): Thread method, doesn't release lock, pauses current thread for specified time. wait() for inter-thread communication, sleep() for pausing execution. Both throw InterruptedException.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 6,
+        "question": "What is deadlock and how to prevent it?",
+        "answer": "Deadlock: Two+ threads waiting for each other's locks forever. Conditions: mutual exclusion, hold and wait, no preemption, circular wait. Prevention: Lock ordering (always acquire locks in same order), lock timeout (tryLock with timeout), avoid nested locks, use higher-level concurrency utilities.",
+        "difficulty": "Hard"
+      }
+    ]
+  },
+
+  "java8Features": {
+    "title": "Java 8+ Features",
+    "icon": "✨",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is a lambda expression?",
+        "answer": "Lambda is an anonymous function implementing a functional interface. Syntax: (params) -> expression or (params) -> { statements }. Examples: () -> 42, x -> x * 2, (a, b) -> a + b. Enables functional programming, used with Stream API, reduces boilerplate vs anonymous classes.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 2,
+        "question": "What is a functional interface?",
+        "answer": "Interface with exactly one abstract method, used as lambda target. @FunctionalInterface annotation (optional but recommended). Built-in: Predicate<T> (test), Function<T,R> (apply), Consumer<T> (accept), Supplier<T> (get). Can have default and static methods without affecting functional interface status.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 3,
+        "question": "What is the difference between map() and flatMap()?",
+        "answer": "map(): Transforms each element, one-to-one mapping. flatMap(): Transforms and flattens, one-to-many mapping. Use flatMap when mapper returns Stream/Collection. Example: List of Lists → flatMap flattens to single List. map would create Stream of Streams instead.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 4,
+        "question": "What is Optional and why use it?",
+        "answer": "Optional<T> is a container that may or may not contain a non-null value. Avoids NullPointerException, makes null handling explicit. Create: Optional.of(val), Optional.ofNullable(val), Optional.empty(). Use: isPresent(), get(), orElse(), orElseGet(), map(), filter(). Don't use for fields or parameters, mainly for return types.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 5,
+        "question": "What is the difference between intermediate and terminal operations in Stream?",
+        "answer": "Intermediate: Return Stream, lazy (not executed until terminal), chainable. Examples: filter(), map(), sorted(), distinct(). Terminal: Return non-Stream result, trigger execution of pipeline. Examples: collect(), forEach(), count(), reduce(). Stream can only be consumed once.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 6,
+        "question": "What are default methods in interfaces?",
+        "answer": "Java 8 allows method implementations in interfaces using 'default' keyword. Enables adding methods to interfaces without breaking existing implementations. Used for backward compatibility (Collection.stream()). If class implements multiple interfaces with same default method, must override it.",
+        "difficulty": "Medium"
+      }
+    ]
+  },
+
+  "springBoot": {
+    "title": "Spring Boot",
+    "icon": "🌱",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is Spring Boot and its advantages?",
+        "answer": "Spring Boot is a framework for building production-ready Spring applications quickly. Advantages: Auto-configuration, embedded servers (Tomcat), starter dependencies, no XML config needed, production-ready features (Actuator), rapid development. @SpringBootApplication combines @Configuration, @EnableAutoConfiguration, @ComponentScan.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 2,
+        "question": "What is dependency injection and IoC?",
+        "answer": "IoC (Inversion of Control): Framework controls object lifecycle, not the code. DI (Dependency Injection): Dependencies provided to objects rather than created by them. Types: Constructor injection (recommended), setter injection, field injection (@Autowired). Benefits: loose coupling, testability, flexibility.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 3,
+        "question": "What is the difference between @Component, @Service, @Repository, @Controller?",
+        "answer": "@Component: Generic stereotype. @Service: Business logic layer, semantic clarity. @Repository: Data access layer, enables exception translation. @Controller/@RestController: Web layer, handles HTTP requests. All are @Component specializations, detected by component scanning. Use appropriate one for each layer.",
+        "difficulty": "Easy"
+      },
+      {
+        "id": 4,
+        "question": "What is the difference between @Autowired constructor vs field injection?",
+        "answer": "Constructor injection: Dependencies explicit, immutable (final), easier testing, fails fast if dependency missing. Field injection: Less code, but hides dependencies, harder to test, allows null. Constructor injection recommended by Spring team. @Autowired optional on single constructor (Spring 4.3+).",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 5,
+        "question": "What are Spring Boot profiles?",
+        "answer": "Profiles allow different configurations for different environments (dev, test, prod). Files: application-dev.properties, application-prod.properties. Activate: spring.profiles.active=dev or -Dspring.profiles.active=dev. @Profile annotation on beans. Enables environment-specific behavior without code changes.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 6,
+        "question": "What is Spring Data JPA?",
+        "answer": "Spring Data JPA simplifies data access by auto-implementing repository interfaces. Extend JpaRepository<Entity, ID> to get CRUD operations free. Method naming conventions: findByName(), findByAgeGreaterThan(). @Query for custom JPQL/SQL. Reduces boilerplate significantly compared to raw JPA/Hibernate.",
+        "difficulty": "Medium"
+      }
+    ]
+  },
+
+  "designPatterns": {
+    "title": "Design Patterns",
+    "icon": "🏗️",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is Singleton pattern and how to implement it?",
+        "answer": "Singleton ensures one instance per JVM. Thread-safe implementation: private static volatile instance, private constructor, double-checked locking in getInstance(). Or use enum: enum Singleton { INSTANCE }. Enum handles serialization and reflection attacks. Used for configuration, connection pools, logging.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 2,
+        "question": "What is Factory pattern?",
+        "answer": "Factory creates objects without exposing instantiation logic. Client uses factory method instead of 'new'. Types: Simple Factory, Factory Method (subclasses decide), Abstract Factory (families of objects). Benefits: loose coupling, single responsibility, easy to add new types. Used in JDBC, Spring BeanFactory.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 3,
+        "question": "What is Builder pattern?",
+        "answer": "Builder constructs complex objects step by step. Separates construction from representation. Pattern: static inner Builder class, fluent API with chained methods, build() returns product. Benefits: handles many parameters elegantly, immutable objects possible. Example: StringBuilder, Stream API, Lombok @Builder.",
+        "difficulty": "Medium"
+      },
+      {
+        "id": 4,
+        "question": "What is Strategy pattern?",
+        "answer": "Strategy defines family of algorithms, encapsulates each, makes them interchangeable. Context holds reference to strategy interface, clients can switch algorithms at runtime. Example: Comparator (different sorting strategies), payment methods, compression algorithms. Follows Open/Closed principle.",
+        "difficulty": "Medium"
+      }
+    ]
+  }
+}

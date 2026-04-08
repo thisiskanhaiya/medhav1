@@ -1,0 +1,493 @@
+{
+    "Task 1: Introduction to REST & APIs": {
+      "title": "Introduction to REST & APIs",
+      "description": "REST (Representational State Transfer) is an architectural style for designing networked applications. RESTful APIs use HTTP requests to perform CRUD operations on resources.\n\nWhat is an API?\n   - Application Programming Interface\n   - Allows two applications to communicate\n   - Client sends Request, Server returns Response\n   - Data exchanged in JSON or XML format\n\nHTTP Methods:\n   - GET    : Retrieve data (Read)\n   - POST   : Create new resource\n   - PUT    : Update entire resource\n   - PATCH  : Partially update resource\n   - DELETE : Remove resource\n\nHTTP Status Codes:\n   - 200 OK            : Success\n   - 201 Created       : Resource created\n   - 204 No Content    : Success, no response body\n   - 400 Bad Request   : Invalid request data\n   - 401 Unauthorized  : Authentication required\n   - 403 Forbidden     : No permission\n   - 404 Not Found     : Resource does not exist\n   - 500 Internal Server Error : Server-side error\n\nRequest Structure:\n   - URL/Endpoint\n   - HTTP Method\n   - Headers (Content-Type, Authorization)\n   - Request Body (for POST/PUT/PATCH)\n   - Query Parameters (?key=value)\n   - Path Parameters (/users/{id})\n\nResponse Structure:\n   - Status Code\n   - Response Headers\n   - Response Body (JSON/XML)\n   - Response Time",
+      "keyPoints": [
+        "REST is stateless - each request is independent",
+        "JSON is the most common data format for REST APIs",
+        "GET requests should never modify data",
+        "POST creates resource, PUT replaces it, PATCH updates partially",
+        "Status codes 2xx = success, 4xx = client error, 5xx = server error",
+        "Headers carry metadata like Content-Type and Authorization tokens"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Explore APIs using Postman",
+          "scenario": "Before writing code, explore the free JSONPlaceholder API (https://jsonplaceholder.typicode.com) using Postman to understand request/response structure.",
+          "steps": [
+            "Download and install Postman",
+            "Create a GET request to https://jsonplaceholder.typicode.com/users",
+            "Observe the JSON response structure",
+            "Create a GET request to /users/1 (path parameter)",
+            "Create a POST request to /posts with JSON body",
+            "Observe status codes for each request",
+            "Check response headers like Content-Type"
+          ],
+          "code": "// API Endpoints to explore in Postman:\n\n// GET all users\nGET https://jsonplaceholder.typicode.com/users\n\n// GET single user by ID (path parameter)\nGET https://jsonplaceholder.typicode.com/users/1\n\n// GET posts with query parameter\nGET https://jsonplaceholder.typicode.com/posts?userId=1\n\n// POST - create new post\nPOST https://jsonplaceholder.typicode.com/posts\nContent-Type: application/json\n\n{\n  \"title\": \"My First Post\",\n  \"body\": \"This is the post body\",\n  \"userId\": 1\n}\n\n// Expected Responses:\n// GET users    -> 200 OK\n// POST posts   -> 201 Created\n// GET /users/999 -> 404 Not Found"
+        },
+        {
+          "id": 2,
+          "title": "Understand JSON Structure",
+          "scenario": "Practice reading and understanding JSON response structures that you will validate in Rest Assured tests.",
+          "steps": [
+            "Identify JSON object vs JSON array",
+            "Navigate nested JSON objects",
+            "Identify data types: string, number, boolean, array",
+            "Note field names for later use in assertions",
+            "Understand null values in JSON"
+          ],
+          "code": "// Sample JSON Response - User Object\n{\n  \"id\": 1,\n  \"name\": \"Leanne Graham\",\n  \"username\": \"Bret\",\n  \"email\": \"Sincere@april.biz\",\n  \"address\": {\n    \"street\": \"Kulas Light\",\n    \"city\": \"Gwenborough\",\n    \"zipcode\": \"92998-3874\"\n  },\n  \"phone\": \"1-770-736-0988\",\n  \"website\": \"hildegard.org\",\n  \"company\": {\n    \"name\": \"Romaguera-Crona\",\n    \"bs\": \"harness real-time e-markets\"\n  }\n}\n\n// JSON Array of Posts\n[\n  {\n    \"userId\": 1,\n    \"id\": 1,\n    \"title\": \"sunt aut facere\",\n    \"body\": \"quia et suscipit\"\n  },\n  {\n    \"userId\": 1,\n    \"id\": 2,\n    \"title\": \"qui est esse\",\n    \"body\": \"est rerum tempore\"\n  }\n]\n\n// Accessing values in Rest Assured:\n// body(\"name\", equalTo(\"Leanne Graham\"))\n// body(\"address.city\", equalTo(\"Gwenborough\"))\n// body(\"[0].title\", equalTo(\"sunt aut facere\"))  // array index"
+        }
+      ]
+    },
+  
+    "Task 2: Rest Assured Setup": {
+      "title": "Rest Assured Setup & Configuration",
+      "description": "Rest Assured is a Java DSL (Domain Specific Language) for simplifying testing of REST services. It provides a fluent API that makes writing API tests feel like plain English.\n\nWhy Rest Assured?\n   - No need to write HTTP connection code manually\n   - Built-in JSON/XML parsing\n   - Chainable fluent API: given().when().then()\n   - Integrates perfectly with TestNG and JUnit\n   - Supports all HTTP methods\n   - Built-in serialization/deserialization with Jackson\n\nRest Assured Structure:\ngiven()   - Setup request (headers, params, body, auth)\n  .when() - Execute request (get, post, put, delete)\n  .then() - Validate response (status, body, headers)\n\nMaven Dependencies:\n   - rest-assured\n   - json-path\n   - xml-path\n   - jackson-databind (for POJO serialization)\n   - testng\n\nBase URI Configuration:\n   - Set globally: RestAssured.baseURI\n   - Set globally: RestAssured.basePath\n   - Set globally: RestAssured.port\n   - Or use RequestSpecification for reusable config\n\nRequestSpecification:\n   - Define base URL, headers, auth once\n   - Reuse across all tests\n   - Clean and maintainable",
+      "keyPoints": [
+        "Rest Assured uses BDD-style syntax: given/when/then",
+        "Set RestAssured.baseURI once in @BeforeClass to avoid repetition",
+        "RequestSpecification allows reusable request configuration",
+        "ResponseSpecification allows reusable response validation",
+        "Always add io.rest-assured:rest-assured dependency not old com.jayway",
+        "Enable logging with .log().all() for debugging"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Setup Rest Assured Maven Project",
+          "scenario": "Create a Maven project with all required Rest Assured dependencies and write a basic configuration class.",
+          "steps": [
+            "Create Maven project in IntelliJ",
+            "Add rest-assured dependency in pom.xml",
+            "Add jackson-databind for JSON serialization",
+            "Add testng dependency",
+            "Create BaseTest class with RestAssured.baseURI setup",
+            "Write first simple GET test to verify setup works"
+          ],
+          "code": "<!-- pom.xml dependencies -->\n<dependencies>\n  <dependency>\n    <groupId>io.rest-assured</groupId>\n    <artifactId>rest-assured</artifactId>\n    <version>5.3.2</version>\n    <scope>test</scope>\n  </dependency>\n\n  <dependency>\n    <groupId>com.fasterxml.jackson.core</groupId>\n    <artifactId>jackson-databind</artifactId>\n    <version>2.15.2</version>\n  </dependency>\n\n  <dependency>\n    <groupId>org.testng</groupId>\n    <artifactId>testng</artifactId>\n    <version>7.8.0</version>\n    <scope>test</scope>\n  </dependency>\n\n  <dependency>\n    <groupId>io.rest-assured</groupId>\n    <artifactId>json-path</artifactId>\n    <version>5.3.2</version>\n  </dependency>\n</dependencies>\n\n// BaseTest.java\npublic class BaseTest {\n  protected RequestSpecification requestSpec;\n\n  @BeforeClass\n  public void setup() {\n    RestAssured.baseURI = \"https://jsonplaceholder.typicode.com\";\n\n    requestSpec = new RequestSpecBuilder()\n      .setBaseUri(\"https://jsonplaceholder.typicode.com\")\n      .setContentType(ContentType.JSON)\n      .build();\n  }\n}"
+        },
+        {
+          "id": 2,
+          "title": "First Rest Assured GET Request",
+          "scenario": "Write your first Rest Assured test using given/when/then syntax to call GET /users and validate the response.",
+          "steps": [
+            "Create FirstApiTest class extending BaseTest",
+            "Write GET request using given().when().then()",
+            "Assert status code is 200",
+            "Enable logging to see request and response",
+            "Extract and print response body",
+            "Run the test and verify output"
+          ],
+          "code": "import io.restassured.RestAssured;\nimport static io.restassured.RestAssured.*;\nimport static org.hamcrest.Matchers.*;\n\npublic class FirstApiTest extends BaseTest {\n\n  @Test\n  public void firstGetRequest() {\n    given()\n      .log().all()            // Log request details\n    .when()\n      .get(\"/users\")          // HTTP GET /users\n    .then()\n      .log().all()            // Log response details\n      .statusCode(200);       // Assert status is 200\n  }\n\n  @Test\n  public void getResponseBody() {\n    Response response =\n      given()\n        .when()\n        .get(\"/users/1\")\n        .then()\n        .statusCode(200)\n        .extract().response();\n\n    System.out.println(\"Status Code : \" + response.getStatusCode());\n    System.out.println(\"Response Body: \" + response.getBody().asString());\n    System.out.println(\"Response Time: \" + response.getTime() + \"ms\");\n    System.out.println(\"Content-Type : \" + response.getContentType());\n  }\n}"
+        }
+      ]
+    },
+  
+    "Task 3: GET Requests & Assertions": {
+      "title": "GET Requests & Response Assertions",
+      "description": "GET requests retrieve data from the server. Rest Assured provides powerful assertion capabilities using Hamcrest matchers to validate every aspect of the response.\n\nHamcrest Matchers (most used):\n   - equalTo(value)          : Exact match\n   - containsString(text)    : String contains\n   - hasSize(n)              : Collection size\n   - not(value)              : Negation\n   - greaterThan(n)          : Numeric comparison\n   - lessThan(n)             : Numeric comparison\n   - notNullValue()          : Not null\n   - nullValue()             : Is null\n   - hasItem(value)          : Array contains item\n   - hasItems(v1,v2)         : Array contains all\n   - everyItem(matcher)      : All items match\n\nJSON Path Expressions:\n   - body(\"name\")            : Root level field\n   - body(\"address.city\")    : Nested field\n   - body(\"[0].name\")        : First array item\n   - body(\"users[1].email\") : Second item field\n   - body(\"*.name\")          : All name fields\n   - body(\"findAll{it.id>2}.name\") : Groovy filter\n\nHeader Assertions:\n   - header(\"Content-Type\", containsString(\"json\"))\n   - headers(\"X-Custom\", \"value\")\n\nResponse Time:\n   - time(lessThan(2000L))   : Response under 2 seconds",
+      "keyPoints": [
+        "Import static io.restassured.RestAssured.* for clean syntax",
+        "Import static org.hamcrest.Matchers.* for matchers",
+        "JSON path uses dot notation for nested fields: address.city",
+        "Array elements accessed by index: [0].name or users[0].id",
+        "Use extract().path(\"field\") to get value for use in next request",
+        "body(\"size()\") checks total number of items in array response"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "GET Single Resource & Validate Fields",
+          "scenario": "Call GET /users/1 and validate multiple fields in the response including nested objects.",
+          "steps": [
+            "Send GET request to /users/1",
+            "Assert status code 200",
+            "Assert name field equals expected value",
+            "Assert nested field address.city",
+            "Assert email contains @ symbol",
+            "Assert id is not null",
+            "Assert response time is less than 3 seconds"
+          ],
+          "code": "import static io.restassured.RestAssured.*;\nimport static org.hamcrest.Matchers.*;\n\npublic class GetRequestTest extends BaseTest {\n\n  @Test\n  public void validateSingleUser() {\n    given()\n      .pathParam(\"id\", 1)\n    .when()\n      .get(\"/users/{id}\")\n    .then()\n      .statusCode(200)\n      .body(\"id\",              equalTo(1))\n      .body(\"name\",            equalTo(\"Leanne Graham\"))\n      .body(\"username\",        equalTo(\"Bret\"))\n      .body(\"email\",           containsString(\"@\"))\n      .body(\"address.city\",    equalTo(\"Gwenborough\"))\n      .body(\"address.zipcode\", notNullValue())\n      .body(\"company.name\",    not(emptyString()))\n      .time(lessThan(3000L));\n  }\n\n  @Test\n  public void validateAllUsersResponse() {\n    given()\n    .when()\n      .get(\"/users\")\n    .then()\n      .statusCode(200)\n      .body(\"$\",          hasSize(10))          // 10 users total\n      .body(\"id\",         hasSize(10))          // 10 id fields\n      .body(\"name\",       hasItem(\"Leanne Graham\"))  // array contains\n      .body(\"[0].name\",   equalTo(\"Leanne Graham\"))  // first user\n      .body(\"[9].id\",     equalTo(10))          // last user id\n      .header(\"Content-Type\", containsString(\"application/json\"));\n  }\n}"
+        },
+        {
+          "id": 2,
+          "title": "Query Parameters & Path Parameters",
+          "scenario": "Practice using path parameters and query parameters to filter API responses.",
+          "steps": [
+            "Use pathParam() for /users/{id}",
+            "Use queryParam() to filter posts by userId",
+            "Assert filtered results contain only matching userId",
+            "Use multiple query parameters together",
+            "Extract filtered list size and assert"
+          ],
+          "code": "public class ParameterTest extends BaseTest {\n\n  @Test\n  public void getPostsByUserId() {\n    // Query parameter: /posts?userId=1\n    given()\n      .queryParam(\"userId\", 1)\n    .when()\n      .get(\"/posts\")\n    .then()\n      .statusCode(200)\n      .body(\"$\",         hasSize(10))\n      .body(\"userId\",    everyItem(equalTo(1)))  // all posts belong to userId 1\n      .body(\"id\",        hasSize(10));\n  }\n\n  @Test\n  public void getCommentsByPostId() {\n    // Multiple params: /comments?postId=1\n    given()\n      .queryParam(\"postId\", 1)\n    .when()\n      .get(\"/comments\")\n    .then()\n      .statusCode(200)\n      .body(\"$\",        hasSize(5))\n      .body(\"postId\",   everyItem(equalTo(1)))\n      .body(\"email\",    everyItem(containsString(\"@\")));\n  }\n\n  @Test\n  public void pathAndQueryParamCombined() {\n    // Path param for user, then get their albums\n    int userId = 1;\n    given()\n      .queryParam(\"userId\", userId)\n    .when()\n      .get(\"/albums\")\n    .then()\n      .statusCode(200)\n      .body(\"userId\",   everyItem(equalTo(userId)))\n      .body(\"title\",    everyItem(not(emptyString())));\n  }\n}"
+        },
+        {
+          "id": 3,
+          "title": "Extract Response Values",
+          "scenario": "Extract values from API response to use in subsequent requests or for complex assertions in Java code.",
+          "steps": [
+            "Extract single field value using extract().path()",
+            "Extract entire response as String",
+            "Extract response as JsonPath object",
+            "Extract list of values from array response",
+            "Use extracted value in next API call"
+          ],
+          "code": "public class ExtractResponseTest extends BaseTest {\n\n  @Test\n  public void extractAndUseValues() {\n    // Extract single value\n    String name = given()\n      .when()\n      .get(\"/users/1\")\n      .then()\n      .statusCode(200)\n      .extract().path(\"name\");\n\n    System.out.println(\"User Name: \" + name);\n    Assert.assertEquals(name, \"Leanne Graham\");\n\n    // Extract nested value\n    String city = given()\n      .when()\n      .get(\"/users/1\")\n      .then()\n      .extract().path(\"address.city\");\n    System.out.println(\"City: \" + city);\n\n    // Extract list of all user names\n    List<String> allNames = given()\n      .when()\n      .get(\"/users\")\n      .then()\n      .extract().path(\"name\");\n    System.out.println(\"All names: \" + allNames);\n    Assert.assertEquals(allNames.size(), 10);\n\n    // Extract as JsonPath for complex operations\n    JsonPath jsonPath = given()\n      .when()\n      .get(\"/users\")\n      .then()\n      .extract().jsonPath();\n\n    String firstUserEmail = jsonPath.getString(\"[0].email\");\n    List<String> emails = jsonPath.getList(\"email\");\n    System.out.println(\"First email: \" + firstUserEmail);\n    System.out.println(\"Total emails: \" + emails.size());\n  }\n}"
+        }
+      ]
+    },
+  
+    "Task 4: POST, PUT, PATCH, DELETE": {
+      "title": "POST, PUT, PATCH & DELETE Requests",
+      "description": "While GET retrieves data, the other HTTP methods modify data on the server. Understanding how to send request bodies and validate responses is essential for complete API testing.\n\nPOST Request:\n   - Creates a new resource\n   - Request body contains new resource data\n   - Returns 201 Created on success\n   - Response body usually contains created resource with ID\n\nPUT Request:\n   - Replaces entire existing resource\n   - Must send all fields even unchanged ones\n   - Returns 200 OK on success\n   - If resource not found may return 404\n\nPATCH Request:\n   - Partially updates existing resource\n   - Send only fields you want to change\n   - Returns 200 OK on success\n   - More efficient than PUT for small changes\n\nDELETE Request:\n   - Removes a resource\n   - Usually returns 200 OK or 204 No Content\n   - Response body may be empty\n   - Subsequent GET should return 404\n\nRequest Body Options in Rest Assured:\n   - String (raw JSON)\n   - HashMap/Map object\n   - POJO class (auto-serialized by Jackson)\n   - JSONObject from org.json library\n\nContent-Type Header:\n   - Must set Content-Type: application/json for body requests\n   - Use .contentType(ContentType.JSON) in Rest Assured",
+      "keyPoints": [
+        "Always set Content-Type header for POST/PUT/PATCH requests",
+        "POST returns 201, PUT/PATCH return 200, DELETE returns 200 or 204",
+        "POJO serialization requires Jackson dependency and getter/setter methods",
+        "JSONPlaceholder is fake API - data not actually saved but returns valid response",
+        "body(\"id\", notNullValue()) verifies server assigned an ID to new resource",
+        "For DELETE: verify 200/204, then GET same resource to confirm 404"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "POST Request - Create Resource",
+          "scenario": "Send a POST request to create a new post on /posts endpoint with JSON body using different body formats.",
+          "steps": [
+            "Send POST with raw JSON String body",
+            "Assert status code 201 Created",
+            "Assert response body contains sent data",
+            "Assert server assigned an ID",
+            "Send POST using HashMap as body",
+            "Send POST using POJO class as body"
+          ],
+          "code": "public class PostRequestTest extends BaseTest {\n\n  @Test\n  public void createPostWithStringBody() {\n    String requestBody = \"{\" +\n      \"\\\"title\\\": \\\"Rest Assured Test Post\\\",\" +\n      \"\\\"body\\\": \\\"This is created by Rest Assured\\\",\" +\n      \"\\\"userId\\\": 1\" +\n      \"}\";\n\n    given()\n      .contentType(ContentType.JSON)\n      .body(requestBody)\n    .when()\n      .post(\"/posts\")\n    .then()\n      .statusCode(201)\n      .body(\"title\",  equalTo(\"Rest Assured Test Post\"))\n      .body(\"userId\", equalTo(1))\n      .body(\"id\",     notNullValue())\n      .log().body();\n  }\n\n  @Test\n  public void createPostWithHashMap() {\n    HashMap<String, Object> body = new HashMap<>();\n    body.put(\"title\",  \"Post via HashMap\");\n    body.put(\"body\",   \"Body content here\");\n    body.put(\"userId\", 1);\n\n    given()\n      .contentType(ContentType.JSON)\n      .body(body)\n    .when()\n      .post(\"/posts\")\n    .then()\n      .statusCode(201)\n      .body(\"title\", equalTo(\"Post via HashMap\"))\n      .body(\"id\",    notNullValue());\n  }\n\n  @Test\n  public void createPostWithPOJO() {\n    // Using POJO class for cleaner code\n    PostRequest postRequest = new PostRequest();\n    postRequest.setTitle(\"Post via POJO\");\n    postRequest.setBody(\"Clean POJO body\");\n    postRequest.setUserId(1);\n\n    given()\n      .contentType(ContentType.JSON)\n      .body(postRequest)\n    .when()\n      .post(\"/posts\")\n    .then()\n      .statusCode(201)\n      .body(\"title\", equalTo(\"Post via POJO\"));\n  }\n}"
+        },
+        {
+          "id": 2,
+          "title": "PUT and PATCH Requests",
+          "scenario": "Update an existing post using both PUT (full update) and PATCH (partial update) and validate the changes.",
+          "steps": [
+            "Send PUT to /posts/1 with full updated body",
+            "Assert all fields are updated in response",
+            "Send PATCH to /posts/1 with only title field",
+            "Assert only title changed in response",
+            "Compare PUT vs PATCH behavior"
+          ],
+          "code": "public class UpdateRequestTest extends BaseTest {\n\n  @Test\n  public void updatePostWithPUT() {\n    // PUT - full resource replacement\n    HashMap<String, Object> fullUpdate = new HashMap<>();\n    fullUpdate.put(\"id\",     1);\n    fullUpdate.put(\"title\",  \"Updated Title via PUT\");\n    fullUpdate.put(\"body\",   \"Updated body content\");\n    fullUpdate.put(\"userId\", 1);\n\n    given()\n      .contentType(ContentType.JSON)\n      .body(fullUpdate)\n    .when()\n      .put(\"/posts/1\")\n    .then()\n      .statusCode(200)\n      .body(\"id\",    equalTo(1))\n      .body(\"title\", equalTo(\"Updated Title via PUT\"))\n      .body(\"body\",  equalTo(\"Updated body content\"))\n      .log().body();\n  }\n\n  @Test\n  public void partialUpdateWithPATCH() {\n    // PATCH - only send fields to update\n    HashMap<String, Object> partialUpdate = new HashMap<>();\n    partialUpdate.put(\"title\", \"Only Title Updated via PATCH\");\n\n    given()\n      .contentType(ContentType.JSON)\n      .body(partialUpdate)\n    .when()\n      .patch(\"/posts/1\")\n    .then()\n      .statusCode(200)\n      .body(\"title\",  equalTo(\"Only Title Updated via PATCH\"))\n      .body(\"userId\", equalTo(1))  // other fields unchanged\n      .log().body();\n  }\n}"
+        },
+        {
+          "id": 3,
+          "title": "DELETE Request",
+          "scenario": "Delete a resource using DELETE method, verify the deletion response, and confirm the resource is gone.",
+          "steps": [
+            "Send DELETE request to /posts/1",
+            "Assert status code 200 or 204",
+            "Verify response body is empty or confirmation message",
+            "Send GET to same endpoint after delete",
+            "Assert 404 Not Found after deletion"
+          ],
+          "code": "public class DeleteRequestTest extends BaseTest {\n\n  @Test\n  public void deletePost() {\n    // Delete the post\n    given()\n    .when()\n      .delete(\"/posts/1\")\n    .then()\n      .statusCode(200)\n      .log().all();\n  }\n\n  @Test\n  public void deleteAndVerify() {\n    int postId = 1;\n\n    // Step 1: Verify post exists\n    given()\n    .when()\n      .get(\"/posts/\" + postId)\n    .then()\n      .statusCode(200)\n      .body(\"id\", equalTo(postId));\n\n    // Step 2: Delete the post\n    given()\n    .when()\n      .delete(\"/posts/\" + postId)\n    .then()\n      .statusCode(200);\n\n    System.out.println(\"Post \" + postId + \" deleted successfully\");\n    // Note: JSONPlaceholder is fake API so GET after delete\n    // still returns 200, but in real APIs it would return 404\n  }\n}"
+        }
+      ]
+    },
+  
+    "Task 5: Request & Response Specifications": {
+      "title": "Request & Response Specifications",
+      "description": "Specifications allow you to define reusable request and response configurations. Instead of repeating headers, base URL, and common assertions in every test, you define them once and reuse everywhere.\n\nRequestSpecification:\n   - Defines common request setup\n   - Base URL, headers, auth, content type\n   - Built using RequestSpecBuilder\n   - Used with given(requestSpec)\n\nResponseSpecification:\n   - Defines common response validations\n   - Status codes, headers to check\n   - Built using ResponseSpecBuilder\n   - Used with then(responseSpec)\n\nBenefits:\n   - DRY principle - Don't Repeat Yourself\n   - Change base URL in one place\n   - Common headers managed centrally\n   - Tests become cleaner and focused\n\nSpec Builder Methods:\n   - setBaseUri(url)\n   - setBasePath(path)\n   - addHeader(name, value)\n   - setContentType(type)\n   - addQueryParam(key, value)\n   - expectStatusCode(code)\n   - expectHeader(name, value)\n   - expectResponseTime(matcher)",
+      "keyPoints": [
+        "RequestSpecBuilder builds reusable request config",
+        "ResponseSpecBuilder builds reusable response validations",
+        "Specs reduce boilerplate code significantly",
+        "Multiple specs can be merged: new RequestSpecBuilder().addRequestSpecification(baseSpec)",
+        "Store specs as static fields in BaseTest class",
+        "Specs can be overridden per test when needed"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Create Reusable Specifications",
+          "scenario": "Create RequestSpecification and ResponseSpecification in BaseTest that all test classes can use to eliminate code duplication.",
+          "steps": [
+            "Create RequestSpecBuilder with base URL and headers",
+            "Create ResponseSpecBuilder with common status and header checks",
+            "Use both specs in multiple test methods",
+            "Create a separate spec for authenticated requests",
+            "Override spec for one test that needs different config"
+          ],
+          "code": "public class BaseTest {\n  protected static RequestSpecification requestSpec;\n  protected static ResponseSpecification responseSpec;\n  protected static RequestSpecification authRequestSpec;\n\n  @BeforeClass\n  public static void setupSpecs() {\n    // Base Request Specification\n    requestSpec = new RequestSpecBuilder()\n      .setBaseUri(\"https://jsonplaceholder.typicode.com\")\n      .setContentType(ContentType.JSON)\n      .addHeader(\"Accept\", \"application/json\")\n      .log(LogDetail.ALL)\n      .build();\n\n    // Base Response Specification\n    responseSpec = new ResponseSpecBuilder()\n      .expectHeader(\"Content-Type\", containsString(\"application/json\"))\n      .expectResponseTime(lessThan(5000L))\n      .log(LogDetail.ALL)\n      .build();\n\n    // Authenticated Request Spec (example with Bearer token)\n    authRequestSpec = new RequestSpecBuilder()\n      .addRequestSpecification(requestSpec)  // inherit base\n      .addHeader(\"Authorization\", \"Bearer your-token-here\")\n      .build();\n  }\n}\n\n// Using specs in tests\npublic class SpecificationTest extends BaseTest {\n\n  @Test\n  public void getUserWithSpec() {\n    given(requestSpec)\n    .when()\n      .get(\"/users/1\")\n    .then()\n      .spec(responseSpec)         // use response spec\n      .statusCode(200)\n      .body(\"name\", equalTo(\"Leanne Graham\"));\n  }\n\n  @Test\n  public void getAllUsersWithSpec() {\n    given(requestSpec)\n    .when()\n      .get(\"/users\")\n    .then()\n      .spec(responseSpec)\n      .statusCode(200)\n      .body(\"$\", hasSize(10));\n  }\n}"
+        }
+      ]
+    },
+  
+    "Task 6: POJO Serialization & Deserialization": {
+      "title": "POJO Serialization & Deserialization",
+      "description": "POJO (Plain Old Java Object) serialization converts Java objects to JSON for requests, and deserialization converts JSON responses back to Java objects. Jackson library handles this automatically.\n\nSerialization (Java Object -> JSON):\n   - Create POJO class with fields\n   - Add getters and setters\n   - Pass POJO as body in Rest Assured\n   - Jackson converts to JSON automatically\n\nDeserialization (JSON -> Java Object):\n   - Define POJO matching JSON structure\n   - Use extract().as(ClassName.class)\n   - Access response data as Java object\n   - Type-safe access to fields\n\nJackson Annotations:\n   - @JsonProperty(\"field_name\") : Map different names\n   - @JsonIgnore               : Skip field\n   - @JsonIgnoreProperties(ignoreUnknown=true) : Skip unknown fields\n\nLombok (optional but recommended):\n   - @Data generates getters, setters, toString\n   - @Builder generates builder pattern\n   - @NoArgsConstructor and @AllArgsConstructor\n   - Reduces boilerplate significantly\n\nNested POJOs:\n   - Create separate class for each nested object\n   - Address class inside User class\n   - List<Post> for array responses",
+      "keyPoints": [
+        "Jackson requires no-args constructor and getters/setters",
+        "Use @JsonIgnoreProperties(ignoreUnknown=true) to handle extra fields",
+        "extract().as(Class.class) deserializes response to POJO",
+        "Lombok @Data eliminates need to write getters/setters manually",
+        "Nested objects need their own POJO class",
+        "List<MyClass> works for array responses"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Create Request and Response POJOs",
+          "scenario": "Create POJO classes for Post request and User response, then use them in API tests for type-safe interactions.",
+          "steps": [
+            "Create PostRequest POJO with title, body, userId fields",
+            "Create UserResponse POJO with id, name, email, address fields",
+            "Create Address nested POJO",
+            "Use PostRequest as request body in POST test",
+            "Deserialize GET /users/1 response into UserResponse POJO",
+            "Access fields directly on POJO object"
+          ],
+          "code": "// PostRequest.java - Request POJO\npublic class PostRequest {\n  private String title;\n  private String body;\n  private int userId;\n\n  // Constructors\n  public PostRequest() {}\n  public PostRequest(String title, String body, int userId) {\n    this.title = title;\n    this.body = body;\n    this.userId = userId;\n  }\n\n  // Getters and Setters\n  public String getTitle()   { return title; }\n  public void setTitle(String title) { this.title = title; }\n  public String getBody()    { return body; }\n  public void setBody(String body)   { this.body = body; }\n  public int getUserId()     { return userId; }\n  public void setUserId(int userId)  { this.userId = userId; }\n}\n\n// UserResponse.java - Response POJO\n@JsonIgnoreProperties(ignoreUnknown = true)\npublic class UserResponse {\n  private int id;\n  private String name;\n  private String username;\n  private String email;\n  private Address address;\n\n  // Getters and Setters...\n\n  public static class Address {\n    private String street;\n    private String city;\n    private String zipcode;\n    // Getters and Setters...\n  }\n}\n\n// Test using POJOs\npublic class PojoTest extends BaseTest {\n\n  @Test\n  public void createPostWithPojo() {\n    PostRequest request = new PostRequest(\"POJO Title\", \"POJO Body\", 1);\n\n    given(requestSpec)\n      .body(request)\n    .when()\n      .post(\"/posts\")\n    .then()\n      .statusCode(201)\n      .body(\"title\", equalTo(\"POJO Title\"));\n  }\n\n  @Test\n  public void deserializeUserResponse() {\n    UserResponse user = given(requestSpec)\n    .when()\n      .get(\"/users/1\")\n    .then()\n      .statusCode(200)\n      .extract().as(UserResponse.class);\n\n    // Type-safe field access\n    System.out.println(\"Name:  \" + user.getName());\n    System.out.println(\"Email: \" + user.getEmail());\n    System.out.println(\"City:  \" + user.getAddress().getCity());\n\n    Assert.assertEquals(user.getName(), \"Leanne Graham\");\n    Assert.assertEquals(user.getAddress().getCity(), \"Gwenborough\");\n  }\n}"
+        }
+      ]
+    },
+  
+    "Task 7: Authentication": {
+      "title": "API Authentication",
+      "description": "Most real-world APIs require authentication to protect resources. Rest Assured supports all common authentication mechanisms.\n\nAuthentication Types:\n\n1. Basic Authentication\n   - Username and password encoded in Base64\n   - Sent in Authorization header\n   - Format: Authorization: Basic base64(user:pass)\n   - Not secure without HTTPS\n\n2. Bearer Token (OAuth 2.0)\n   - Token obtained from login endpoint\n   - Sent in Authorization header\n   - Format: Authorization: Bearer <token>\n   - Most common in modern APIs\n\n3. API Key\n   - Unique key provided by API provider\n   - Can be in header, query param, or body\n   - Simpler than OAuth but less secure\n\n4. OAuth 2.0\n   - Industry standard authorization framework\n   - Get access token using client credentials\n   - Token has expiry, need refresh\n\n5. Digest Authentication\n   - More secure than Basic\n   - Server sends challenge, client responds\n\nRest Assured Auth Methods:\n   - .auth().basic(username, password)\n   - .auth().oauth2(token)\n   - .auth().preemptive().basic(u, p)\n   - .header(\"Authorization\", \"Bearer \" + token)\n   - .header(\"X-API-Key\", apiKey)",
+      "keyPoints": [
+        "Basic auth sends credentials in every request - always use HTTPS",
+        "Bearer token is obtained once (login) and reused for subsequent requests",
+        "preemptive().basic() sends auth without waiting for 401 challenge",
+        "Store tokens/keys in config files or environment variables, never hardcode",
+        "Token expiry handling: refresh token before expiry or on 401 response",
+        "API keys in headers are more secure than in URL query parameters"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Basic Authentication",
+          "scenario": "Test an API endpoint that requires Basic Authentication using Rest Assured auth methods.",
+          "steps": [
+            "Use auth().basic() with credentials",
+            "Verify successful 200 response with auth",
+            "Test without auth to see 401 response",
+            "Use preemptive basic auth",
+            "Add auth to RequestSpecification for reuse"
+          ],
+          "code": "public class AuthTest extends BaseTest {\n\n  @Test\n  public void basicAuthentication() {\n    // Basic Auth\n    given()\n      .baseUri(\"https://httpbin.org\")\n      .auth().basic(\"user\", \"passwd\")\n    .when()\n      .get(\"/basic-auth/user/passwd\")\n    .then()\n      .statusCode(200)\n      .body(\"authenticated\", equalTo(true))\n      .body(\"user\",          equalTo(\"user\"));\n  }\n\n  @Test\n  public void preemptiveBasicAuth() {\n    // Preemptive: sends auth without waiting for 401\n    given()\n      .baseUri(\"https://httpbin.org\")\n      .auth().preemptive().basic(\"user\", \"passwd\")\n    .when()\n      .get(\"/basic-auth/user/passwd\")\n    .then()\n      .statusCode(200);\n  }\n\n  @Test\n  public void withoutAuthExpects401() {\n    given()\n      .baseUri(\"https://httpbin.org\")\n    .when()\n      .get(\"/basic-auth/user/passwd\")\n    .then()\n      .statusCode(401);\n  }\n}"
+        },
+        {
+          "id": 2,
+          "title": "Bearer Token Authentication",
+          "scenario": "Simulate a login flow where you first get a token, then use it in subsequent authenticated requests.",
+          "steps": [
+            "Send POST /login with credentials",
+            "Extract token from login response",
+            "Use extracted token in Authorization header",
+            "Make authenticated GET request",
+            "Store token in RequestSpecification for reuse"
+          ],
+          "code": "public class BearerTokenTest extends BaseTest {\n  private static String authToken;\n\n  @BeforeClass\n  public void getAuthToken() {\n    // Step 1: Login to get token\n    HashMap<String, String> credentials = new HashMap<>();\n    credentials.put(\"username\", \"admin\");\n    credentials.put(\"password\", \"password123\");\n\n    authToken = given()\n      .contentType(ContentType.JSON)\n      .body(credentials)\n    .when()\n      .post(\"https://reqres.in/api/login\")\n    .then()\n      .statusCode(200)\n      .extract().path(\"token\");\n\n    System.out.println(\"Auth Token: \" + authToken);\n  }\n\n  @Test\n  public void authenticatedRequest() {\n    // Step 2: Use token in header\n    given()\n      .baseUri(\"https://reqres.in\")\n      .header(\"Authorization\", \"Bearer \" + authToken)\n    .when()\n      .get(\"/api/users\")\n    .then()\n      .statusCode(200)\n      .body(\"data\", not(empty()));\n  }\n\n  @Test\n  public void oAuth2Style() {\n    // Rest Assured oauth2 method\n    given()\n      .baseUri(\"https://reqres.in\")\n      .auth().oauth2(authToken)\n    .when()\n      .get(\"/api/users\")\n    .then()\n      .statusCode(200);\n  }\n}"
+        }
+      ]
+    },
+  
+    "Task 8: API Chaining": {
+      "title": "API Chaining & E2E Scenarios",
+      "description": "API chaining means using the output of one API call as the input for the next. This mimics real user workflows and allows testing end-to-end scenarios.\n\nCommon Chaining Patterns:\n\n1. Create then Read:\n   POST /users -> extract ID -> GET /users/{id}\n   Verify created resource exists\n\n2. Create then Update:\n   POST /posts -> extract ID -> PUT /posts/{id}\n   Verify update applied correctly\n\n3. Create then Delete:\n   POST /resource -> extract ID -> DELETE /resource/{id}\n   Verify deletion with GET -> 404\n\n4. Login then Operate:\n   POST /login -> extract token -> GET /protected with token\n   Full authentication flow\n\n5. Search then Act:\n   GET /users?name=John -> extract first ID -> GET /users/{id}/posts\n   Use search result to drive next call\n\nBest Practices for Chaining:\n   - Extract only needed values between calls\n   - Use TestNG @Test(dependsOnMethods) for ordered execution\n   - Store shared state as class-level variables\n   - Clean up created data in @AfterClass\n   - Use soft assertions to continue even after failures",
+      "keyPoints": [
+        "extract().path() returns the value for use in next request",
+        "Class-level variables share extracted values between @Test methods",
+        "dependsOnMethods ensures tests run in correct order",
+        "Always clean up test data created during chaining tests",
+        "Log each step clearly for debugging chain failures",
+        "Isolate each chain step in separate method for readability"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "CRUD Chaining Test",
+          "scenario": "Build a complete CRUD flow: Create a post, read it back, update it, verify update, then delete it and verify deletion.",
+          "steps": [
+            "POST /posts - Create a new post, extract ID",
+            "GET /posts/{id} - Verify created post",
+            "PUT /posts/{id} - Update the post",
+            "GET /posts/{id} - Verify updated fields",
+            "DELETE /posts/{id} - Delete the post",
+            "Verify each step with assertions"
+          ],
+          "code": "public class CrudChainTest extends BaseTest {\n  private int createdPostId;\n\n  @Test(priority = 1)\n  public void step1_CreatePost() {\n    HashMap<String, Object> body = new HashMap<>();\n    body.put(\"title\",  \"Chain Test Post\");\n    body.put(\"body\",   \"Created in step 1\");\n    body.put(\"userId\", 1);\n\n    createdPostId = given(requestSpec)\n      .body(body)\n    .when()\n      .post(\"/posts\")\n    .then()\n      .statusCode(201)\n      .body(\"title\", equalTo(\"Chain Test Post\"))\n      .extract().path(\"id\");\n\n    System.out.println(\"Created Post ID: \" + createdPostId);\n    Assert.assertTrue(createdPostId > 0, \"Post ID should be positive\");\n  }\n\n  @Test(priority = 2, dependsOnMethods = \"step1_CreatePost\")\n  public void step2_ReadCreatedPost() {\n    given(requestSpec)\n    .when()\n      .get(\"/posts/\" + createdPostId)\n    .then()\n      .statusCode(200)\n      .body(\"id\", equalTo(createdPostId));\n\n    System.out.println(\"Step 2: Post \" + createdPostId + \" exists\");\n  }\n\n  @Test(priority = 3, dependsOnMethods = \"step2_ReadCreatedPost\")\n  public void step3_UpdatePost() {\n    HashMap<String, Object> updateBody = new HashMap<>();\n    updateBody.put(\"id\",     createdPostId);\n    updateBody.put(\"title\",  \"Updated Chain Post\");\n    updateBody.put(\"body\",   \"Updated in step 3\");\n    updateBody.put(\"userId\", 1);\n\n    given(requestSpec)\n      .body(updateBody)\n    .when()\n      .put(\"/posts/\" + createdPostId)\n    .then()\n      .statusCode(200)\n      .body(\"title\", equalTo(\"Updated Chain Post\"));\n\n    System.out.println(\"Step 3: Post updated\");\n  }\n\n  @Test(priority = 4, dependsOnMethods = \"step3_UpdatePost\")\n  public void step4_DeletePost() {\n    given(requestSpec)\n    .when()\n      .delete(\"/posts/\" + createdPostId)\n    .then()\n      .statusCode(200);\n\n    System.out.println(\"Step 4: Post \" + createdPostId + \" deleted\");\n  }\n}"
+        },
+        {
+          "id": 2,
+          "title": "Login and Perform Operations",
+          "scenario": "Complete authentication chain: register user, login to get token, use token for CRUD operations.",
+          "steps": [
+            "POST /register - Create test user",
+            "POST /login - Login with created credentials",
+            "Extract auth token from login response",
+            "GET /users with Bearer token",
+            "Verify authenticated response"
+          ],
+          "code": "public class LoginChainTest {\n  private String token;\n  private int userId;\n\n  @Test(priority = 1)\n  public void step1_RegisterUser() {\n    HashMap<String, String> body = new HashMap<>();\n    body.put(\"email\",    \"testuser@reqres.in\");\n    body.put(\"password\", \"password123\");\n\n    userId = given()\n      .baseUri(\"https://reqres.in\")\n      .contentType(ContentType.JSON)\n      .body(body)\n    .when()\n      .post(\"/api/register\")\n    .then()\n      .statusCode(200)\n      .body(\"token\", notNullValue())\n      .extract().path(\"id\");\n\n    System.out.println(\"Registered User ID: \" + userId);\n  }\n\n  @Test(priority = 2, dependsOnMethods = \"step1_RegisterUser\")\n  public void step2_LoginAndGetToken() {\n    HashMap<String, String> credentials = new HashMap<>();\n    credentials.put(\"email\",    \"testuser@reqres.in\");\n    credentials.put(\"password\", \"password123\");\n\n    token = given()\n      .baseUri(\"https://reqres.in\")\n      .contentType(ContentType.JSON)\n      .body(credentials)\n    .when()\n      .post(\"/api/login\")\n    .then()\n      .statusCode(200)\n      .body(\"token\", notNullValue())\n      .extract().path(\"token\");\n\n    System.out.println(\"Token: \" + token);\n    Assert.assertNotNull(token);\n  }\n\n  @Test(priority = 3, dependsOnMethods = \"step2_LoginAndGetToken\")\n  public void step3_GetUsersWithToken() {\n    given()\n      .baseUri(\"https://reqres.in\")\n      .header(\"Authorization\", \"Bearer \" + token)\n    .when()\n      .get(\"/api/users\")\n    .then()\n      .statusCode(200)\n      .body(\"data\",        not(empty()))\n      .body(\"data[0].id\",  notNullValue())\n      .body(\"data[0].email\", containsString(\"@\"));\n\n    System.out.println(\"Authenticated GET successful\");\n  }\n}"
+        }
+      ]
+    },
+  
+    "Task 9: Response Validation Deep Dive": {
+      "title": "Advanced Response Validation",
+      "description": "Thorough response validation is what separates good API tests from basic ones. Rest Assured provides rich validation capabilities beyond simple status code checks.\n\nWhat to Validate:\n\n1. Status Code\n   - Exact match: statusCode(200)\n   - Range: statusCode(both(greaterThan(199)).and(lessThan(300)))\n\n2. Response Headers\n   - Content-Type header\n   - Cache-Control\n   - Custom headers\n\n3. Response Body\n   - Field values\n   - Data types\n   - Null checks\n   - Array size and contents\n   - Nested object values\n\n4. Response Time\n   - Performance threshold validation\n   - SLA enforcement in CI/CD\n\n5. Schema Validation\n   - Validate JSON structure against schema\n   - Catches missing/extra fields\n   - Validates data types\n   - Industry standard approach\n\nJSON Schema Validation:\n   - Define expected structure in .json file\n   - matchesJsonSchemaInClasspath(schemaFile)\n   - Validates field names, types, required fields\n   - Works with complex nested structures\n\nSoft Assertions:\n   - Continue test even after assertion fails\n   - Collect all failures at end\n   - Use SoftAssert from TestNG",
+      "keyPoints": [
+        "Schema validation catches API contract changes automatically",
+        "Always validate Content-Type header to ensure JSON response",
+        "Response time assertions enforce performance SLAs",
+        "Validate array empty vs not-empty states explicitly",
+        "Check both positive (data exists) and negative (error message) responses",
+        "Use SoftAssert to report all failures in one test run"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Complete Response Validation",
+          "scenario": "Write comprehensive validation covering status code, headers, body fields, data types, array contents, and response time.",
+          "steps": [
+            "Validate status code is exactly 200",
+            "Validate Content-Type header contains application/json",
+            "Validate multiple body fields with different matchers",
+            "Validate array has correct size",
+            "Validate every item in array matches condition",
+            "Validate response time is under 3 seconds",
+            "Validate nested object fields"
+          ],
+          "code": "public class DeepValidationTest extends BaseTest {\n\n  @Test\n  public void comprehensiveValidation() {\n    given(requestSpec)\n    .when()\n      .get(\"/users\")\n    .then()\n      // Status Code\n      .statusCode(200)\n\n      // Headers\n      .header(\"Content-Type\",  containsString(\"application/json\"))\n      .header(\"Content-Type\",  containsString(\"charset=utf-8\"))\n\n      // Array level checks\n      .body(\"$\",          hasSize(10))\n      .body(\"$\",          not(empty()))\n\n      // Field existence and values\n      .body(\"id\",         hasSize(10))\n      .body(\"id\",         hasItem(1))\n      .body(\"id\",         hasItem(10))\n      .body(\"name\",       hasItem(\"Leanne Graham\"))\n\n      // Every item validation\n      .body(\"id\",         everyItem(notNullValue()))\n      .body(\"email\",      everyItem(containsString(\"@\")))\n      .body(\"username\",   everyItem(not(emptyString())))\n\n      // Nested field validation\n      .body(\"[0].address.city\",    equalTo(\"Gwenborough\"))\n      .body(\"[0].company.name\",    not(emptyString()))\n\n      // Response time\n      .time(lessThan(3000L));\n  }\n\n  @Test\n  public void validateErrorResponse() {\n    given(requestSpec)\n    .when()\n      .get(\"/users/9999\")     // Non-existent user\n    .then()\n      .statusCode(404)\n      .body(isEmpty());\n  }\n\n  @Test\n  public void validateWithSoftAssert() {\n    SoftAssert softAssert = new SoftAssert();\n\n    Response response = given(requestSpec)\n      .when()\n      .get(\"/users/1\")\n      .then()\n      .extract().response();\n\n    softAssert.assertEquals(response.getStatusCode(), 200, \"Status code mismatch\");\n    softAssert.assertEquals(response.jsonPath().getString(\"name\"), \"Leanne Graham\", \"Name mismatch\");\n    softAssert.assertNotNull(response.jsonPath().getString(\"email\"), \"Email is null\");\n    softAssert.assertTrue(response.getTime() < 3000, \"Response too slow\");\n\n    softAssert.assertAll();  // Reports all failures together\n  }\n}"
+        },
+        {
+          "id": 2,
+          "title": "JSON Schema Validation",
+          "scenario": "Create a JSON schema file and use it to validate the structure of API responses automatically.",
+          "steps": [
+            "Add json-schema-validator dependency in pom.xml",
+            "Create user-schema.json in test resources",
+            "Define required fields and data types in schema",
+            "Use matchesJsonSchemaInClasspath() in test",
+            "Verify schema catches missing fields",
+            "Test both valid and invalid responses"
+          ],
+          "code": "// user-schema.json (save in src/test/resources)\n{\n  \"$schema\": \"http://json-schema.org/draft-04/schema#\",\n  \"type\": \"object\",\n  \"required\": [\"id\", \"name\", \"email\", \"username\"],\n  \"properties\": {\n    \"id\":       { \"type\": \"integer\" },\n    \"name\":     { \"type\": \"string\"  },\n    \"username\": { \"type\": \"string\"  },\n    \"email\":    { \"type\": \"string\"  },\n    \"address\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"street\":  { \"type\": \"string\" },\n        \"city\":    { \"type\": \"string\" },\n        \"zipcode\": { \"type\": \"string\" }\n      }\n    }\n  }\n}\n\n// Schema Validation Test\nimport static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;\n\npublic class SchemaValidationTest extends BaseTest {\n\n  @Test\n  public void validateUserSchema() {\n    given(requestSpec)\n    .when()\n      .get(\"/users/1\")\n    .then()\n      .statusCode(200)\n      .body(matchesJsonSchemaInClasspath(\"user-schema.json\"));\n\n    System.out.println(\"Schema validation passed!\");\n  }\n}"
+        }
+      ]
+    },
+  
+    "Task 10: Data-Driven API Testing": {
+      "title": "Data-Driven API Testing",
+      "description": "Data-driven testing runs the same test logic with multiple sets of data. For API testing, this means testing same endpoints with different inputs and expected outputs.\n\nApproaches:\n\n1. TestNG @DataProvider\n   - Return Object[][] with multiple data sets\n   - Test runs once per data row\n   - Best for small inline data sets\n\n2. External JSON File\n   - Read test data from JSON file\n   - Flexible and easy to update\n   - Non-technical team can update data\n\n3. Excel File\n   - Apache POI to read Excel\n   - Business-friendly format\n   - Works well for large data sets\n\n4. CSV File\n   - Simplest format\n   - Easy to generate and edit\n   - Limited structure support\n\n5. Faker Library\n   - Generate random realistic test data\n   - Names, emails, addresses, phone numbers\n   - Useful for load testing or creating unique records\n\nBenefits:\n   - Test coverage without duplicating test code\n   - Easy to add new test cases (just add data)\n   - Clear separation of data and logic\n   - Non-developers can add test scenarios",
+      "keyPoints": [
+        "DataProvider name must match dataProvider attribute in @Test",
+        "Object[][] first dimension is rows, second is columns (parameters)",
+        "External data files go in src/test/resources",
+        "Parameterize both input data AND expected output for complete testing",
+        "Use Faker for generating unique data to avoid conflicts",
+        "Always log which data set is being tested for debugging failures"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Data-Driven POST with DataProvider",
+          "scenario": "Use TestNG @DataProvider to run the same POST /posts test with multiple different data sets.",
+          "steps": [
+            "Create @DataProvider with multiple post data sets",
+            "Include valid and invalid data combinations",
+            "Reference DataProvider in @Test annotation",
+            "Assert different expected results per data set",
+            "Log which data set is currently running"
+          ],
+          "code": "public class DataDrivenApiTest extends BaseTest {\n\n  @DataProvider(name = \"postData\")\n  public Object[][] getPostData() {\n    return new Object[][] {\n      // title,               body,              userId, expectedStatus\n      {\"Valid Post Title\",    \"Valid body\",      1,      201},\n      {\"Another Valid Post\", \"Another body\",    2,      201},\n      {\"Tech Post\",          \"About Java\",      3,      201},\n      {\"Empty Title\",        \"Body only\",       1,      201}\n    };\n  }\n\n  @Test(dataProvider = \"postData\")\n  public void createPostDataDriven(String title, String body, int userId, int expectedStatus) {\n    System.out.println(\"Testing with title: \" + title + \", userId: \" + userId);\n\n    HashMap<String, Object> requestBody = new HashMap<>();\n    requestBody.put(\"title\",  title);\n    requestBody.put(\"body\",   body);\n    requestBody.put(\"userId\", userId);\n\n    given(requestSpec)\n      .body(requestBody)\n    .when()\n      .post(\"/posts\")\n    .then()\n      .statusCode(expectedStatus)\n      .body(\"title\",  equalTo(title))\n      .body(\"userId\", equalTo(userId))\n      .body(\"id\",     notNullValue());\n  }\n\n  @DataProvider(name = \"userIdData\")\n  public Object[][] getUserIdData() {\n    return new Object[][] {\n      {1, \"Leanne Graham\",  200},\n      {2, \"Ervin Howell\",   200},\n      {3, \"Clementine\",     200},\n      {999, null,           404}   // invalid ID\n    };\n  }\n\n  @Test(dataProvider = \"userIdData\")\n  public void getUserDataDriven(int userId, String expectedName, int expectedStatus) {\n    System.out.println(\"Testing userId: \" + userId);\n\n    ValidatableResponse response = given(requestSpec)\n    .when()\n      .get(\"/users/\" + userId)\n    .then()\n      .statusCode(expectedStatus);\n\n    if (expectedStatus == 200) {\n      response.body(\"name\", containsString(expectedName));\n    }\n  }\n}"
+        },
+        {
+          "id": 2,
+          "title": "Read Test Data from JSON File",
+          "scenario": "Store API test data in an external JSON file and read it in DataProvider for cleaner separation of data and logic.",
+          "steps": [
+            "Create testdata/posts.json in test resources",
+            "Define array of test cases in JSON",
+            "Create utility method to read JSON file",
+            "Convert JSON to Object[][] for DataProvider",
+            "Use file-based DataProvider in test"
+          ],
+          "code": "// src/test/resources/testdata/posts.json\n[\n  {\n    \"title\":          \"Java Automation\",\n    \"body\":           \"Rest Assured is great\",\n    \"userId\":         1,\n    \"expectedStatus\": 201\n  },\n  {\n    \"title\":          \"API Testing\",\n    \"body\":           \"Testing REST APIs\",\n    \"userId\":         2,\n    \"expectedStatus\": 201\n  }\n]\n\n// TestDataReader.java utility\npublic class TestDataReader {\n  public static List<Map<String, Object>> readJsonData(String filePath) throws IOException {\n    ObjectMapper mapper = new ObjectMapper();\n    File file = new File(\"src/test/resources/\" + filePath);\n    return mapper.readValue(file,\n        new TypeReference<List<Map<String, Object>>>() {});\n  }\n}\n\n// Test class\npublic class FileDataDrivenTest extends BaseTest {\n\n  @DataProvider(name = \"postsFromFile\")\n  public Object[][] getPostsFromFile() throws IOException {\n    List<Map<String, Object>> testData = TestDataReader.readJsonData(\"testdata/posts.json\");\n    Object[][] data = new Object[testData.size()][1];\n    for (int i = 0; i < testData.size(); i++) {\n      data[i][0] = testData.get(i);\n    }\n    return data;\n  }\n\n  @Test(dataProvider = \"postsFromFile\")\n  public void createPostFromFile(Map<String, Object> testCase) {\n    System.out.println(\"Test case: \" + testCase.get(\"title\"));\n\n    given(requestSpec)\n      .body(testCase)\n    .when()\n      .post(\"/posts\")\n    .then()\n      .statusCode((Integer) testCase.get(\"expectedStatus\"))\n      .body(\"title\", equalTo(testCase.get(\"title\")));\n  }\n}"
+        }
+      ]
+    },
+  
+    "Task 11: API Framework Design": {
+      "title": "API Test Framework Design",
+      "description": "A well-designed API test framework is maintainable, scalable, and reusable. It follows software engineering best practices and makes adding new tests effortless.\n\nFramework Structure:\n   src/\n   main/java/\n     api/        - API client classes\n     models/     - Request/Response POJOs\n     utils/      - Utility helpers\n     config/     - Configuration management\n   test/java/\n     tests/      - Test classes\n     base/       - BaseTest\n     data/       - DataProviders\n   test/resources/\n     schemas/    - JSON schema files\n     testdata/   - Test data JSON/Excel\n     config.properties\n\nKey Components:\n\n1. Configuration Manager\n   - Read from config.properties\n   - Environment-specific URLs (dev/staging/prod)\n   - No hardcoded values in tests\n\n2. API Client Layer\n   - Each API resource has a client class\n   - PostApiClient, UserApiClient, etc.\n   - Tests call client methods, not Rest Assured directly\n\n3. POJO Models\n   - Request and Response models\n   - Lombok for reducing boilerplate\n\n4. Utilities\n   - TestDataReader\n   - FileUtils\n   - DateUtils\n\n5. Base Test\n   - Common setup and teardown\n   - RequestSpecification\n   - Logging configuration",
+      "keyPoints": [
+        "API Client layer hides Rest Assured details from tests",
+        "Config manager reads environment variables or properties file",
+        "Tests should read like documentation - business language",
+        "All URLs and credentials come from config, never hardcoded",
+        "Logging should be configurable - verbose for debug, minimal for CI",
+        "Framework should work for multiple environments with single change"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Build API Client Layer",
+          "scenario": "Create a PostApiClient class that wraps Rest Assured calls so tests don't directly use Rest Assured syntax.",
+          "steps": [
+            "Create PostApiClient class in api package",
+            "Add methods: getAllPosts(), getPostById(), createPost(), updatePost(), deletePost()",
+            "Each method returns Response object",
+            "Tests use client methods instead of given().when().then()",
+            "Client uses RequestSpecification from BaseTest"
+          ],
+          "code": "// PostApiClient.java\npublic class PostApiClient {\n  private final RequestSpecification requestSpec;\n\n  public PostApiClient(RequestSpecification requestSpec) {\n    this.requestSpec = requestSpec;\n  }\n\n  public Response getAllPosts() {\n    return given(requestSpec)\n      .when()\n      .get(\"/posts\");\n  }\n\n  public Response getPostById(int id) {\n    return given(requestSpec)\n      .pathParam(\"id\", id)\n      .when()\n      .get(\"/posts/{id}\");\n  }\n\n  public Response createPost(PostRequest postRequest) {\n    return given(requestSpec)\n      .body(postRequest)\n      .when()\n      .post(\"/posts\");\n  }\n\n  public Response updatePost(int id, PostRequest postRequest) {\n    return given(requestSpec)\n      .pathParam(\"id\", id)\n      .body(postRequest)\n      .when()\n      .put(\"/posts/{id}\");\n  }\n\n  public Response deletePost(int id) {\n    return given(requestSpec)\n      .pathParam(\"id\", id)\n      .when()\n      .delete(\"/posts/{id}\");\n  }\n}\n\n// Clean test using client\npublic class PostApiTest extends BaseTest {\n  private PostApiClient postClient;\n\n  @BeforeClass\n  public void initClient() {\n    postClient = new PostApiClient(requestSpec);\n  }\n\n  @Test\n  public void getAllPostsReturns200() {\n    postClient.getAllPosts()\n      .then()\n      .statusCode(200)\n      .body(\"$\", hasSize(100));\n  }\n\n  @Test\n  public void createPostReturns201() {\n    PostRequest newPost = new PostRequest(\"Framework Post\", \"Via client\", 1);\n    postClient.createPost(newPost)\n      .then()\n      .statusCode(201)\n      .body(\"title\", equalTo(\"Framework Post\"));\n  }\n}"
+        },
+        {
+          "id": 2,
+          "title": "Configuration Manager",
+          "scenario": "Create a ConfigManager class that reads base URLs and credentials from config.properties, enabling multi-environment testing.",
+          "steps": [
+            "Create config.properties in test resources",
+            "Add environment-specific URLs",
+            "Create ConfigManager singleton class",
+            "Read properties using java.util.Properties",
+            "Use system properties to override for different environments",
+            "Update BaseTest to use ConfigManager for URL"
+          ],
+          "code": "// src/test/resources/config.properties\nbase.url=https://jsonplaceholder.typicode.com\napi.version=/\ndefault.timeout=5000\nlog.level=all\n\n// ConfigManager.java\npublic class ConfigManager {\n  private static Properties properties;\n  private static ConfigManager instance;\n\n  private ConfigManager() {\n    properties = new Properties();\n    try {\n      FileInputStream fis = new FileInputStream(\n          \"src/test/resources/config.properties\");\n      properties.load(fis);\n    } catch (IOException e) {\n      throw new RuntimeException(\"Could not load config.properties\", e);\n    }\n  }\n\n  public static ConfigManager getInstance() {\n    if (instance == null) {\n      instance = new ConfigManager();\n    }\n    return instance;\n  }\n\n  public String getBaseUrl() {\n    // System property overrides file (for CI/CD)\n    return System.getProperty(\"base.url\",\n        properties.getProperty(\"base.url\"));\n  }\n\n  public int getTimeout() {\n    return Integer.parseInt(\n        properties.getProperty(\"default.timeout\", \"5000\"));\n  }\n}\n\n// Updated BaseTest\npublic class BaseTest {\n  protected RequestSpecification requestSpec;\n  private ConfigManager config = ConfigManager.getInstance();\n\n  @BeforeClass\n  public void setup() {\n    requestSpec = new RequestSpecBuilder()\n      .setBaseUri(config.getBaseUrl())\n      .setContentType(ContentType.JSON)\n      .build();\n  }\n}\n\n// Run with different environment:\n// mvn test -Dbase.url=https://staging-api.example.com"
+        }
+      ]
+    },
+  
+    "Task 12: Reporting & Logging": {
+      "title": "API Test Reporting & Logging",
+      "description": "Good reporting and logging are essential for understanding API test results, especially in CI/CD pipelines where you need to diagnose failures remotely.\n\nRest Assured Logging:\n\n1. Request Logging:\n   - .log().all() - Log everything\n   - .log().headers() - Log only headers\n   - .log().body() - Log only body\n   - .log().params() - Log parameters\n   - .log().method() - Log HTTP method and URL\n\n2. Response Logging:\n   - .log().all() - Log everything\n   - .log().body() - Log only body\n   - .log().status() - Log status code\n   - .log().ifError() - Log only on error (recommended)\n   - .log().ifValidationFails() - Log only on assertion failure\n\n3. Global Logging:\n   - RestAssured.filters(new RequestLoggingFilter())\n   - Applies to all requests in suite\n\nExtent Reports for API:\n   - Create extent report in @BeforeSuite\n   - Add test node for each @Test\n   - Log request/response details in report\n   - Mark pass/fail with screenshots or JSON\n   - Flush report in @AfterSuite\n\nAllure Reports:\n   - @Step annotation for test steps\n   - @Attachment for request/response JSON\n   - Beautiful timeline and history\n   - Category analysis of failures",
+      "keyPoints": [
+        "Use log().ifValidationFails() in production to reduce log noise",
+        "Always log in @BeforeMethod and @AfterMethod for test boundaries",
+        "Extent report needs extentReports.flush() to generate HTML file",
+        "Allure needs maven plugin and allure commandline to generate report",
+        "Log request/response as Allure attachment for full visibility",
+        "Store reports in target/ folder - excluded from git"
+      ],
+      "exercises": [
+        {
+          "id": 1,
+          "title": "Configure Smart Logging",
+          "scenario": "Set up logging that shows full request/response on failure but minimal output on success for CI/CD pipelines.",
+          "steps": [
+            "Add log().ifValidationFails() to response",
+            "Add global request logging filter",
+            "Log only on error for response",
+            "Write custom log filter for structured output",
+            "Test logging behavior with passing and failing tests"
+          ],
+          "code": "public class LoggingTest extends BaseTest {\n\n  @BeforeClass\n  public void setupLogging() {\n    // Global logging - applies to all requests\n    PrintStream logStream = System.out;\n    RestAssured.filters(\n      new RequestLoggingFilter(logStream),\n      new ResponseLoggingFilter(logStream)\n    );\n  }\n\n  @Test\n  public void logOnlyOnFailure() {\n    given(requestSpec)\n    .when()\n      .get(\"/users/1\")\n    .then()\n      .log().ifValidationFails()  // Only log if assertion fails\n      .statusCode(200)\n      .body(\"name\", equalTo(\"Leanne Graham\"));\n  }\n\n  @Test\n  public void logAllDetails() {\n    given(requestSpec)\n      .log().all()              // Log full request\n    .when()\n      .get(\"/users\")\n    .then()\n      .log().body()             // Log only response body\n      .statusCode(200);\n  }\n\n  @Test\n  public void captureResponseForReport() {\n    Response response = given(requestSpec)\n    .when()\n      .get(\"/users/1\")\n    .then()\n      .extract().response();\n\n    // Log structured info\n    System.out.println(\"========== API Test Result ==========\");\n    System.out.println(\"URL:           \" + response.getHeader(\"Content-Location\"));\n    System.out.println(\"Status Code:   \" + response.getStatusCode());\n    System.out.println(\"Response Time: \" + response.getTime() + \"ms\");\n    System.out.println(\"Response Body: \" + response.getBody().asPrettyString());\n    System.out.println(\"=====================================\");\n  }\n}"
+        }
+      ]
+    }
+  }
