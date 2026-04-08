@@ -1,6 +1,0 @@
-[build]
-  command = "cd medhasphere && npm install && npm run build"
-  publish = "medhasphere/dist"
-
-[build.environment]
-  NODE_VERSION = "18"
