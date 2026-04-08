@@ -19,6 +19,13 @@
           </span>
         </template>
         <span
+          class="nav-item talentcloud-nav"
+          :class="{ active: selected === 'talentcloud' }"
+          @click="navigate('talentcloud'); mobileMenuOpen = false"
+        >
+          ☁️ Talent Cloud
+        </span>
+        <span
           class="nav-item talentforge-nav"
           :class="{ active: selected === 'talentforge' }"
           @click="navigate('talentforge'); mobileMenuOpen = false"
@@ -76,6 +83,11 @@
           Explore Skill Tracks
           <span class="cta-arrow">↓</span>
         </button>
+        <button class="hero-cta talent-cloud-cta" @click="navigate('talentcloud')">
+          <span class="cta-icon">☁️</span>
+          Explore Talent Cloud
+          <span class="cta-arrow">→</span>
+        </button>
       </div>
     </section>
 
@@ -112,6 +124,30 @@
               <span class="btn-text">Start Learning</span>
               <span class="btn-arrow">→</span>
             </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Talent Cloud Section -->
+      <section class="talentcloud-section">
+        <div class="tc-banner" @click="navigate('talentcloud')">
+          <div class="tc-banner-bg"></div>
+          <div class="tc-banner-content">
+            <div class="tc-banner-left">
+              <span class="tc-badge">☁️ Talent-as-a-Service</span>
+              <h2 class="tc-banner-title">Hire Talent</h2>
+              <p class="tc-banner-tagline">Access and deploy industry-ready professionals</p>
+              <div class="tc-features">
+                <span class="tc-feature">🎯 Pre-Trained Talent</span>
+                <span class="tc-feature">🚀 Quick Deployment</span>
+                <span class="tc-feature">📊 Performance Tracking</span>
+              </div>
+            </div>
+            <div class="tc-banner-right">
+              <button class="tc-enter-btn">
+                Explore Talent Cloud →
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -180,7 +216,7 @@
         <div class="footer-content">
           <div class="footer-brand">
             <h3>📚 Medhasphere</h3>
-            <p>Master Testing & Development Skills</p>
+            <p>Empowering Minds · Delivering Solutions</p>
           </div>
           <div class="footer-links">
             <p>© 2025 Medhasphere. All rights reserved.</p>
@@ -204,6 +240,7 @@ import SDETComponent from './SDET.vue'
 import JavaComponent from './Java.vue'
 import AIDeveloperComponent from './AIDeveloper.vue'
 import TalentForgeComponent from './TalentForge.vue'
+import TalentCloudComponent from './TalentCloud.vue'
 import testimonial1 from '../assets/1775264017792.png'
 import testimonial2 from '../assets/1775264871247.png'
 import testimonial3 from '../assets/1775265121160.png'
@@ -293,6 +330,7 @@ const currentComponent = computed(() => {
   if (selected.value === 'java') return JavaComponent
   if (selected.value === 'ai') return AIDeveloperComponent
   if (selected.value === 'talentforge') return TalentForgeComponent
+  if (selected.value === 'talentcloud') return TalentCloudComponent
   return null
 })
 </script>
@@ -473,6 +511,23 @@ const currentComponent = computed(() => {
 .nav-item.home-btn:hover {
   background: rgba(99, 102, 241, 0.2);
   transform: translateY(-2px);
+}
+
+.nav-item.talentcloud-nav {
+  background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(6, 182, 212, 0.25);
+}
+
+.nav-item.talentcloud-nav:hover {
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.4);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.nav-item.talentcloud-nav.active {
+  background: linear-gradient(135deg, #0891b2 0%, #2563eb 100%);
+  box-shadow: 0 8px 28px rgba(6, 182, 212, 0.45);
 }
 
 .nav-item.talentforge-nav {
@@ -658,6 +713,26 @@ const currentComponent = computed(() => {
   transform: translateX(-50%);
   z-index: 10;
   animation: fadeUp 1s ease 0.5s both;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hero-cta.talent-cloud-cta {
+  background: rgba(6, 182, 212, 0.95);
+  backdrop-filter: blur(12px);
+  color: white;
+  box-shadow: 
+    0 4px 24px rgba(6, 182, 212, 0.3),
+    0 8px 32px rgba(6, 182, 212, 0.15);
+}
+
+.hero-cta.talent-cloud-cta:hover {
+  background: rgba(6, 182, 212, 1);
+  box-shadow: 
+    0 8px 32px rgba(6, 182, 212, 0.4),
+    0 12px 48px rgba(6, 182, 212, 0.25);
 }
 
 @keyframes fadeUp {
@@ -904,6 +979,127 @@ const currentComponent = computed(() => {
 
 .btn:hover .btn-arrow { transform: translateX(4px); }
 
+/* ─── Talent Cloud Section ───────────────────────────── */
+.talentcloud-section {
+  margin-bottom: 40px;
+}
+
+.tc-banner {
+  position: relative;
+  border-radius: 28px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tc-banner:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 32px 64px rgba(6, 182, 212, 0.2);
+}
+
+.tc-banner-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #0c4a6e 0%, #0e7490 50%, #0891b2 100%);
+  z-index: 0;
+}
+
+.tc-banner-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(6, 182, 212, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(59, 130, 246, 0.25) 0%, transparent 50%);
+}
+
+.tc-banner-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px 48px;
+  gap: 40px;
+  color: white;
+}
+
+.tc-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+  padding: 8px 18px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 16px rgba(34, 211, 238, 0.3);
+}
+
+.tc-banner-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  background: linear-gradient(135deg, #fff 0%, #a5f3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -1px;
+}
+
+.tc-banner-tagline {
+  font-size: 1.05rem;
+  opacity: 0.9;
+  margin: 0 0 20px 0;
+  font-weight: 500;
+}
+
+.tc-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.tc-feature {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.tc-feature:hover {
+  background: rgba(255, 255, 255, 0.18);
+  transform: translateY(-2px);
+}
+
+.tc-banner-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 24px;
+}
+
+.tc-enter-btn {
+  background: linear-gradient(135deg, #22d3ee 0%, #3b82f6 100%);
+  color: white;
+  border: none;
+  padding: 16px 36px;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 4px 20px rgba(34, 211, 238, 0.35);
+}
+
+.tc-enter-btn:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 8px 32px rgba(34, 211, 238, 0.5);
+}
+
 /* ─── TalentForge Section ────────────────────────────── */
 .talentforge-section {
   margin-bottom: 60px;
@@ -1144,7 +1340,22 @@ const currentComponent = computed(() => {
   margin-top: 20px;
 }
 
-.footer-content { max-width: 1200px; margin: 0 auto; }
+.footer-content { 
+  max-width: 1200px; 
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
 
 .footer-brand h3 { 
   font-size: 1.3rem; 
@@ -1154,18 +1365,26 @@ const currentComponent = computed(() => {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-weight: 800;
+  text-align: center;
 }
 
 .footer-brand p { 
   margin: 0 0 16px 0; 
   font-size: 0.95rem;
   font-weight: 500;
+  text-align: center;
+}
+
+.footer-links {
+  width: 100%;
+  text-align: center;
 }
 
 .footer-links p { 
-  margin: 0; 
+  margin: 0 auto; 
   opacity: 0.7; 
-  font-size: 0.88rem; 
+  font-size: 0.88rem;
+  text-align: center;
 }
 
 /* ─── Course Content ─────────────────────────────────── */
@@ -1274,6 +1493,17 @@ const currentComponent = computed(() => {
   .footer { padding: 32px 20px; }
   
   .course-content { padding-top: 80px; }
+
+  .tc-banner-content {
+    flex-direction: column;
+    padding: 28px 24px;
+    text-align: center;
+  }
+
+  .tc-banner-title { font-size: 1.8rem; }
+  .tc-banner-tagline { font-size: 0.95rem; }
+  .tc-features { justify-content: center; }
+  .tc-banner-right { align-items: center; }
 
   .tf-banner-content {
     flex-direction: column;

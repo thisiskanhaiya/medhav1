@@ -1,0 +1,202 @@
+{
+  "talents": [
+    {
+      "id": "T001",
+      "uniqueId": "MED-2024-001",
+      "name": "Rahul Sharma",
+      "avatar": "👨‍💻",
+      "skills": ["Java", "Selenium", "TestNG", "API Testing", "BDD Cucumber"],
+      "experience": "2.5 years as QA Automation Engineer at TCS",
+      "category": "SDET",
+      "categoryId": "sdet",
+      "projectDescription": "Automated 200+ test cases for banking application achieving 95% regression coverage. Reduced manual testing effort by 60%.",
+      "status": "available",
+      "education": "B.Tech in Computer Science",
+      "location": "Bangalore, India"
+    },
+    {
+      "id": "T002",
+      "uniqueId": "MED-2024-002",
+      "name": "Priya Patel",
+      "avatar": "👩‍💻",
+      "skills": ["Python", "Playwright", "CI/CD", "Docker", "AWS"],
+      "experience": "3 years as SDET at Infosys",
+      "category": "SDET",
+      "categoryId": "sdet",
+      "projectDescription": "Built end-to-end test automation framework for fintech platform using Playwright. Integrated with Jenkins CI/CD pipeline.",
+      "status": "deployed",
+      "education": "M.Tech in Software Engineering",
+      "location": "Hyderabad, India"
+    },
+    {
+      "id": "T003",
+      "uniqueId": "MED-2024-003",
+      "name": "Amit Kumar",
+      "avatar": "🧑‍💻",
+      "skills": ["Java", "Spring Boot", "Microservices", "PostgreSQL", "Kafka"],
+      "experience": "2 years as Backend Developer at Wipro",
+      "category": "Backend",
+      "categoryId": "backend",
+      "projectDescription": "Developed RESTful APIs for healthcare management system serving 50K+ daily users. Implemented event-driven architecture using Kafka.",
+      "status": "available",
+      "education": "B.Tech in Information Technology",
+      "location": "Pune, India"
+    },
+    {
+      "id": "T004",
+      "uniqueId": "MED-2024-004",
+      "name": "Sneha Reddy",
+      "avatar": "👩‍💻",
+      "skills": ["React", "Node.js", "MongoDB", "AWS", "TypeScript"],
+      "experience": "2.5 years as Full Stack Developer at Accenture",
+      "category": "Full Stack",
+      "categoryId": "fullstack",
+      "projectDescription": "Built real-time logistics tracking dashboard handling 10K+ concurrent connections. Deployed on AWS with auto-scaling.",
+      "status": "available",
+      "education": "B.E. in Computer Science",
+      "location": "Chennai, India"
+    },
+    {
+      "id": "T005",
+      "uniqueId": "MED-2024-005",
+      "name": "Vikram Singh",
+      "avatar": "👨‍💻",
+      "skills": ["Python", "TensorFlow", "NLP", "FastAPI", "Hugging Face"],
+      "experience": "1.5 years as ML Engineer at Tech Mahindra",
+      "category": "AI/ML",
+      "categoryId": "ai",
+      "projectDescription": "Implemented sentiment analysis model with 92% accuracy for customer feedback analysis. Deployed as REST API using FastAPI.",
+      "status": "available",
+      "education": "M.Tech in AI & ML",
+      "location": "Noida, India"
+    },
+    {
+      "id": "T006",
+      "uniqueId": "MED-2024-006",
+      "name": "Ananya Gupta",
+      "avatar": "👩‍💻",
+      "skills": ["Vue.js", "Python", "Django", "Redis", "PostgreSQL"],
+      "experience": "3 years as Full Stack Developer at Cognizant",
+      "category": "Full Stack",
+      "categoryId": "fullstack",
+      "projectDescription": "Architected scalable SaaS HR management platform for 100+ enterprise clients. Implemented caching layer reducing response time by 40%.",
+      "status": "deployed",
+      "education": "B.Tech in Computer Science",
+      "location": "Bangalore, India"
+    },
+    {
+      "id": "T007",
+      "uniqueId": "MED-2024-007",
+      "name": "Karthik Nair",
+      "avatar": "👨‍💻",
+      "skills": ["Cypress", "JavaScript", "REST API", "Jenkins", "Git"],
+      "experience": "2 years as QA Engineer at HCL Technologies",
+      "category": "SDET",
+      "categoryId": "sdet",
+      "projectDescription": "Implemented CI/CD pipeline with automated regression testing for e-commerce platform. Achieved 80% test automation coverage.",
+      "status": "available",
+      "education": "B.Tech in Electronics & Communication",
+      "location": "Kochi, India"
+    },
+    {
+      "id": "T008",
+      "uniqueId": "MED-2024-008",
+      "name": "Megha Joshi",
+      "avatar": "👩‍💻",
+      "skills": ["Python", "Django", "PostgreSQL", "Docker", "Kubernetes"],
+      "experience": "2.5 years as Backend Developer at Mindtree",
+      "category": "Backend",
+      "categoryId": "backend",
+      "projectDescription": "Built payment gateway integration processing 1M+ transactions monthly. Implemented microservices architecture with Docker & K8s.",
+      "status": "available",
+      "education": "M.Sc. in Computer Science",
+      "location": "Mumbai, India"
+    },
+    {
+      "id": "T009",
+      "uniqueId": "MED-2024-009",
+      "name": "Arjun Menon",
+      "avatar": "🧑‍💻",
+      "skills": ["PyTorch", "Computer Vision", "OpenCV", "Flask", "YOLO"],
+      "experience": "2 years as AI Engineer at L&T Infotech",
+      "category": "AI/ML",
+      "categoryId": "ai",
+      "projectDescription": "Developed real-time defect detection system using YOLO achieving 96% accuracy. Reduced manual inspection time by 70%.",
+      "status": "deployed",
+      "education": "M.Tech in Data Science",
+      "location": "Trivandrum, India"
+    },
+    {
+      "id": "T010",
+      "uniqueId": "MED-2024-010",
+      "name": "Divya Krishnan",
+      "avatar": "👩‍💻",
+      "skills": ["Angular", "Node.js", "MySQL", "Azure", "GraphQL"],
+      "experience": "3 years as Full Stack Developer at Capgemini",
+      "category": "Full Stack",
+      "categoryId": "fullstack",
+      "projectDescription": "Developed enterprise resource planning system for manufacturing sector. Migrated legacy system to modern Angular + Node.js stack.",
+      "status": "available",
+      "education": "B.E. in Information Technology",
+      "location": "Coimbatore, India"
+    },
+    {
+      "id": "T011",
+      "uniqueId": "MED-2024-011",
+      "name": "Rohan Desai",
+      "avatar": "👨‍💻",
+      "skills": ["Java", "RestAssured", "Postman", "JMeter", "SQL"],
+      "experience": "2 years as API Test Engineer at Mphasis",
+      "category": "SDET",
+      "categoryId": "sdet",
+      "projectDescription": "Automated 150+ API test cases using RestAssured framework. Conducted performance testing using JMeter for 5000+ concurrent users.",
+      "status": "available",
+      "education": "B.Tech in Computer Science",
+      "location": "Ahmedabad, India"
+    },
+    {
+      "id": "T012",
+      "uniqueId": "MED-2024-012",
+      "name": "Neha Agarwal",
+      "avatar": "👩‍💻",
+      "skills": ["Go", "gRPC", "MongoDB", "Redis", "Docker"],
+      "experience": "2.5 years as Backend Developer at Persistent Systems",
+      "category": "Backend",
+      "categoryId": "backend",
+      "projectDescription": "Built high-performance microservices in Go handling 100K requests/second. Implemented distributed caching with Redis cluster.",
+      "status": "available",
+      "education": "B.Tech in Computer Engineering",
+      "location": "Nagpur, India"
+    }
+  ],
+  "categories": [
+    {
+      "id": "sdet",
+      "title": "SDET / QA Automation",
+      "shortName": "SDET",
+      "icon": "🔬",
+      "count": 25
+    },
+    {
+      "id": "backend",
+      "title": "Backend Developers",
+      "shortName": "Backend",
+      "icon": "⚙️",
+      "count": 18
+    },
+    {
+      "id": "fullstack",
+      "title": "Full Stack Developers",
+      "shortName": "Full Stack",
+      "icon": "🌐",
+      "count": 22
+    },
+    {
+      "id": "ai",
+      "title": "AI / Automation Engineers",
+      "shortName": "AI/ML",
+      "icon": "🤖",
+      "count": 12
+    }
+  ]
+}
