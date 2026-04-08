@@ -1,0 +1,417 @@
+{
+  "Task 1: Introduction to AI Development": {
+    "title": "Introduction to AI Development",
+    "description": "Artificial Intelligence (AI) Development is the process of creating systems that can perform tasks that typically require human intelligence. As an AI Developer, you'll work with machine learning models, neural networks, and modern AI tools.\n\nKey Areas of AI Development:\n\n1. Machine Learning (ML)\n   - Supervised Learning (classification, regression)\n   - Unsupervised Learning (clustering, dimensionality reduction)\n   - Reinforcement Learning\n\n2. Deep Learning\n   - Neural Networks architecture\n   - CNNs for computer vision\n   - RNNs/Transformers for NLP\n\n3. Large Language Models (LLMs)\n   - GPT, Claude, Llama, Gemini\n   - Fine-tuning and prompt engineering\n   - RAG (Retrieval Augmented Generation)\n\n4. AI Application Development\n   - API integration (OpenAI, Anthropic, etc.)\n   - Building AI-powered applications\n   - Deploying ML models\n\nWhy AI Development?\n   - Rapidly growing field with high demand\n   - Transforming every industry\n   - Creative and challenging problem-solving\n   - High compensation and career growth",
+    "keyPoints": [
+      "AI encompasses ML, Deep Learning, NLP, and Computer Vision",
+      "Python is the primary language for AI development",
+      "Understanding data is fundamental to AI success",
+      "LLMs have revolutionized how we build AI applications",
+      "Ethics and responsible AI are critical considerations",
+      "Cloud platforms (AWS, GCP, Azure) are essential for deployment"
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "title": "Set Up Your AI Development Environment",
+        "scenario": "Create a Python environment with essential AI/ML libraries to start your AI development journey.",
+        "steps": [
+          "Install Python 3.10+ and pip",
+          "Create a virtual environment: python -m venv ai_env",
+          "Activate the environment",
+          "Install core libraries: numpy, pandas, scikit-learn",
+          "Install deep learning: torch or tensorflow",
+          "Install LLM tools: openai, langchain, transformers",
+          "Verify installations with import statements"
+        ],
+        "code": "# Create and activate virtual environment\npython -m venv ai_env\nsource ai_env/bin/activate  # On Windows: ai_env\\Scripts\\activate\n\n# Install essential packages\npip install numpy pandas scikit-learn matplotlib seaborn\npip install torch torchvision  # or tensorflow\npip install openai langchain transformers\npip install jupyter notebook\n\n# Verify installation\npython -c \"import numpy; import pandas; import sklearn; print('Core ML libraries OK')\"\npython -c \"import torch; print(f'PyTorch version: {torch.__version__}')\"\npython -c \"import openai; import langchain; print('LLM libraries OK')\""
+      },
+      {
+        "id": 2,
+        "title": "Understanding the AI/ML Workflow",
+        "scenario": "Learn the standard workflow for building AI/ML solutions from problem definition to deployment.",
+        "steps": [
+          "Define the problem and success metrics",
+          "Collect and explore the data",
+          "Preprocess and clean the data",
+          "Select and train the model",
+          "Evaluate model performance",
+          "Iterate and improve",
+          "Deploy and monitor"
+        ],
+        "code": "# Standard ML Workflow Example\nimport pandas as pd\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import accuracy_score, classification_report\n\n# 1. Load Data\ndf = pd.read_csv('data.csv')\n\n# 2. Explore Data\nprint(df.head())\nprint(df.describe())\nprint(df.info())\n\n# 3. Preprocess\nX = df.drop('target', axis=1)\ny = df['target']\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)\n\nscaler = StandardScaler()\nX_train_scaled = scaler.fit_transform(X_train)\nX_test_scaled = scaler.transform(X_test)\n\n# 4. Train Model\nmodel = RandomForestClassifier(n_estimators=100)\nmodel.fit(X_train_scaled, y_train)\n\n# 5. Evaluate\ny_pred = model.predict(X_test_scaled)\nprint(f'Accuracy: {accuracy_score(y_test, y_pred)}')\nprint(classification_report(y_test, y_pred))"
+      }
+    ]
+  },
+
+  "Task 2: Python for AI": {
+    "title": "Python Fundamentals for AI",
+    "description": "Python is the lingua franca of AI development. Mastering Python and its scientific computing ecosystem is essential for any AI developer.\n\nCore Libraries:\n\n1. NumPy\n   - N-dimensional arrays\n   - Mathematical operations\n   - Broadcasting and vectorization\n\n2. Pandas\n   - DataFrames for tabular data\n   - Data manipulation and cleaning\n   - Time series handling\n\n3. Matplotlib & Seaborn\n   - Data visualization\n   - Statistical plots\n   - Custom visualizations\n\n4. Scikit-learn\n   - ML algorithms\n   - Preprocessing utilities\n   - Model evaluation tools\n\nPython Best Practices for AI:\n   - Use type hints for clarity\n   - Write modular, reusable code\n   - Document functions and classes\n   - Use virtual environments\n   - Follow PEP 8 style guide",
+    "keyPoints": [
+      "NumPy arrays are 50x faster than Python lists for numerical operations",
+      "Pandas DataFrames are essential for data manipulation",
+      "Vectorized operations are key to performance",
+      "List comprehensions and generators for memory efficiency",
+      "Understanding broadcasting rules saves debugging time",
+      "Jupyter notebooks are great for experimentation"
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "title": "NumPy Essentials for AI",
+        "scenario": "Master NumPy operations that you'll use daily in AI development - array creation, manipulation, and mathematical operations.",
+        "steps": [
+          "Create arrays from lists and using built-in functions",
+          "Perform element-wise operations",
+          "Use broadcasting for efficient computation",
+          "Apply linear algebra operations",
+          "Use random number generation for ML"
+        ],
+        "code": "import numpy as np\n\n# Array creation\narr = np.array([1, 2, 3, 4, 5])\nzeros = np.zeros((3, 4))\nones = np.ones((2, 3))\nrandom = np.random.randn(3, 3)  # Standard normal distribution\nlinspace = np.linspace(0, 1, 10)  # 10 evenly spaced values\n\n# Array operations\na = np.array([[1, 2], [3, 4]])\nb = np.array([[5, 6], [7, 8]])\n\nprint('Element-wise multiplication:', a * b)\nprint('Matrix multiplication:', a @ b)  # or np.dot(a, b)\nprint('Transpose:', a.T)\n\n# Broadcasting\nmatrix = np.random.randn(3, 4)\nrow_means = matrix.mean(axis=1, keepdims=True)\nnormalized = matrix - row_means  # Broadcasting in action\n\n# Common ML operations\nX = np.random.randn(100, 5)  # 100 samples, 5 features\nmean = X.mean(axis=0)\nstd = X.std(axis=0)\nX_normalized = (X - mean) / std  # Standardization\n\nprint(f'Shape: {X.shape}, Mean: {X_normalized.mean():.4f}, Std: {X_normalized.std():.4f}')"
+      },
+      {
+        "id": 2,
+        "title": "Pandas for Data Manipulation",
+        "scenario": "Learn essential Pandas operations for loading, cleaning, and transforming data for ML pipelines.",
+        "steps": [
+          "Load data from various sources",
+          "Explore and understand the data",
+          "Handle missing values",
+          "Feature engineering",
+          "Prepare data for ML models"
+        ],
+        "code": "import pandas as pd\nimport numpy as np\n\n# Create sample dataset\ndf = pd.DataFrame({\n    'name': ['Alice', 'Bob', 'Charlie', 'Diana', None],\n    'age': [25, 30, None, 28, 35],\n    'salary': [50000, 60000, 55000, None, 70000],\n    'department': ['Engineering', 'Sales', 'Engineering', 'HR', 'Sales']\n})\n\n# Data exploration\nprint(df.head())\nprint(df.info())\nprint(df.describe())\nprint(df.isnull().sum())  # Missing values count\n\n# Handle missing values\ndf['age'].fillna(df['age'].median(), inplace=True)\ndf['salary'].fillna(df['salary'].mean(), inplace=True)\ndf['name'].fillna('Unknown', inplace=True)\n\n# Feature engineering\ndf['salary_category'] = pd.cut(df['salary'], bins=[0, 55000, 65000, np.inf], \n                                labels=['Low', 'Medium', 'High'])\ndf['age_group'] = df['age'].apply(lambda x: 'Young' if x < 30 else 'Senior')\n\n# One-hot encoding for ML\ndf_encoded = pd.get_dummies(df, columns=['department'], drop_first=True)\n\n# Group operations\nprint(df.groupby('department')['salary'].agg(['mean', 'min', 'max']))"
+      }
+    ]
+  },
+
+  "Task 3: Machine Learning Fundamentals": {
+    "title": "Machine Learning Fundamentals",
+    "description": "Machine Learning is the foundation of modern AI. Understanding ML algorithms, when to use them, and how to evaluate them is crucial.\n\nTypes of Machine Learning:\n\n1. Supervised Learning\n   - Classification: Predict categories (spam/not spam)\n   - Regression: Predict continuous values (house prices)\n   - Examples: Linear Regression, Decision Trees, SVM, Neural Networks\n\n2. Unsupervised Learning\n   - Clustering: Group similar items (customer segments)\n   - Dimensionality Reduction: Reduce features (PCA)\n   - Examples: K-Means, DBSCAN, PCA, Autoencoders\n\n3. Reinforcement Learning\n   - Agent learns by interacting with environment\n   - Reward-based learning\n   - Examples: Game AI, Robotics, Recommendation systems\n\nKey Concepts:\n   - Overfitting vs Underfitting\n   - Bias-Variance Tradeoff\n   - Cross-validation\n   - Hyperparameter tuning\n   - Feature engineering",
+    "keyPoints": [
+      "Choose algorithm based on problem type and data characteristics",
+      "Always split data into train/validation/test sets",
+      "Feature engineering often matters more than algorithm choice",
+      "Cross-validation gives more reliable performance estimates",
+      "Regularization helps prevent overfitting",
+      "Start simple, add complexity only when needed"
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "title": "Build a Classification Model",
+        "scenario": "Build a complete classification pipeline using scikit-learn with proper evaluation and cross-validation.",
+        "steps": [
+          "Load and explore the dataset",
+          "Preprocess the features",
+          "Split into train/test sets",
+          "Train multiple classifiers",
+          "Evaluate using appropriate metrics",
+          "Perform cross-validation"
+        ],
+        "code": "from sklearn.datasets import load_iris\nfrom sklearn.model_selection import train_test_split, cross_val_score\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.svm import SVC\nfrom sklearn.metrics import classification_report, confusion_matrix\nimport numpy as np\n\n# Load data\niris = load_iris()\nX, y = iris.data, iris.target\n\n# Split data\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42, stratify=y\n)\n\n# Scale features\nscaler = StandardScaler()\nX_train_scaled = scaler.fit_transform(X_train)\nX_test_scaled = scaler.transform(X_test)\n\n# Train multiple models\nmodels = {\n    'Logistic Regression': LogisticRegression(max_iter=200),\n    'Random Forest': RandomForestClassifier(n_estimators=100),\n    'SVM': SVC(kernel='rbf')\n}\n\nfor name, model in models.items():\n    # Train\n    model.fit(X_train_scaled, y_train)\n    \n    # Evaluate\n    train_score = model.score(X_train_scaled, y_train)\n    test_score = model.score(X_test_scaled, y_test)\n    \n    # Cross-validation\n    cv_scores = cross_val_score(model, X_train_scaled, y_train, cv=5)\n    \n    print(f'\\n{name}:')\n    print(f'  Train Accuracy: {train_score:.4f}')\n    print(f'  Test Accuracy: {test_score:.4f}')\n    print(f'  CV Score: {cv_scores.mean():.4f} (+/- {cv_scores.std()*2:.4f})')"
+      },
+      {
+        "id": 2,
+        "title": "Build a Regression Model",
+        "scenario": "Create a regression pipeline to predict continuous values with proper feature engineering and evaluation.",
+        "steps": [
+          "Load and explore the dataset",
+          "Handle missing values and outliers",
+          "Engineer new features",
+          "Train regression models",
+          "Evaluate using MSE, RMSE, R²"
+        ],
+        "code": "from sklearn.datasets import fetch_california_housing\nfrom sklearn.model_selection import train_test_split, cross_val_score\nfrom sklearn.preprocessing import StandardScaler\nfrom sklearn.linear_model import LinearRegression, Ridge, Lasso\nfrom sklearn.ensemble import GradientBoostingRegressor\nfrom sklearn.metrics import mean_squared_error, r2_score\nimport numpy as np\n\n# Load data\nhousing = fetch_california_housing()\nX, y = housing.data, housing.target\n\n# Split data\nX_train, X_test, y_train, y_test = train_test_split(\n    X, y, test_size=0.2, random_state=42\n)\n\n# Scale features\nscaler = StandardScaler()\nX_train_scaled = scaler.fit_transform(X_train)\nX_test_scaled = scaler.transform(X_test)\n\n# Train models\nmodels = {\n    'Linear Regression': LinearRegression(),\n    'Ridge (L2)': Ridge(alpha=1.0),\n    'Lasso (L1)': Lasso(alpha=0.1),\n    'Gradient Boosting': GradientBoostingRegressor(n_estimators=100)\n}\n\nfor name, model in models.items():\n    model.fit(X_train_scaled, y_train)\n    y_pred = model.predict(X_test_scaled)\n    \n    mse = mean_squared_error(y_test, y_pred)\n    rmse = np.sqrt(mse)\n    r2 = r2_score(y_test, y_pred)\n    \n    print(f'\\n{name}:')\n    print(f'  RMSE: {rmse:.4f}')\n    print(f'  R² Score: {r2:.4f}')"
+      }
+    ]
+  },
+
+  "Task 4: Deep Learning with PyTorch": {
+    "title": "Deep Learning with PyTorch",
+    "description": "Deep Learning powers modern AI breakthroughs. PyTorch is the preferred framework for research and increasingly for production.\n\nPyTorch Core Concepts:\n\n1. Tensors\n   - Multi-dimensional arrays (like NumPy but GPU-accelerated)\n   - Automatic differentiation (autograd)\n   - Device management (CPU/GPU)\n\n2. Neural Network Building Blocks\n   - nn.Module: Base class for all networks\n   - nn.Linear: Fully connected layers\n   - nn.Conv2d: Convolutional layers\n   - Activation functions: ReLU, Sigmoid, Softmax\n\n3. Training Loop\n   - Forward pass\n   - Loss computation\n   - Backward pass (backpropagation)\n   - Optimizer step\n\n4. Common Architectures\n   - MLP (Multi-Layer Perceptron)\n   - CNN (Convolutional Neural Network)\n   - RNN/LSTM (Recurrent Neural Networks)\n   - Transformers",
+    "keyPoints": [
+      "PyTorch uses dynamic computation graphs (define-by-run)",
+      "Always zero gradients before backward pass",
+      "Use DataLoader for efficient batch processing",
+      "Move models and data to GPU with .to(device)",
+      "Use torch.no_grad() during inference for efficiency",
+      "Save models with torch.save() and load with torch.load()"
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "title": "Build Your First Neural Network",
+        "scenario": "Create a simple neural network for classification using PyTorch's nn.Module.",
+        "steps": [
+          "Create a custom neural network class",
+          "Define layers in __init__",
+          "Implement forward pass",
+          "Create loss function and optimizer",
+          "Write training loop",
+          "Evaluate on test data"
+        ],
+        "code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\nfrom torch.utils.data import DataLoader, TensorDataset\nfrom sklearn.datasets import make_classification\nfrom sklearn.model_selection import train_test_split\nimport numpy as np\n\n# Generate synthetic data\nX, y = make_classification(n_samples=1000, n_features=20, n_classes=2, random_state=42)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)\n\n# Convert to tensors\nX_train = torch.FloatTensor(X_train)\ny_train = torch.LongTensor(y_train)\nX_test = torch.FloatTensor(X_test)\ny_test = torch.LongTensor(y_test)\n\n# Create DataLoader\ntrain_dataset = TensorDataset(X_train, y_train)\ntrain_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)\n\n# Define Neural Network\nclass NeuralNet(nn.Module):\n    def __init__(self, input_size, hidden_size, num_classes):\n        super(NeuralNet, self).__init__()\n        self.fc1 = nn.Linear(input_size, hidden_size)\n        self.relu = nn.ReLU()\n        self.dropout = nn.Dropout(0.2)\n        self.fc2 = nn.Linear(hidden_size, hidden_size)\n        self.fc3 = nn.Linear(hidden_size, num_classes)\n    \n    def forward(self, x):\n        x = self.fc1(x)\n        x = self.relu(x)\n        x = self.dropout(x)\n        x = self.fc2(x)\n        x = self.relu(x)\n        x = self.fc3(x)\n        return x\n\n# Initialize model, loss, optimizer\nmodel = NeuralNet(input_size=20, hidden_size=64, num_classes=2)\ncriterion = nn.CrossEntropyLoss()\noptimizer = optim.Adam(model.parameters(), lr=0.001)\n\n# Training loop\nfor epoch in range(100):\n    for batch_X, batch_y in train_loader:\n        # Forward pass\n        outputs = model(batch_X)\n        loss = criterion(outputs, batch_y)\n        \n        # Backward pass\n        optimizer.zero_grad()\n        loss.backward()\n        optimizer.step()\n    \n    if (epoch + 1) % 20 == 0:\n        print(f'Epoch {epoch+1}, Loss: {loss.item():.4f}')\n\n# Evaluate\nwith torch.no_grad():\n    outputs = model(X_test)\n    _, predicted = torch.max(outputs, 1)\n    accuracy = (predicted == y_test).sum().item() / len(y_test)\n    print(f'Test Accuracy: {accuracy:.4f}')"
+      },
+      {
+        "id": 2,
+        "title": "Build a CNN for Image Classification",
+        "scenario": "Create a Convolutional Neural Network for image classification using PyTorch.",
+        "steps": [
+          "Define CNN architecture with conv layers",
+          "Add pooling and fully connected layers",
+          "Load image dataset with transforms",
+          "Train with proper data augmentation",
+          "Evaluate and visualize results"
+        ],
+        "code": "import torch\nimport torch.nn as nn\nimport torch.optim as optim\nimport torchvision\nimport torchvision.transforms as transforms\nfrom torch.utils.data import DataLoader\n\n# Define transforms\ntransform = transforms.Compose([\n    transforms.ToTensor(),\n    transforms.Normalize((0.5,), (0.5,))\n])\n\n# Load MNIST dataset\ntrain_dataset = torchvision.datasets.MNIST(\n    root='./data', train=True, transform=transform, download=True\n)\ntest_dataset = torchvision.datasets.MNIST(\n    root='./data', train=False, transform=transform\n)\n\ntrain_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)\ntest_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)\n\n# Define CNN\nclass CNN(nn.Module):\n    def __init__(self):\n        super(CNN, self).__init__()\n        self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1)\n        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)\n        self.pool = nn.MaxPool2d(2, 2)\n        self.fc1 = nn.Linear(64 * 7 * 7, 128)\n        self.fc2 = nn.Linear(128, 10)\n        self.relu = nn.ReLU()\n        self.dropout = nn.Dropout(0.25)\n    \n    def forward(self, x):\n        x = self.pool(self.relu(self.conv1(x)))  # 28x28 -> 14x14\n        x = self.pool(self.relu(self.conv2(x)))  # 14x14 -> 7x7\n        x = x.view(-1, 64 * 7 * 7)  # Flatten\n        x = self.relu(self.fc1(x))\n        x = self.dropout(x)\n        x = self.fc2(x)\n        return x\n\n# Setup\ndevice = torch.device('cuda' if torch.cuda.is_available() else 'cpu')\nmodel = CNN().to(device)\ncriterion = nn.CrossEntropyLoss()\noptimizer = optim.Adam(model.parameters(), lr=0.001)\n\n# Training\nfor epoch in range(5):\n    model.train()\n    for images, labels in train_loader:\n        images, labels = images.to(device), labels.to(device)\n        \n        outputs = model(images)\n        loss = criterion(outputs, labels)\n        \n        optimizer.zero_grad()\n        loss.backward()\n        optimizer.step()\n    \n    # Evaluate\n    model.eval()\n    correct = 0\n    total = 0\n    with torch.no_grad():\n        for images, labels in test_loader:\n            images, labels = images.to(device), labels.to(device)\n            outputs = model(images)\n            _, predicted = torch.max(outputs, 1)\n            total += labels.size(0)\n            correct += (predicted == labels).sum().item()\n    \n    print(f'Epoch {epoch+1}, Accuracy: {100*correct/total:.2f}%')"
+      }
+    ]
+  },
+
+  "Task 5: Large Language Models (LLMs)": {
+    "title": "Working with Large Language Models",
+    "description": "Large Language Models have revolutionized AI development. Understanding how to work with LLMs is essential for modern AI developers.\n\nKey LLM Concepts:\n\n1. What are LLMs?\n   - Transformer-based models trained on massive text data\n   - Capable of understanding and generating human-like text\n   - Examples: GPT-4, Claude, Llama, Gemini, Mistral\n\n2. Using LLM APIs\n   - OpenAI API (GPT-4, GPT-3.5)\n   - Anthropic API (Claude)\n   - Open-source models (Llama, Mistral)\n   - Structured outputs and function calling\n\n3. Key Parameters\n   - Temperature: Creativity vs consistency (0-2)\n   - Max tokens: Response length limit\n   - Top-p (nucleus sampling): Diversity control\n   - System prompts: Set behavior and context\n\n4. Best Practices\n   - Clear, specific instructions\n   - Provide examples (few-shot learning)\n   - Handle rate limits and errors\n   - Monitor costs and token usage",
+    "keyPoints": [
+      "Temperature 0 = deterministic, higher = more creative/random",
+      "System prompts define the AI's role and behavior",
+      "Few-shot examples significantly improve output quality",
+      "Always handle API errors and rate limits gracefully",
+      "Token count affects both cost and response time",
+      "Use streaming for better UX in chat applications"
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "title": "Build an LLM-Powered Chatbot",
+        "scenario": "Create a conversational AI chatbot using the OpenAI API with proper error handling and conversation history.",
+        "steps": [
+          "Set up OpenAI client with API key",
+          "Create system prompt for the assistant",
+          "Implement conversation history management",
+          "Handle API responses and errors",
+          "Add streaming for real-time responses"
+        ],
+        "code": "from openai import OpenAI\nimport os\n\n# Initialize client\nclient = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))\n\nclass Chatbot:\n    def __init__(self, system_prompt):\n        self.system_prompt = system_prompt\n        self.conversation_history = [\n            {\"role\": \"system\", \"content\": system_prompt}\n        ]\n    \n    def chat(self, user_message):\n        # Add user message to history\n        self.conversation_history.append({\n            \"role\": \"user\",\n            \"content\": user_message\n        })\n        \n        try:\n            # Call the API\n            response = client.chat.completions.create(\n                model=\"gpt-4\",\n                messages=self.conversation_history,\n                temperature=0.7,\n                max_tokens=1000\n            )\n            \n            # Extract assistant's response\n            assistant_message = response.choices[0].message.content\n            \n            # Add to history\n            self.conversation_history.append({\n                \"role\": \"assistant\",\n                \"content\": assistant_message\n            })\n            \n            return assistant_message\n            \n        except Exception as e:\n            return f\"Error: {str(e)}\"\n    \n    def chat_stream(self, user_message):\n        \"\"\"Streaming version for real-time responses\"\"\"\n        self.conversation_history.append({\n            \"role\": \"user\",\n            \"content\": user_message\n        })\n        \n        stream = client.chat.completions.create(\n            model=\"gpt-4\",\n            messages=self.conversation_history,\n            temperature=0.7,\n            stream=True\n        )\n        \n        full_response = \"\"\n        for chunk in stream:\n            if chunk.choices[0].delta.content:\n                content = chunk.choices[0].delta.content\n                full_response += content\n                print(content, end=\"\", flush=True)\n        \n        self.conversation_history.append({\n            \"role\": \"assistant\",\n            \"content\": full_response\n        })\n        return full_response\n\n# Usage\nbot = Chatbot(\"You are a helpful AI coding assistant.\")\nresponse = bot.chat(\"Explain what a neural network is in simple terms.\")\nprint(response)"
+      },
+      {
+        "id": 2,
+        "title": "Implement Function Calling",
+        "scenario": "Use OpenAI's function calling feature to let the LLM interact with external tools and APIs.",
+        "steps": [
+          "Define function schemas",
+          "Call API with function definitions",
+          "Parse function call responses",
+          "Execute the requested function",
+          "Return results to the model"
+        ],
+        "code": "from openai import OpenAI\nimport json\n\nclient = OpenAI()\n\n# Define available functions\ndef get_weather(location, unit=\"celsius\"):\n    \"\"\"Simulated weather API\"\"\"\n    return {\"location\": location, \"temperature\": 22, \"unit\": unit, \"condition\": \"sunny\"}\n\ndef search_web(query):\n    \"\"\"Simulated web search\"\"\"\n    return {\"results\": [f\"Result 1 for {query}\", f\"Result 2 for {query}\"]}\n\n# Function schemas for the API\ntools = [\n    {\n        \"type\": \"function\",\n        \"function\": {\n            \"name\": \"get_weather\",\n            \"description\": \"Get current weather for a location\",\n            \"parameters\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"location\": {\"type\": \"string\", \"description\": \"City name\"},\n                    \"unit\": {\"type\": \"string\", \"enum\": [\"celsius\", \"fahrenheit\"]}\n                },\n                \"required\": [\"location\"]\n            }\n        }\n    },\n    {\n        \"type\": \"function\",\n        \"function\": {\n            \"name\": \"search_web\",\n            \"description\": \"Search the web for information\",\n            \"parameters\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"query\": {\"type\": \"string\", \"description\": \"Search query\"}\n                },\n                \"required\": [\"query\"]\n            }\n        }\n    }\n]\n\ndef run_conversation(user_message):\n    messages = [{\"role\": \"user\", \"content\": user_message}]\n    \n    response = client.chat.completions.create(\n        model=\"gpt-4\",\n        messages=messages,\n        tools=tools,\n        tool_choice=\"auto\"\n    )\n    \n    message = response.choices[0].message\n    \n    # Check if model wants to call a function\n    if message.tool_calls:\n        for tool_call in message.tool_calls:\n            func_name = tool_call.function.name\n            func_args = json.loads(tool_call.function.arguments)\n            \n            # Execute the function\n            if func_name == \"get_weather\":\n                result = get_weather(**func_args)\n            elif func_name == \"search_web\":\n                result = search_web(**func_args)\n            \n            # Add function result to messages\n            messages.append(message)\n            messages.append({\n                \"role\": \"tool\",\n                \"tool_call_id\": tool_call.id,\n                \"content\": json.dumps(result)\n            })\n        \n        # Get final response\n        final_response = client.chat.completions.create(\n            model=\"gpt-4\",\n            messages=messages\n        )\n        return final_response.choices[0].message.content\n    \n    return message.content\n\n# Test\nprint(run_conversation(\"What's the weather like in Tokyo?\"))"
+      }
+    ]
+  },
+
+  "Task 6: Prompt Engineering": {
+    "title": "Prompt Engineering Mastery",
+    "description": "Prompt engineering is the art and science of crafting effective prompts to get desired outputs from LLMs. It's a critical skill for AI developers.\n\nPrompt Engineering Techniques:\n\n1. Zero-Shot Prompting\n   - Direct instruction without examples\n   - Works for simple, well-defined tasks\n\n2. Few-Shot Prompting\n   - Provide examples of desired input-output pairs\n   - Helps model understand format and style\n\n3. Chain-of-Thought (CoT)\n   - Ask model to think step-by-step\n   - Improves reasoning on complex problems\n\n4. Role Prompting\n   - Assign a persona or role to the model\n   - Influences tone, expertise, and perspective\n\n5. Structured Output\n   - Request specific formats (JSON, XML, Markdown)\n   - Use schemas for consistent outputs\n\nPrompt Components:\n   - Context: Background information\n   - Instruction: What to do\n   - Input: The specific data to process\n   - Output format: How to structure response",
+    "keyPoints": [
+      "Be specific and explicit in your instructions",
+      "Use delimiters to separate different parts of the prompt",
+      "Few-shot examples dramatically improve consistency",
+      "Chain-of-thought improves reasoning accuracy by 10-40%",
+      "Negative prompting (what NOT to do) can help avoid common errors",
+      "Iterate and refine prompts based on outputs"
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "title": "Master Prompt Techniques",
+        "scenario": "Practice different prompting techniques to solve various tasks effectively.",
+        "steps": [
+          "Create zero-shot prompts for simple tasks",
+          "Build few-shot prompts with examples",
+          "Implement chain-of-thought for reasoning",
+          "Use role prompting for specialized outputs",
+          "Structure outputs with JSON formatting"
+        ],
+        "code": "# Zero-Shot Prompt\nzero_shot = \"\"\"\nClassify the sentiment of the following review as POSITIVE, NEGATIVE, or NEUTRAL.\n\nReview: \"The product arrived on time and works exactly as described. Very satisfied!\"\n\nSentiment:\n\"\"\"\n\n# Few-Shot Prompt\nfew_shot = \"\"\"\nExtract the product name and price from the text.\n\nText: \"The new iPhone 15 Pro is available for $999.\"\nOutput: {\"product\": \"iPhone 15 Pro\", \"price\": \"$999\"}\n\nText: \"Samsung Galaxy S24 Ultra costs $1199.\"\nOutput: {\"product\": \"Samsung Galaxy S24 Ultra\", \"price\": \"$1199\"}\n\nText: \"Get the MacBook Air M3 for just $1099.\"\nOutput:\n\"\"\"\n\n# Chain-of-Thought Prompt\ncot_prompt = \"\"\"\nSolve this problem step by step:\n\nA store has 50 apples. They sell 23 apples in the morning and receive a shipment of 35 apples. \nThen they sell 18 more apples in the afternoon. How many apples do they have now?\n\nLet's think through this step by step:\n1. Start with initial count\n2. Subtract morning sales\n3. Add shipment\n4. Subtract afternoon sales\n5. Calculate final answer\n\nSolution:\n\"\"\"\n\n# Role Prompting\nrole_prompt = \"\"\"\nYou are an expert Python code reviewer with 15 years of experience. \nYou focus on code quality, security, performance, and best practices.\n\nReview the following code and provide detailed feedback:\n\n```python\ndef get_user(id):\n    conn = sqlite3.connect('users.db')\n    cursor = conn.cursor()\n    cursor.execute(f\"SELECT * FROM users WHERE id = {id}\")\n    return cursor.fetchone()\n```\n\nProvide your review in this format:\n1. Security Issues\n2. Performance Concerns  \n3. Best Practice Violations\n4. Suggested Improvements\n\"\"\"\n\n# Structured Output with JSON\njson_prompt = \"\"\"\nAnalyze the following customer feedback and extract insights.\n\nFeedback: \"I love the fast shipping but the packaging was damaged. The product itself is great quality though. Will probably order again.\"\n\nRespond with a JSON object containing:\n- sentiment: overall sentiment (positive/negative/mixed)\n- aspects: list of aspects mentioned with their individual sentiments\n- recommendation: whether customer would recommend (yes/no/maybe)\n- key_phrases: important phrases from the feedback\n\nJSON Response:\n\"\"\""
+      },
+      {
+        "id": 2,
+        "title": "Build a Prompt Template System",
+        "scenario": "Create a reusable prompt template system for consistent AI interactions across your application.",
+        "steps": [
+          "Design template structure with placeholders",
+          "Create template classes for different use cases",
+          "Implement variable substitution",
+          "Add validation for required fields",
+          "Build a template library"
+        ],
+        "code": "from dataclasses import dataclass\nfrom typing import Optional, List\nimport re\n\n@dataclass\nclass PromptTemplate:\n    \"\"\"Reusable prompt template with variable substitution.\"\"\"\n    template: str\n    name: str\n    description: str\n    required_vars: List[str]\n    \n    def format(self, **kwargs) -> str:\n        # Validate required variables\n        missing = [var for var in self.required_vars if var not in kwargs]\n        if missing:\n            raise ValueError(f\"Missing required variables: {missing}\")\n        \n        # Substitute variables\n        result = self.template\n        for key, value in kwargs.items():\n            result = result.replace(f\"{{{key}}}\", str(value))\n        \n        return result\n\n# Template Library\nclass PromptLibrary:\n    templates = {\n        \"code_review\": PromptTemplate(\n            name=\"Code Review\",\n            description=\"Review code for quality and issues\",\n            required_vars=[\"language\", \"code\"],\n            template=\"\"\"You are an expert {language} developer.\n\nReview this code for:\n- Bugs and errors\n- Security vulnerabilities\n- Performance issues\n- Best practices\n\nCode:\n```{language}\n{code}\n```\n\nProvide specific, actionable feedback.\"\"\"\n        ),\n        \n        \"summarize\": PromptTemplate(\n            name=\"Summarize\",\n            description=\"Summarize text to specified length\",\n            required_vars=[\"text\", \"max_sentences\"],\n            template=\"\"\"Summarize the following text in {max_sentences} sentences or less.\nBe concise but capture the key points.\n\nText: {text}\n\nSummary:\"\"\"\n        ),\n        \n        \"translate\": PromptTemplate(\n            name=\"Translate\",\n            description=\"Translate text between languages\",\n            required_vars=[\"text\", \"source_lang\", \"target_lang\"],\n            template=\"\"\"Translate the following {source_lang} text to {target_lang}.\nMaintain the tone and meaning as closely as possible.\n\nOriginal ({source_lang}):\n{text}\n\nTranslation ({target_lang}):\"\"\"\n        ),\n        \n        \"extract_data\": PromptTemplate(\n            name=\"Extract Data\",\n            description=\"Extract structured data from text\",\n            required_vars=[\"text\", \"fields\"],\n            template=\"\"\"Extract the following information from the text.\nReturn as JSON with these fields: {fields}\n\nText: {text}\n\nIf a field is not found, use null.\n\nJSON:\"\"\"\n        )\n    }\n    \n    @classmethod\n    def get(cls, template_name: str) -> PromptTemplate:\n        if template_name not in cls.templates:\n            raise KeyError(f\"Template '{template_name}' not found\")\n        return cls.templates[template_name]\n    \n    @classmethod\n    def list_templates(cls) -> List[str]:\n        return list(cls.templates.keys())\n\n# Usage\ntemplate = PromptLibrary.get(\"code_review\")\nprompt = template.format(\n    language=\"Python\",\n    code=\"def add(a, b): return a + b\"\n)\nprint(prompt)"
+      }
+    ]
+  },
+
+  "Task 7: RAG - Retrieval Augmented Generation": {
+    "title": "RAG - Retrieval Augmented Generation",
+    "description": "RAG combines the power of LLMs with external knowledge retrieval, enabling AI systems to access and use specific, up-to-date information.\n\nRAG Architecture:\n\n1. Document Processing\n   - Load documents (PDFs, web pages, databases)\n   - Split into chunks (optimal size varies)\n   - Handle different document types\n\n2. Embedding & Indexing\n   - Convert text chunks to vector embeddings\n   - Store in vector database\n   - Enable semantic similarity search\n\n3. Retrieval\n   - Convert query to embedding\n   - Find similar documents\n   - Rank and filter results\n\n4. Generation\n   - Combine retrieved context with query\n   - Generate response using LLM\n   - Cite sources when appropriate\n\nVector Databases:\n   - Pinecone, Weaviate, Chroma\n   - FAISS (local), Milvus\n   - pgvector (PostgreSQL extension)",
+    "keyPoints": [
+      "Chunk size affects retrieval quality - typically 500-1000 tokens",
+      "Overlap between chunks preserves context",
+      "Embedding model choice impacts semantic search quality",
+      "Reranking improves retrieval accuracy",
+      "Hybrid search (keyword + semantic) often works best",
+      "Always handle cases where no relevant documents are found"
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "title": "Build a RAG System with LangChain",
+        "scenario": "Create a complete RAG pipeline that can answer questions based on your documents.",
+        "steps": [
+          "Load and process documents",
+          "Split into chunks with overlap",
+          "Create embeddings and vector store",
+          "Implement retrieval chain",
+          "Generate answers with context"
+        ],
+        "code": "from langchain.document_loaders import TextLoader, PyPDFLoader, WebBaseLoader\nfrom langchain.text_splitter import RecursiveCharacterTextSplitter\nfrom langchain.embeddings import OpenAIEmbeddings\nfrom langchain.vectorstores import Chroma\nfrom langchain.chat_models import ChatOpenAI\nfrom langchain.chains import RetrievalQA\nfrom langchain.prompts import PromptTemplate\n\n# 1. Load Documents\n# loader = PyPDFLoader(\"document.pdf\")\n# loader = WebBaseLoader(\"https://example.com\")\nloader = TextLoader(\"knowledge_base.txt\")\ndocuments = loader.load()\n\n# 2. Split into chunks\ntext_splitter = RecursiveCharacterTextSplitter(\n    chunk_size=1000,\n    chunk_overlap=200,\n    length_function=len,\n    separators=[\"\\n\\n\", \"\\n\", \" \", \"\"]\n)\nchunks = text_splitter.split_documents(documents)\nprint(f\"Created {len(chunks)} chunks\")\n\n# 3. Create embeddings and vector store\nembeddings = OpenAIEmbeddings()\nvectorstore = Chroma.from_documents(\n    documents=chunks,\n    embedding=embeddings,\n    persist_directory=\"./chroma_db\"\n)\n\n# 4. Create retriever\nretriever = vectorstore.as_retriever(\n    search_type=\"similarity\",\n    search_kwargs={\"k\": 4}  # Return top 4 documents\n)\n\n# 5. Create custom prompt\ntemplate = \"\"\"Use the following context to answer the question.\nIf you don't know the answer based on the context, say so.\n\nContext:\n{context}\n\nQuestion: {question}\n\nAnswer:\"\"\"\n\nprompt = PromptTemplate(\n    template=template,\n    input_variables=[\"context\", \"question\"]\n)\n\n# 6. Create QA chain\nllm = ChatOpenAI(model=\"gpt-4\", temperature=0)\nqa_chain = RetrievalQA.from_chain_type(\n    llm=llm,\n    chain_type=\"stuff\",\n    retriever=retriever,\n    return_source_documents=True,\n    chain_type_kwargs={\"prompt\": prompt}\n)\n\n# 7. Query\nquery = \"What is the main topic of the document?\"\nresult = qa_chain({\"query\": query})\n\nprint(f\"Answer: {result['result']}\")\nprint(f\"\\nSources:\")\nfor doc in result['source_documents']:\n    print(f\"- {doc.page_content[:100]}...\")"
+      },
+      {
+        "id": 2,
+        "title": "Advanced RAG with Reranking",
+        "scenario": "Implement advanced RAG techniques including hybrid search and reranking for better accuracy.",
+        "steps": [
+          "Implement hybrid search (BM25 + semantic)",
+          "Add a reranker for better relevance",
+          "Implement query expansion",
+          "Add source citation to responses",
+          "Handle edge cases gracefully"
+        ],
+        "code": "from langchain.retrievers import BM25Retriever, EnsembleRetriever\nfrom langchain.retrievers.document_compressors import CrossEncoderReranker\nfrom langchain.retrievers import ContextualCompressionRetriever\nfrom langchain_community.cross_encoders import HuggingFaceCrossEncoder\n\nclass AdvancedRAG:\n    def __init__(self, documents, embeddings):\n        self.documents = documents\n        self.embeddings = embeddings\n        self._setup_retrievers()\n    \n    def _setup_retrievers(self):\n        # Semantic retriever\n        self.vectorstore = Chroma.from_documents(\n            documents=self.documents,\n            embedding=self.embeddings\n        )\n        semantic_retriever = self.vectorstore.as_retriever(search_kwargs={\"k\": 10})\n        \n        # BM25 keyword retriever\n        bm25_retriever = BM25Retriever.from_documents(self.documents)\n        bm25_retriever.k = 10\n        \n        # Hybrid retriever (ensemble)\n        self.ensemble_retriever = EnsembleRetriever(\n            retrievers=[bm25_retriever, semantic_retriever],\n            weights=[0.4, 0.6]  # Weight towards semantic\n        )\n        \n        # Reranker\n        reranker = HuggingFaceCrossEncoder(model_name=\"cross-encoder/ms-marco-MiniLM-L-6-v2\")\n        compressor = CrossEncoderReranker(model=reranker, top_n=4)\n        \n        self.retriever = ContextualCompressionRetriever(\n            base_compressor=compressor,\n            base_retriever=self.ensemble_retriever\n        )\n    \n    def expand_query(self, query: str, llm) -> str:\n        \"\"\"Expand query with related terms for better retrieval.\"\"\"\n        expansion_prompt = f\"\"\"Generate 2-3 alternative ways to ask this question.\n        Keep them short and focused on the same intent.\n        \n        Question: {query}\n        \n        Alternatives (one per line):\"\"\"\n        \n        response = llm.invoke(expansion_prompt)\n        expanded = f\"{query}\\n{response.content}\"\n        return expanded\n    \n    def retrieve_with_sources(self, query: str):\n        \"\"\"Retrieve documents with source tracking.\"\"\"\n        docs = self.retriever.get_relevant_documents(query)\n        \n        sources = []\n        for i, doc in enumerate(docs):\n            sources.append({\n                \"id\": i + 1,\n                \"content\": doc.page_content,\n                \"metadata\": doc.metadata\n            })\n        \n        return docs, sources\n    \n    def generate_answer(self, query: str, llm):\n        \"\"\"Generate answer with citations.\"\"\"\n        docs, sources = self.retrieve_with_sources(query)\n        \n        if not docs:\n            return \"I couldn't find relevant information to answer this question.\", []\n        \n        context = \"\\n\\n\".join([\n            f\"[{i+1}] {doc.page_content}\" \n            for i, doc in enumerate(docs)\n        ])\n        \n        prompt = f\"\"\"Answer the question using the provided sources.\n        Cite sources using [1], [2], etc.\n        \n        Sources:\n        {context}\n        \n        Question: {query}\n        \n        Answer with citations:\"\"\"\n        \n        response = llm.invoke(prompt)\n        return response.content, sources\n\n# Usage\n# rag = AdvancedRAG(documents, OpenAIEmbeddings())\n# answer, sources = rag.generate_answer(\"What is machine learning?\", ChatOpenAI())"
+      }
+    ]
+  },
+
+  "Task 8: AI Agents": {
+    "title": "Building AI Agents",
+    "description": "AI Agents are autonomous systems that can plan, reason, use tools, and execute multi-step tasks. They represent the cutting edge of LLM applications.\n\nAgent Architecture:\n\n1. Core Components\n   - LLM (brain): Reasoning and decision making\n   - Tools: Actions the agent can take\n   - Memory: Short-term and long-term storage\n   - Planning: Breaking down complex tasks\n\n2. Agent Types\n   - ReAct Agents: Reason + Act pattern\n   - Plan-and-Execute: Plan first, then execute\n   - Multi-Agent Systems: Specialized agents working together\n\n3. Tool Design\n   - Clear descriptions for the LLM\n   - Well-defined inputs and outputs\n   - Error handling and validation\n   - Safety constraints\n\n4. Memory Systems\n   - Conversation history\n   - Working memory (current task)\n   - Long-term memory (vector store)\n   - Episodic memory (past experiences)",
+    "keyPoints": [
+      "Agents need clear tool descriptions to choose correctly",
+      "ReAct pattern: Thought → Action → Observation → Repeat",
+      "Limit agent iterations to prevent infinite loops",
+      "Include human-in-the-loop for critical actions",
+      "Test agents thoroughly - they can be unpredictable",
+      "Monitor token usage - agents can be expensive"
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "title": "Build a ReAct Agent",
+        "scenario": "Create an agent that can reason about tasks and use tools to accomplish goals.",
+        "steps": [
+          "Define tools with clear descriptions",
+          "Set up the agent with LangChain",
+          "Implement the reasoning loop",
+          "Add memory for conversation",
+          "Test with various queries"
+        ],
+        "code": "from langchain.agents import AgentExecutor, create_react_agent\nfrom langchain.tools import Tool, tool\nfrom langchain.prompts import PromptTemplate\nfrom langchain_openai import ChatOpenAI\nfrom langchain.memory import ConversationBufferWindowMemory\nimport requests\nimport json\n\n# Define tools\n@tool\ndef calculator(expression: str) -> str:\n    \"\"\"Calculate a mathematical expression. Input should be a valid math expression.\"\"\"\n    try:\n        result = eval(expression)\n        return f\"Result: {result}\"\n    except Exception as e:\n        return f\"Error: {str(e)}\"\n\n@tool\ndef search_wikipedia(query: str) -> str:\n    \"\"\"Search Wikipedia for information. Input should be a search query.\"\"\"\n    try:\n        url = f\"https://en.wikipedia.org/api/rest_v1/page/summary/{query}\"\n        response = requests.get(url)\n        if response.status_code == 200:\n            data = response.json()\n            return data.get('extract', 'No information found.')\n        return \"Could not find information.\"\n    except Exception as e:\n        return f\"Error: {str(e)}\"\n\n@tool  \ndef get_current_time() -> str:\n    \"\"\"Get the current date and time. No input required.\"\"\"\n    from datetime import datetime\n    return datetime.now().strftime(\"%Y-%m-%d %H:%M:%S\")\n\ntools = [calculator, search_wikipedia, get_current_time]\n\n# Create agent\nllm = ChatOpenAI(model=\"gpt-4\", temperature=0)\n\n# ReAct prompt template\nreact_template = \"\"\"Answer the following questions as best you can. You have access to the following tools:\n\n{tools}\n\nUse the following format:\n\nQuestion: the input question you must answer\nThought: you should always think about what to do\nAction: the action to take, should be one of [{tool_names}]\nAction Input: the input to the action\nObservation: the result of the action\n... (this Thought/Action/Action Input/Observation can repeat N times)\nThought: I now know the final answer\nFinal Answer: the final answer to the original input question\n\nBegin!\n\nQuestion: {input}\nThought:{agent_scratchpad}\"\"\"\n\nprompt = PromptTemplate.from_template(react_template)\n\n# Create agent\nagent = create_react_agent(llm, tools, prompt)\n\n# Add memory\nmemory = ConversationBufferWindowMemory(\n    memory_key=\"chat_history\",\n    k=5,  # Remember last 5 exchanges\n    return_messages=True\n)\n\n# Create executor with limits\nagent_executor = AgentExecutor(\n    agent=agent,\n    tools=tools,\n    memory=memory,\n    verbose=True,\n    max_iterations=5,\n    handle_parsing_errors=True\n)\n\n# Test the agent\nresult = agent_executor.invoke({\n    \"input\": \"What is 15% of 250, and who invented the calculator?\"\n})\nprint(f\"\\nFinal Answer: {result['output']}\")"
+      },
+      {
+        "id": 2,
+        "title": "Build a Multi-Agent System",
+        "scenario": "Create a system with specialized agents that collaborate to solve complex tasks.",
+        "steps": [
+          "Design specialized agent roles",
+          "Implement coordinator agent",
+          "Set up inter-agent communication",
+          "Handle task delegation",
+          "Aggregate results from agents"
+        ],
+        "code": "from typing import List, Dict\nfrom dataclasses import dataclass\nfrom enum import Enum\nfrom langchain_openai import ChatOpenAI\n\nclass AgentRole(Enum):\n    RESEARCHER = \"researcher\"\n    WRITER = \"writer\"\n    CRITIC = \"critic\"\n    COORDINATOR = \"coordinator\"\n\n@dataclass\nclass AgentMessage:\n    sender: AgentRole\n    recipient: AgentRole\n    content: str\n    task_id: str\n\nclass SpecializedAgent:\n    def __init__(self, role: AgentRole, system_prompt: str):\n        self.role = role\n        self.system_prompt = system_prompt\n        self.llm = ChatOpenAI(model=\"gpt-4\", temperature=0.7)\n    \n    def process(self, message: str, context: str = \"\") -> str:\n        prompt = f\"\"\"{self.system_prompt}\n        \n        Context from other agents:\n        {context}\n        \n        Task: {message}\n        \n        Your response:\"\"\"\n        \n        response = self.llm.invoke(prompt)\n        return response.content\n\nclass MultiAgentSystem:\n    def __init__(self):\n        self.agents = {\n            AgentRole.RESEARCHER: SpecializedAgent(\n                AgentRole.RESEARCHER,\n                \"\"\"You are a research specialist. Your job is to:\n                - Gather relevant information\n                - Identify key facts and data\n                - Provide well-sourced findings\n                Be thorough but concise.\"\"\"\n            ),\n            AgentRole.WRITER: SpecializedAgent(\n                AgentRole.WRITER,\n                \"\"\"You are a professional writer. Your job is to:\n                - Create clear, engaging content\n                - Structure information logically\n                - Adapt tone to the audience\n                Focus on clarity and impact.\"\"\"\n            ),\n            AgentRole.CRITIC: SpecializedAgent(\n                AgentRole.CRITIC,\n                \"\"\"You are a quality critic. Your job is to:\n                - Review content for accuracy\n                - Identify gaps or improvements\n                - Suggest specific enhancements\n                Be constructive but thorough.\"\"\"\n            ),\n            AgentRole.COORDINATOR: SpecializedAgent(\n                AgentRole.COORDINATOR,\n                \"\"\"You are the coordinator. Your job is to:\n                - Break down complex tasks\n                - Delegate to appropriate specialists\n                - Synthesize results\n                - Ensure quality output\"\"\"\n            )\n        }\n        self.conversation_history: List[AgentMessage] = []\n    \n    def run_task(self, task: str) -> str:\n        \"\"\"Execute a task using multiple agents.\"\"\"\n        task_id = f\"task_{len(self.conversation_history)}\"\n        \n        # Step 1: Coordinator plans the approach\n        plan = self.agents[AgentRole.COORDINATOR].process(\n            f\"Plan how to accomplish this task: {task}\"\n        )\n        print(f\"📋 Coordinator Plan:\\n{plan}\\n\")\n        \n        # Step 2: Researcher gathers information\n        research = self.agents[AgentRole.RESEARCHER].process(\n            task,\n            context=f\"Coordinator's plan: {plan}\"\n        )\n        print(f\"🔍 Research Results:\\n{research}\\n\")\n        \n        # Step 3: Writer creates content\n        draft = self.agents[AgentRole.WRITER].process(\n            f\"Create content based on this research: {research}\",\n            context=f\"Original task: {task}\"\n        )\n        print(f\"✍️ Writer's Draft:\\n{draft}\\n\")\n        \n        # Step 4: Critic reviews\n        review = self.agents[AgentRole.CRITIC].process(\n            f\"Review this content: {draft}\",\n            context=f\"Original task: {task}\\nResearch: {research}\"\n        )\n        print(f\"🔎 Critic's Review:\\n{review}\\n\")\n        \n        # Step 5: Writer revises based on feedback\n        final = self.agents[AgentRole.WRITER].process(\n            f\"Revise the content based on this feedback: {review}\\n\\nOriginal draft: {draft}\"\n        )\n        \n        return final\n\n# Usage\n# mas = MultiAgentSystem()\n# result = mas.run_task(\"Write a blog post about the future of AI in healthcare\")\n# print(f\"📄 Final Output:\\n{result}\")"
+      }
+    ]
+  },
+
+  "Task 9: Model Fine-tuning": {
+    "title": "Fine-tuning AI Models",
+    "description": "Fine-tuning adapts pre-trained models to specific tasks or domains, improving performance for your use case.\n\nFine-tuning Approaches:\n\n1. Full Fine-tuning\n   - Update all model parameters\n   - Requires significant compute\n   - Best results but expensive\n\n2. Parameter-Efficient Fine-tuning (PEFT)\n   - LoRA (Low-Rank Adaptation)\n   - QLoRA (Quantized LoRA)\n   - Adapters\n   - Much cheaper, nearly same quality\n\n3. Instruction Fine-tuning\n   - Train on instruction-response pairs\n   - Improves task following\n   - Used for chat models\n\n4. RLHF (Reinforcement Learning from Human Feedback)\n   - Train reward model\n   - Optimize with PPO\n   - Aligns model with human preferences\n\nWhen to Fine-tune:\n   - Specific domain knowledge needed\n   - Consistent output format required\n   - Prompt engineering insufficient\n   - Privacy/security requirements",
+    "keyPoints": [
+      "Start with prompt engineering before fine-tuning",
+      "Quality of training data matters more than quantity",
+      "LoRA/QLoRA makes fine-tuning accessible on consumer GPUs",
+      "Always evaluate on held-out test set",
+      "Fine-tuned models may lose some general capabilities",
+      "OpenAI fine-tuning is easiest but limited to their models"
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "title": "Fine-tune with OpenAI",
+        "scenario": "Fine-tune a GPT model using OpenAI's fine-tuning API for a specific task.",
+        "steps": [
+          "Prepare training data in JSONL format",
+          "Upload the training file",
+          "Create a fine-tuning job",
+          "Monitor training progress",
+          "Test the fine-tuned model"
+        ],
+        "code": "from openai import OpenAI\nimport json\nimport time\n\nclient = OpenAI()\n\n# 1. Prepare training data (JSONL format)\ntraining_data = [\n    {\n        \"messages\": [\n            {\"role\": \"system\", \"content\": \"You are a customer service assistant for a tech company.\"},\n            {\"role\": \"user\", \"content\": \"My laptop won't turn on\"},\n            {\"role\": \"assistant\", \"content\": \"I'm sorry to hear that. Let's troubleshoot: 1) Check if it's plugged in and the charger light is on. 2) Try holding the power button for 30 seconds. 3) If using a removable battery, remove it and try again. Would you like to try these steps?\"}\n        ]\n    },\n    {\n        \"messages\": [\n            {\"role\": \"system\", \"content\": \"You are a customer service assistant for a tech company.\"},\n            {\"role\": \"user\", \"content\": \"How do I reset my password?\"},\n            {\"role\": \"assistant\", \"content\": \"To reset your password: 1) Go to our login page and click 'Forgot Password'. 2) Enter your registered email. 3) Check your inbox for the reset link (also check spam). 4) Click the link and create a new password. Need help with any of these steps?\"}\n        ]\n    }\n    # Add more training examples (minimum 10 recommended)\n]\n\n# Save to JSONL file\nwith open('training_data.jsonl', 'w') as f:\n    for item in training_data:\n        f.write(json.dumps(item) + '\\n')\n\n# 2. Upload the training file\nwith open('training_data.jsonl', 'rb') as f:\n    file_response = client.files.create(\n        file=f,\n        purpose='fine-tune'\n    )\n\nfile_id = file_response.id\nprint(f\"File uploaded: {file_id}\")\n\n# 3. Create fine-tuning job\njob = client.fine_tuning.jobs.create(\n    training_file=file_id,\n    model=\"gpt-3.5-turbo\",\n    hyperparameters={\n        \"n_epochs\": 3\n    }\n)\n\njob_id = job.id\nprint(f\"Fine-tuning job created: {job_id}\")\n\n# 4. Monitor progress\nwhile True:\n    job_status = client.fine_tuning.jobs.retrieve(job_id)\n    print(f\"Status: {job_status.status}\")\n    \n    if job_status.status in ['succeeded', 'failed']:\n        break\n    \n    time.sleep(60)  # Check every minute\n\n# 5. Use the fine-tuned model\nif job_status.status == 'succeeded':\n    fine_tuned_model = job_status.fine_tuned_model\n    print(f\"Fine-tuned model: {fine_tuned_model}\")\n    \n    # Test it\n    response = client.chat.completions.create(\n        model=fine_tuned_model,\n        messages=[\n            {\"role\": \"system\", \"content\": \"You are a customer service assistant for a tech company.\"},\n            {\"role\": \"user\", \"content\": \"My screen is flickering\"}\n        ]\n    )\n    print(f\"Response: {response.choices[0].message.content}\")"
+      },
+      {
+        "id": 2,
+        "title": "Fine-tune with LoRA",
+        "scenario": "Use LoRA to efficiently fine-tune an open-source model on your own hardware.",
+        "steps": [
+          "Set up the training environment",
+          "Load base model with quantization",
+          "Configure LoRA parameters",
+          "Train on your dataset",
+          "Merge and save the model"
+        ],
+        "code": "import torch\nfrom transformers import (\n    AutoModelForCausalLM,\n    AutoTokenizer,\n    TrainingArguments,\n    Trainer,\n    DataCollatorForLanguageModeling\n)\nfrom peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training\nfrom datasets import Dataset\n\n# 1. Load base model with quantization (4-bit for memory efficiency)\nmodel_name = \"mistralai/Mistral-7B-v0.1\"\n\ntokenizer = AutoTokenizer.from_pretrained(model_name)\ntokenizer.pad_token = tokenizer.eos_token\n\nmodel = AutoModelForCausalLM.from_pretrained(\n    model_name,\n    load_in_4bit=True,\n    torch_dtype=torch.float16,\n    device_map=\"auto\"\n)\n\n# Prepare model for training\nmodel = prepare_model_for_kbit_training(model)\n\n# 2. Configure LoRA\nlora_config = LoraConfig(\n    r=16,                    # Rank of update matrices\n    lora_alpha=32,           # Scaling factor\n    target_modules=[\"q_proj\", \"v_proj\", \"k_proj\", \"o_proj\"],  # Layers to adapt\n    lora_dropout=0.05,\n    bias=\"none\",\n    task_type=\"CAUSAL_LM\"\n)\n\n# Apply LoRA\nmodel = get_peft_model(model, lora_config)\nmodel.print_trainable_parameters()\n\n# 3. Prepare dataset\ntraining_texts = [\n    \"### Instruction: Summarize this article.\\n### Input: [article text]\\n### Response: [summary]\",\n    # Add more training examples\n]\n\ndef tokenize_function(examples):\n    return tokenizer(\n        examples[\"text\"],\n        truncation=True,\n        max_length=512,\n        padding=\"max_length\"\n    )\n\ndataset = Dataset.from_dict({\"text\": training_texts})\ntokenized_dataset = dataset.map(tokenize_function, batched=True)\n\n# 4. Training arguments\ntraining_args = TrainingArguments(\n    output_dir=\"./lora_model\",\n    num_train_epochs=3,\n    per_device_train_batch_size=4,\n    gradient_accumulation_steps=4,\n    learning_rate=2e-4,\n    fp16=True,\n    logging_steps=10,\n    save_strategy=\"epoch\",\n    warmup_ratio=0.03,\n)\n\n# 5. Create trainer and train\ntrainer = Trainer(\n    model=model,\n    args=training_args,\n    train_dataset=tokenized_dataset,\n    data_collator=DataCollatorForLanguageModeling(tokenizer, mlm=False)\n)\n\ntrainer.train()\n\n# 6. Save the LoRA adapter\nmodel.save_pretrained(\"./lora_adapter\")\n\n# 7. For inference, merge and save full model\nfrom peft import PeftModel\n\nbase_model = AutoModelForCausalLM.from_pretrained(model_name)\npeft_model = PeftModel.from_pretrained(base_model, \"./lora_adapter\")\nmerged_model = peft_model.merge_and_unload()\nmerged_model.save_pretrained(\"./merged_model\")"
+      }
+    ]
+  },
+
+  "Task 10: AI Application Deployment": {
+    "title": "Deploying AI Applications",
+    "description": "Deploying AI applications requires careful consideration of performance, scalability, cost, and reliability.\n\nDeployment Options:\n\n1. API-Based Deployment\n   - FastAPI / Flask for REST APIs\n   - gRPC for high-performance\n   - Serverless (AWS Lambda, Cloud Functions)\n\n2. Container Deployment\n   - Docker for containerization\n   - Kubernetes for orchestration\n   - Cloud Run, ECS, AKS\n\n3. ML-Specific Platforms\n   - AWS SageMaker\n   - Google Vertex AI\n   - Azure ML\n   - Hugging Face Inference Endpoints\n\n4. Edge Deployment\n   - ONNX Runtime\n   - TensorRT\n   - Core ML (iOS)\n   - TensorFlow Lite (Mobile)\n\nKey Considerations:\n   - Latency requirements\n   - Throughput needs\n   - Cost optimization\n   - Model versioning\n   - Monitoring and observability",
+    "keyPoints": [
+      "Use async processing for non-blocking inference",
+      "Implement proper health checks and monitoring",
+      "Cache embeddings and frequent queries",
+      "Use batching to improve GPU utilization",
+      "Set up proper error handling and fallbacks",
+      "Monitor model performance and data drift"
+    ],
+    "exercises": [
+      {
+        "id": 1,
+        "title": "Build a Production FastAPI Service",
+        "scenario": "Create a production-ready AI API service with proper error handling, validation, and monitoring.",
+        "steps": [
+          "Set up FastAPI with proper structure",
+          "Add request validation with Pydantic",
+          "Implement async inference",
+          "Add health checks and metrics",
+          "Configure logging and error handling"
+        ],
+        "code": "from fastapi import FastAPI, HTTPException, BackgroundTasks\nfrom pydantic import BaseModel, Field\nfrom typing import Optional, List\nimport logging\nimport time\nfrom contextlib import asynccontextmanager\nimport asyncio\n\n# Configure logging\nlogging.basicConfig(level=logging.INFO)\nlogger = logging.getLogger(__name__)\n\n# Request/Response models\nclass ChatRequest(BaseModel):\n    message: str = Field(..., min_length=1, max_length=4000)\n    conversation_id: Optional[str] = None\n    temperature: float = Field(default=0.7, ge=0, le=2)\n    max_tokens: int = Field(default=1000, ge=1, le=4000)\n\nclass ChatResponse(BaseModel):\n    response: str\n    conversation_id: str\n    tokens_used: int\n    latency_ms: float\n\nclass HealthResponse(BaseModel):\n    status: str\n    model_loaded: bool\n    uptime_seconds: float\n\n# Global state\nclass AppState:\n    def __init__(self):\n        self.model = None\n        self.start_time = time.time()\n        self.request_count = 0\n        self.error_count = 0\n\nstate = AppState()\n\n# Lifecycle management\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    # Startup\n    logger.info(\"Loading AI model...\")\n    # state.model = load_your_model()\n    state.model = \"model_placeholder\"  # Replace with actual model\n    logger.info(\"Model loaded successfully\")\n    yield\n    # Shutdown\n    logger.info(\"Shutting down...\")\n\napp = FastAPI(\n    title=\"AI Chat API\",\n    version=\"1.0.0\",\n    lifespan=lifespan\n)\n\n# Middleware for request tracking\n@app.middleware(\"http\")\nasync def track_requests(request, call_next):\n    start = time.time()\n    response = await call_next(request)\n    duration = time.time() - start\n    logger.info(f\"{request.method} {request.url.path} - {response.status_code} - {duration:.3f}s\")\n    return response\n\n# Health check endpoint\n@app.get(\"/health\", response_model=HealthResponse)\nasync def health_check():\n    return HealthResponse(\n        status=\"healthy\",\n        model_loaded=state.model is not None,\n        uptime_seconds=time.time() - state.start_time\n    )\n\n# Main chat endpoint\n@app.post(\"/chat\", response_model=ChatResponse)\nasync def chat(request: ChatRequest):\n    start_time = time.time()\n    state.request_count += 1\n    \n    try:\n        # Simulate AI inference\n        await asyncio.sleep(0.1)  # Replace with actual inference\n        response_text = f\"AI response to: {request.message[:50]}...\"\n        \n        latency = (time.time() - start_time) * 1000\n        \n        return ChatResponse(\n            response=response_text,\n            conversation_id=request.conversation_id or \"new_conv_123\",\n            tokens_used=len(request.message.split()) * 2,\n            latency_ms=latency\n        )\n    \n    except Exception as e:\n        state.error_count += 1\n        logger.error(f\"Chat error: {str(e)}\")\n        raise HTTPException(status_code=500, detail=\"Internal server error\")\n\n# Metrics endpoint\n@app.get(\"/metrics\")\nasync def metrics():\n    return {\n        \"total_requests\": state.request_count,\n        \"total_errors\": state.error_count,\n        \"error_rate\": state.error_count / max(state.request_count, 1),\n        \"uptime_seconds\": time.time() - state.start_time\n    }\n\n# Run with: uvicorn main:app --host 0.0.0.0 --port 8000"
+      },
+      {
+        "id": 2,
+        "title": "Containerize and Deploy with Docker",
+        "scenario": "Package your AI application in Docker and prepare for cloud deployment.",
+        "steps": [
+          "Create optimized Dockerfile",
+          "Set up docker-compose for local development",
+          "Configure environment variables",
+          "Add health checks to container",
+          "Prepare for Kubernetes deployment"
+        ],
+        "code": "# Dockerfile\n\"\"\"\n# Use Python slim image for smaller size\nFROM python:3.11-slim\n\n# Set working directory\nWORKDIR /app\n\n# Install system dependencies\nRUN apt-get update && apt-get install -y \\\n    build-essential \\\n    curl \\\n    && rm -rf /var/lib/apt/lists/*\n\n# Copy requirements first for better caching\nCOPY requirements.txt .\nRUN pip install --no-cache-dir -r requirements.txt\n\n# Copy application code\nCOPY . .\n\n# Create non-root user for security\nRUN useradd -m appuser && chown -R appuser:appuser /app\nUSER appuser\n\n# Expose port\nEXPOSE 8000\n\n# Health check\nHEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \\\n    CMD curl -f http://localhost:8000/health || exit 1\n\n# Run the application\nCMD [\"uvicorn\", \"main:app\", \"--host\", \"0.0.0.0\", \"--port\", \"8000\"]\n\"\"\"\n\n# docker-compose.yml\n\"\"\"\nversion: '3.8'\n\nservices:\n  ai-api:\n    build: .\n    ports:\n      - \"8000:8000\"\n    environment:\n      - OPENAI_API_KEY=${OPENAI_API_KEY}\n      - LOG_LEVEL=INFO\n      - MAX_WORKERS=4\n    volumes:\n      - ./models:/app/models  # Mount model directory\n    healthcheck:\n      test: [\"CMD\", \"curl\", \"-f\", \"http://localhost:8000/health\"]\n      interval: 30s\n      timeout: 10s\n      retries: 3\n    restart: unless-stopped\n    deploy:\n      resources:\n        limits:\n          memory: 4G\n        reservations:\n          memory: 2G\n\n  redis:\n    image: redis:alpine\n    ports:\n      - \"6379:6379\"\n    volumes:\n      - redis_data:/data\n\nvolumes:\n  redis_data:\n\"\"\"\n\n# kubernetes/deployment.yaml\n\"\"\"\napiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: ai-api\nspec:\n  replicas: 3\n  selector:\n    matchLabels:\n      app: ai-api\n  template:\n    metadata:\n      labels:\n        app: ai-api\n    spec:\n      containers:\n      - name: ai-api\n        image: your-registry/ai-api:latest\n        ports:\n        - containerPort: 8000\n        env:\n        - name: OPENAI_API_KEY\n          valueFrom:\n            secretKeyRef:\n              name: ai-secrets\n              key: openai-api-key\n        resources:\n          limits:\n            memory: \"4Gi\"\n            cpu: \"2\"\n          requests:\n            memory: \"2Gi\"\n            cpu: \"1\"\n        livenessProbe:\n          httpGet:\n            path: /health\n            port: 8000\n          initialDelaySeconds: 30\n          periodSeconds: 10\n        readinessProbe:\n          httpGet:\n            path: /health\n            port: 8000\n          initialDelaySeconds: 5\n          periodSeconds: 5\n---\napiVersion: v1\nkind: Service\nmetadata:\n  name: ai-api-service\nspec:\n  selector:\n    app: ai-api\n  ports:\n  - port: 80\n    targetPort: 8000\n  type: LoadBalancer\n\"\"\"\n\n# Build and run commands:\n# docker build -t ai-api .\n# docker run -p 8000:8000 --env-file .env ai-api\n# docker-compose up -d\n# kubectl apply -f kubernetes/"
+      }
+    ]
+  }
+}

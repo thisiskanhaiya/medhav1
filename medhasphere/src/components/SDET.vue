@@ -255,7 +255,7 @@
     </div>
   </template>
   
-  <script setup lang="ts">
+  <script setup>
   import { ref, computed } from 'vue';
   import seleniumTasksRaw   from '../data/seleniumTasks.json';
   import playwrightTasksRaw from '../data/playwrightTasks.json';
@@ -264,42 +264,29 @@
   import SdetCareer from './SdetCareer.vue';
 
 
-  // ── types ──────────────────────────────────────────────
-  interface QA {
-    id: number;
-    question: string;
-    answer: string;
-    difficulty: string;
-  }
-  interface InterviewCategory {
-    title: string;
-    icon: string;
-    questions: QA[];
-  }
-  
   // ── normalise helpers ──────────────────────────────────
-  function toTaskArray(raw: Record<string, any>): any[] {
+  function toTaskArray(raw) {
     return Object.values(raw);
   }
   const showCareer = ref(false);
   // interviewQA.json → array of { title, icon, questions[] }
-  const interviewCategories = Object.values(interviewQARaw) as InterviewCategory[];
+  const interviewCategories = Object.values(interviewQARaw);
   
   // ── state ──────────────────────────────────────────────
   const sidebarOpen        = ref(false);
   const sidebarMinimized   = ref(false);
-  const openSections       = ref<number[]>([]);
-  const openExercises      = ref<number[]>([]);
-  const openQAs            = ref<number[]>([]);
-  const selectedTask       = ref<any>(null);
-  const selectedCategory   = ref<InterviewCategory | null>(null);
+  const openSections       = ref([]);
+  const openExercises      = ref([]);
+  const openQAs            = ref([]);
+  const selectedTask       = ref(null);
+  const selectedCategory   = ref(null);
   const currentSection     = ref('');
-  const copiedIndex        = ref<number | null>(null);
-  const activeSectionIndex = ref<number | null>(null);
+  const copiedIndex        = ref(null);
+  const activeSectionIndex = ref(null);
   
   // ── completion tracking ─────────────────────────────────
-  const completedTasks     = ref<Set<string>>(new Set());
-  const completedQAs       = ref<Set<string>>(new Set());
+  const completedTasks     = ref(new Set());
+  const completedQAs       = ref(new Set());
   
   // ── 4 sections ─────────────────────────────────────────
   const sections = computed(() => [
@@ -308,27 +295,27 @@
       title: 'Selenium Automation',
       icon: '🌐',
       tasks: toTaskArray(seleniumTasksRaw),
-      categories: [] as InterviewCategory[],
+      categories: [],
     },
     {
       id: 'api',
       title: 'API Automation',
       icon: '🔌',
       tasks: toTaskArray(apiTasksRaw),
-      categories: [] as InterviewCategory[],
+      categories: [],
     },
     {
       id: 'playwright',
       title: 'Playwright',
       icon: '🎭',
       tasks: toTaskArray(playwrightTasksRaw),
-      categories: [] as InterviewCategory[],
+      categories: [],
     },
     {
       id: 'interview',
       title: 'Interview Preparation',
       icon: '📝',
-      tasks: [] as any[],
+      tasks: [],
       categories: interviewCategories,
     },
   ]);
@@ -351,29 +338,29 @@
   const nextTask = computed(() => hasNext.value ? currentTasks.value[currentTaskIndex.value + 1] : null);
 
   // ── completion helpers ──────────────────────────────────
-  const getSectionCompletion = (section: any) => {
+  const getSectionCompletion = (section) => {
     if (section.id === 'interview') {
-      const totalQAs = section.categories.reduce((sum: number, cat: InterviewCategory) => sum + cat.questions.length, 0);
-      const completedQAsInSection = section.categories.reduce((sum: number, cat: InterviewCategory) => {
-        return sum + cat.questions.filter((qa: QA) => completedQAs.value.has(`${cat.title}-${qa.id}`)).length;
+      const totalQAs = section.categories.reduce((sum, cat) => sum + cat.questions.length, 0);
+      const completedQAsInSection = section.categories.reduce((sum, cat) => {
+        return sum + cat.questions.filter((qa) => completedQAs.value.has(`${cat.title}-${qa.id}`)).length;
       }, 0);
       return totalQAs > 0 ? Math.round((completedQAsInSection / totalQAs) * 100) : 0;
     } else {
       const totalTasks = section.tasks.length;
-      const completedTasksInSection = section.tasks.filter((task: any) => completedTasks.value.has(`${section.id}-${task.title}`)).length;
+      const completedTasksInSection = section.tasks.filter((task) => completedTasks.value.has(`${section.id}-${task.title}`)).length;
       return totalTasks > 0 ? Math.round((completedTasksInSection / totalTasks) * 100) : 0;
     }
   };
 
-  const isTaskCompleted = (task: any, sectionId: string) => {
+  const isTaskCompleted = (task, sectionId) => {
     return completedTasks.value.has(`${sectionId}-${task.title}`);
   };
 
-  const isQACompleted = (qa: QA, categoryTitle: string) => {
+  const isQACompleted = (qa, categoryTitle) => {
     return completedQAs.value.has(`${categoryTitle}-${qa.id}`);
   };
 
-  const toggleTaskCompletion = (task: any, sectionId: string) => {
+  const toggleTaskCompletion = (task, sectionId) => {
     const key = `${sectionId}-${task.title}`;
     if (completedTasks.value.has(key)) {
       completedTasks.value.delete(key);
@@ -382,7 +369,7 @@
     }
   };
 
-  const toggleQACompletion = (qa: QA, categoryTitle: string) => {
+  const toggleQACompletion = (qa, categoryTitle) => {
     const key = `${categoryTitle}-${qa.id}`;
     if (completedQAs.value.has(key)) {
       completedQAs.value.delete(key);
@@ -396,7 +383,7 @@
   function toggleSidebarMinimized() { sidebarMinimized.value = !sidebarMinimized.value; }
   function closeSidebar()  { sidebarOpen.value = false; }
   
-  function toggleSection(index: number) {
+  function toggleSection(index) {
     activeSectionIndex.value = index;
     // Only allow one section open at a time
     if (openSections.value.includes(index)) {
@@ -406,12 +393,12 @@
     }
   }
   
-  function openSection(index: number) {
+  function openSection(index) {
     activeSectionIndex.value = index;
     if (!openSections.value.includes(index)) openSections.value.push(index);
   }
   
-  function selectTask(task: any, section: string) {
+  function selectTask(task, section) {
     selectedTask.value     = task;
     selectedCategory.value = null;
     currentSection.value   = section;
@@ -419,7 +406,7 @@
     closeSidebar();
   }
   
-  function selectCategory(cat: InterviewCategory, section: string) {
+  function selectCategory(cat, section) {
     selectedCategory.value = cat;
     selectedTask.value     = null;
     currentSection.value   = section;
@@ -439,19 +426,19 @@
     }
   }
   
-  function toggleExercise(index: number) {
+  function toggleExercise(index) {
     const idx = openExercises.value.indexOf(index);
     if (idx === -1) openExercises.value.push(index);
     else            openExercises.value.splice(idx, 1);
   }
   
-  function toggleQA(index: number) {
+  function toggleQA(index) {
     const idx = openQAs.value.indexOf(index);
     if (idx === -1) openQAs.value.push(index);
     else            openQAs.value.splice(idx, 1);
   }
   
-  async function copyCode(code: string, index: number) {
+  async function copyCode(code, index) {
     await navigator.clipboard.writeText(code);
     copiedIndex.value = index;
     setTimeout(() => (copiedIndex.value = null), 2000);
