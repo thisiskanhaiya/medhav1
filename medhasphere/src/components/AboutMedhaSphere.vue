@@ -1,17 +1,5 @@
 <template>
-  <div class="about-page" ref="aboutPage">
-    <!-- Fixed Nav that hides on scroll -->
-    <nav :class="['about-nav', { 'nav-hidden': isNavHidden }]">
-      <div class="nav-logo">Medha<span>Sphere</span></div>
-      <div class="nav-links-inner">
-        <a href="#who">Who It's For</a>
-        <a href="#talent">Talent Flow</a>
-        <a href="#company">Company Flow</a>
-        <a href="#vision">Vision</a>
-        <a href="#why">Why Us</a>
-      </div>
-    </nav>
-
+  <div class="about-page">
     <!-- Hero Section -->
     <section class="about-hero">
       <div class="hero-bg"></div>
@@ -266,28 +254,6 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-
-const isNavHidden = ref(false)
-let lastScrollY = 0
-
-const handleScroll = () => {
-  const currentScrollY = window.scrollY
-  if (currentScrollY > lastScrollY && currentScrollY > 100) {
-    isNavHidden.value = true
-  } else {
-    isNavHidden.value = false
-  }
-  lastScrollY = currentScrollY
-}
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll, { passive: true })
-})
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
 </script>
 
 <style scoped>
@@ -307,58 +273,6 @@ onUnmounted(() => {
   color: #0d1117;
   line-height: 1.65;
   overflow-x: hidden;
-}
-
-/* Nav */
-.about-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 5%;
-  height: 64px;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid #e3e8ef;
-  transition: transform 0.35s ease, opacity 0.35s ease;
-}
-
-.about-nav.nav-hidden {
-  transform: translateY(-100%);
-  opacity: 0;
-}
-
-.nav-logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1.25rem;
-  color: #0d1117;
-  letter-spacing: -0.5px;
-}
-
-.nav-logo span {
-  color: #10b981;
-}
-
-.nav-links-inner {
-  display: flex;
-  gap: 2rem;
-}
-
-.nav-links-inner a {
-  text-decoration: none;
-  color: #5a6478;
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: color 0.2s;
-}
-
-.nav-links-inner a:hover {
-  color: #10b981;
 }
 
 /* Hero */
@@ -1014,15 +928,6 @@ section {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .about-nav {
-    padding: 0 4%;
-    height: 56px;
-  }
-
-  .nav-links-inner {
-    display: none;
-  }
-
   .about-hero {
     padding: 100px 5% 60px;
     min-height: auto;

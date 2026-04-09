@@ -3,7 +3,7 @@
   <div class="dashboard">
 
     <!-- Top Nav -->
-    <header :class="['header', { 'header-scrolled': isScrolled, 'header-hidden': !selected && isScrolled }]">
+    <header :class="['header', { 'header-scrolled': isScrolled, 'header-hidden': isNavHidden }]">
       <h1 @click="goHome" class="logo">📚 <span class="logo-medha">Medha</span><span class="logo-sphere">sphere</span></h1>
       
       <!-- Mobile menu button -->
@@ -259,11 +259,22 @@ const images = [testimonial1, testimonial2, testimonial3]
 const isScrolled = ref(false)
 const heroHovered = ref(false)
 const mobileMenuOpen = ref(false)
+const isNavHidden = ref(false)
 
 let imageInterval = null
+let lastScrollY = 0
 
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 100
+  const currentScrollY = window.scrollY
+  isScrolled.value = currentScrollY > 100
+  
+  // Hide navbar when scrolling down, show when scrolling up
+  if (currentScrollY > lastScrollY && currentScrollY > 80) {
+    isNavHidden.value = true
+  } else {
+    isNavHidden.value = false
+  }
+  lastScrollY = currentScrollY
 }
 
 const scrollToContent = () => {
@@ -1433,7 +1444,7 @@ const currentComponent = computed(() => {
     border-radius: 14px;
   }
   
-  .header-hidden { transform: none; opacity: 1; }
+  
   
   .header .logo { font-size: 1.15rem; }
   
