@@ -32,6 +32,13 @@
         >
           ⚡ TalentForge
         </span>
+        <span
+          class="nav-item about-nav"
+          :class="{ active: selected === 'about' }"
+          @click="navigate('about'); mobileMenuOpen = false"
+        >
+          🌱 About
+        </span>
       </nav>
     </header>
 
@@ -191,7 +198,7 @@
         </div>
       </section>
 
-      <!-- Testimonials -->
+<!-- Testimonials -->
       <section class="testimonials">
         <h2 class="section-title">⭐ What Our Learners Say</h2>
         <div class="testimonials-grid">
@@ -241,6 +248,7 @@ import JavaComponent from './Java.vue'
 import AIDeveloperComponent from './AIDeveloper.vue'
 import TalentForgeComponent from './TalentForge.vue'
 import TalentCloudComponent from './TalentCloud.vue'
+import AboutMedhaSphereComponent from './AboutMedhaSphere.vue'
 import testimonial1 from '../assets/1775264017792.png'
 import testimonial2 from '../assets/1775264871247.png'
 import testimonial3 from '../assets/1775265121160.png'
@@ -331,6 +339,7 @@ const currentComponent = computed(() => {
   if (selected.value === 'ai') return AIDeveloperComponent
   if (selected.value === 'talentforge') return TalentForgeComponent
   if (selected.value === 'talentcloud') return TalentCloudComponent
+  if (selected.value === 'about') return AboutMedhaSphereComponent
   return null
 })
 </script>
@@ -545,6 +554,23 @@ const currentComponent = computed(() => {
 .nav-item.talentforge-nav.active {
   background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
   box-shadow: 0 8px 28px rgba(236, 72, 153, 0.45);
+}
+
+.nav-item.about-nav {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
+}
+
+.nav-item.about-nav:hover {
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4);
+  transform: translateY(-3px) scale(1.02);
+}
+
+.nav-item.about-nav.active {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  box-shadow: 0 8px 28px rgba(16, 185, 129, 0.45);
 }
 
 /* ─── Hero ───────────────────────────────────────────── */
