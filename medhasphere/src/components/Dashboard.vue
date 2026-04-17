@@ -1,6 +1,29 @@
 <!-- filepath: src/components/Dashboard.vue -->
 <template>
-  <div class="dashboard">
+  <!-- Login Page -->
+  <LoginComponent 
+    v-if="showLogin" 
+    @login-success="handleLoginSuccess"
+    @go-register="showRegisterPage"
+  />
+
+  <!-- Register Page -->
+  <RegisterComponent
+    v-else-if="showRegister"
+    @go-login="showLoginPage"
+    @register-attempt="handleRegisterAttempt"
+  />
+
+  <!-- Main Dashboard -->
+  <div v-else class="dashboard">
+
+    <!-- Toast Notification -->
+    <Toast 
+      :show="toast.show" 
+      :message="toast.message" 
+      :type="toast.type"
+      @close="toast.show = false"
+    />
 
     <!-- Top Nav -->
     <header :class="['header', { 'header-scrolled': isScrolled, 'header-hidden': isNavHidden }]">
@@ -39,8 +62,24 @@
         >
           🌱 About
         </span>
+        
+        <!-- Profile Dropdown -->
+        <ProfileDropdown
+          :isLoggedIn="isLoggedIn"
+          :user="currentUser"
+          @login="showLoginPage"
+          @logout="handleLogout"
+        />
       </nav>
     </header>
+
+    <!-- Auth Guard Popup -->
+    <AuthGuardPopup
+      :show="showAuthPopup"
+      @close="showAuthPopup = false"
+      @login="handleAuthPopupLogin"
+      @register="handleAuthPopupRegister"
+    />
 
     <!-- Hero - only when no course selected -->
     <section
@@ -242,13 +281,19 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import SDETComponent from './SDET.vue'
 import JavaComponent from './Java.vue'
 import AIDeveloperComponent from './AIDeveloper.vue'
 import TalentForgeComponent from './TalentForge.vue'
 import TalentCloudComponent from './TalentCloud.vue'
 import AboutMedhaSphereComponent from './AboutMedhaSphere.vue'
+import LoginComponent from './Login.vue'
+import RegisterComponent from './Register.vue'
+import Toast from './Toast.vue'
+import AuthGuardPopup from './AuthGuardPopup.vue'
+import ProfileDropdown from './ProfileDropdown.vue'
+import { isAuthenticated, getCurrentUser, logout, requiresAuth } from '../services/auth.js'
 import testimonial1 from '../assets/1775264017792.png'
 import testimonial2 from '../assets/1775264871247.png'
 import testimonial3 from '../assets/1775265121160.png'
@@ -260,6 +305,27 @@ const isScrolled = ref(false)
 const heroHovered = ref(false)
 const mobileMenuOpen = ref(false)
 const isNavHidden = ref(false)
+
+// Auth state
+const showLogin = ref(false)
+const showRegister = ref(false)
+const showAuthPopup = ref(false)
+const isLoggedIn = ref(false)
+const currentUser = ref(null)
+const pendingRoute = ref(null)
+
+// Toast state
+const toast = reactive({
+  show: false,
+  message: '',
+  type: 'info'
+})
+
+const showToast = (message, type = 'info') => {
+  toast.message = message
+  toast.type = type
+  toast.show = true
+}
 
 let imageInterval = null
 let lastScrollY = 0
@@ -284,7 +350,15 @@ const scrollToContent = () => {
   }
 }
 
+// Check auth state on mount
+const checkAuthState = () => {
+  isLoggedIn.value = isAuthenticated()
+  currentUser.value = getCurrentUser()
+}
+
 onMounted(() => {
+  checkAuthState()
+  
   imageInterval = setInterval(() => {
     currentImageIndex.value = (currentImageIndex.value + 1) % images.length
   }, 5000)
@@ -341,8 +415,66 @@ const testimonials = [
   { avatar: '👨‍🎓', name: 'Arjun Patel',   role: 'SDET Specialist',   text: 'Best platform for learning SDET fundamentals. Highly recommended for career growth!', image: testimonial3 },
 ]
 
-const navigate = (id) => { selected.value = id }
-const goHome   = ()  => { selected.value = null }
+// Navigation with auth guard
+const navigate = (id) => {
+  // Check if route requires authentication
+  if (requiresAuth(id) && !isLoggedIn.value) {
+    pendingRoute.value = id
+    showAuthPopup.value = true
+    return
+  }
+  selected.value = id
+}
+
+const handleAuthPopupLogin = () => {
+  showAuthPopup.value = false
+  showLogin.value = true
+}
+
+const handleAuthPopupRegister = () => {
+  showAuthPopup.value = false
+  showRegister.value = true
+}
+
+const goHome = () => { 
+  selected.value = null 
+}
+
+// Auth handlers
+const showLoginPage = () => {
+  showLogin.value = true
+  showRegister.value = false
+}
+
+const showRegisterPage = () => {
+  showRegister.value = true
+  showLogin.value = false
+}
+
+const handleLoginSuccess = (data) => {
+  isLoggedIn.value = true
+  currentUser.value = data.user
+  showLogin.value = false
+  showToast(data.message, 'success')
+  
+  // Redirect to pending route if exists
+  if (pendingRoute.value) {
+    selected.value = pendingRoute.value
+    pendingRoute.value = null
+  }
+}
+
+const handleRegisterAttempt = (data) => {
+  showToast(data.message, 'warning')
+}
+
+const handleLogout = () => {
+  logout()
+  isLoggedIn.value = false
+  currentUser.value = null
+  selected.value = null
+  showToast('Logged out successfully', 'info')
+}
 
 const currentComponent = computed(() => {
   if (selected.value === 'sdet') return SDETComponent
